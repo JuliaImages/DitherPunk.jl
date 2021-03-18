@@ -1,0 +1,3 @@
+[deps]
+DitherPunk = "b8f752a5-abd5-43b6-a55b-e75efda20de0"
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"

@@ -10,11 +10,18 @@ function gradient_image(height, width)
     return img = Gray.(vcat(repeat(gradient_row, height)))
 end
 
-test_img = gradient_image(h, w)
+img = gradient_image(h, w)
 
-algs = [threshold_dithering, random_noise_dithering, bayer_dithering]
+algs = [threshold_dithering, random_noise_dithering]
 
 for alg in algs
-    print_braille(alg(test_img), title="$(alg)")
     println("")
+    print_braille(alg(img); title="$(alg)")
+end
+
+for level in 1:3
+    println("")
+    print_braille(
+        bayer_dithering(img; level=level); title="bayer_dithering, level $(level)"
+    )
 end

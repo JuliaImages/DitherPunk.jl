@@ -1,11 +1,7 @@
 module DitherPunk
 
 using Images
-using ImageFiltering: mapwindow, imfilter
-using OffsetArrays
-
 using Random
-
 using SparseArrays
 using UnicodePlots
 

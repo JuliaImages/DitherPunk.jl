@@ -1,14 +1,16 @@
 using DitherPunk
 using Images
+using ImageInTerminal
 using TestImages
 using FileIO
 using ImageTransformations
 
 img = load("./assets/ggb.png")
-img = imresize(img; ratio=2 / 3)
+img = imresize(img; ratio=1 / 3)
 img = Gray.(img)
 
 println("Test image:")
+imshow(img)
 
 algs = [threshold_dithering, random_noise_dithering]
 

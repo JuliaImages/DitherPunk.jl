@@ -1,8 +1,9 @@
-using Images
 using DitherPunk
+using Images
+using ImageInTerminal
 
 w = 200
-h = 3 * 4 # multiple of 8 for unicode braille print
+h = 4 * 4 # multiple of 4 for unicode braille print
 
 function gradient_image(height, width)
     row = reshape(range(0; stop=1, length=width), 1, width)
@@ -10,6 +11,8 @@ function gradient_image(height, width)
 end
 
 img = gradient_image(h, w)
+println("Test image:")
+imshow(img)
 
 algs = [threshold_dithering, random_noise_dithering]
 

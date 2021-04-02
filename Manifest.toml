@@ -47,9 +47,9 @@ version = "0.2.2"
 
 [[ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra", "SparseArrays"]
-git-tree-sha1 = "1132f4e0893f286b1b88eb64ec5ddc8a5ae4b04e"
+git-tree-sha1 = "7d4252faf7323f3c614c9a564a31f22c547995cc"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
-version = "0.9.32"
+version = "0.9.36"
 
 [[ColorTypes]]
 deps = ["FixedPointNumbers", "Random"]
@@ -486,9 +486,9 @@ version = "0.2.4"
 
 [[StaticArrays]]
 deps = ["LinearAlgebra", "Random", "Statistics"]
-git-tree-sha1 = "9da72ed50e94dbff92036da395275ed114e04d49"
+git-tree-sha1 = "2f01a51c23eed210ff4a1be102c4cc8236b66e5b"
 uuid = "90137ffa-7385-5640-81b9-e52037218182"
-version = "1.0.1"
+version = "1.1.0"
 
 [[Statistics]]
 deps = ["LinearAlgebra", "SparseArrays"]

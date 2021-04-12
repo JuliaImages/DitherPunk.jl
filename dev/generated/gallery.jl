@@ -1,8 +1,5 @@
 using DitherPunk
 using Images
-using ImageTransformations
-using ImageContrastAdjustment
-using TestImages
 
 img = gradient_image(50, 400)
 

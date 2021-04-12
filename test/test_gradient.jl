@@ -9,7 +9,13 @@ img = gradient_image(h, w)
 println("Test image:")
 imshow(img)
 
-algs = [threshold_dithering, random_noise_dithering]
+algs = [
+    threshold_dithering,
+    random_noise_dithering,
+    clustered_dots_dithering,
+    balanced_centered_point_dithering,
+    rhombus_dithering,
+]
 
 for alg in algs
     println("")

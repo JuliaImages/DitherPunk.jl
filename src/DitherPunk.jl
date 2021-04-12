@@ -2,8 +2,10 @@ module DitherPunk
 
 using Images
 using Random
-using SparseArrays
-using UnicodePlots
+
+# Imports for display functions
+using BlockArrays: mortar
+using UnicodePlots: spy
 
 # Binary dithering algorithms
 include("mono/colorspaces.jl")
@@ -13,6 +15,7 @@ include("mono/show.jl")
 
 export threshold_dithering, random_noise_dithering
 export ordered_dithering, bayer_dithering
-export show_dither, print_braille
+export clustered_dots_dithering, balanced_centered_point_dithering, rhombus_dithering
+export show_dither, print_braille, gradient_image
 
 end # module

@@ -1,7 +1,16 @@
 """
 Apply `Gray` to indicate that image should be interpreted as a grayscale image.
+Optionally upscale image by integer value.
 """
-show_dither(img::BitMatrix) = Gray.(img)
+function show_dither(img::BitMatrix; scale::Int=1)
+    # Using mortar from BlockArrays to repeat individual "pixels" in the BitMatrix.
+    return Gray.(upscale(img, scale))
+end
+
+"""
+Upscale image by repeating individual pixels.
+"""
+upscale(img::BitMatrix, scale::Int)::BitMatrix = mortar(fill.(img, scale, scale))
 
 """
 (Ab)use `spy` to interpret image as sparse array and print "sparsity pattern"

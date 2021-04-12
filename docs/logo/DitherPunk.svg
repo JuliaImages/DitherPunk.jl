@@ -9,15 +9,15 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="207.40541mm"
-   height="65.737411mm"
-   viewBox="0 0 207.40541 65.737411"
+   height="62.085735mm"
+   viewBox="0 0 207.40541 62.085735"
    version="1.1"
    id="svg8"
    inkscape:version="1.0.2 (e86c8708, 2021-01-15)"
    sodipodi:docname="DitherPunk.svg"
    inkscape:export-filename="/Users/funks/Desktop/DitherPunk.png"
-   inkscape:export-xdpi="367.39639"
-   inkscape:export-ydpi="367.39639">
+   inkscape:export-xdpi="368.2005"
+   inkscape:export-ydpi="368.2005">
   <defs
      id="defs2">
     <linearGradient
@@ -42,12 +42,36 @@
        inkscape:collect="always"
        xlink:href="#linearGradient863"
        id="linearGradient865"
-       x1="87.814194"
-       y1="23.569952"
-       x2="87.814194"
-       y2="107.48586"
+       x1="179.36191"
+       y1="7.3034058"
+       x2="179.60094"
+       y2="104.63039"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.95482357,0,0,0.57360126,-206.13165,18.948053)" />
+       gradientTransform="matrix(0.95482357,0,0,0.54173806,-206.13165,20.457491)" />
+    <rect
+       x="22.367517"
+       y="35.741909"
+       width="177.32599"
+       height="53.728161"
+       id="rect945-5" />
+    <rect
+       x="22.367517"
+       y="35.741909"
+       width="177.32599"
+       height="53.728161"
+       id="rect1052" />
+    <rect
+       x="22.367517"
+       y="35.741909"
+       width="177.32599"
+       height="53.728161"
+       id="rect945-5-2" />
+    <rect
+       x="22.367517"
+       y="35.741909"
+       width="177.32599"
+       height="53.728161"
+       id="rect1116" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -57,16 +81,16 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.159286"
-     inkscape:cx="368.97302"
-     inkscape:cy="236.86679"
+     inkscape:cx="341.80112"
+     inkscape:cy="239.45459"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="false"
-     inkscape:window-width="1635"
-     inkscape:window-height="943"
-     inkscape:window-x="259"
-     inkscape:window-y="208"
+     inkscape:window-width="1748"
+     inkscape:window-height="1006"
+     inkscape:window-x="403"
+     inkscape:window-y="378"
      inkscape:window-maximized="0"
      inkscape:snap-others="false" />
   <metadata
@@ -85,18 +109,28 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-1.3683472,-17.360832)">
+     transform="translate(-1.3683472,-18.958439)">
     <rect
-       style="fill:url(#linearGradient865);fill-opacity:1;stroke-width:0.00195807;stroke-miterlimit:5.55555"
+       style="fill:url(#linearGradient865);fill-opacity:1;stroke-width:0.00190291;stroke-miterlimit:5.55555"
        id="rect849"
        width="207.40541"
-       height="65.737411"
+       height="62.085735"
        x="-208.77376"
-       y="17.360832"
-       transform="scale(-1,1)" />
+       y="18.958439"
+       transform="scale(-1,1)"
+       inkscape:export-xdpi="367"
+       inkscape:export-ydpi="367" />
+    <text
+       xml:space="preserve"
+       id="text943-8-2"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.39999999999999858px;line-height:1.25;font-family:BlackwoodCastle;-inkscape-font-specification:BlackwoodCastle;white-space:pre;shape-inside:url(#rect945-5-2);fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.999952;stroke-miterlimit:4;stroke-dasharray:none;"
+       transform="matrix(1.0640513,0,0,1.0640513,47.322922,-3.468504)"><tspan
+         x="22.367188"
+         y="58.357785"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;font-family:BlackwoodCastle;-inkscape-font-specification:BlackwoodCastle;fill:#000000;stroke:#000000;stroke-width:0.999952;stroke-miterlimit:4;stroke-dasharray:none">DitherPunk.jl</tspan></tspan></text>
     <g
        id="g875"
-       transform="translate(1.2348784,-1.6756628)">
+       transform="translate(1.2348784,-1.9038942)">
       <g
          id="g941"
          transform="matrix(0.54173925,0,0,0.54173925,-21.642763,-6.715875)">
@@ -124,6 +158,14 @@
          id="text943"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.39999999999999858px;line-height:1.25;font-family:BlackwoodCastle;-inkscape-font-specification:BlackwoodCastle;white-space:pre;shape-inside:url(#rect945);fill:#ffffff;fill-opacity:1;stroke:none;"
          transform="matrix(1.0640513,0,0,1.0640513,45.135744,-2.6229432)"><tspan
+           x="22.367188"
+           y="58.357785"><tspan
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;font-family:BlackwoodCastle;-inkscape-font-specification:BlackwoodCastle;fill:#ffffff">DitherPunk.jl</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         id="text943-8"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.39999999999999858px;line-height:1.25;font-family:BlackwoodCastle;-inkscape-font-specification:BlackwoodCastle;white-space:pre;shape-inside:url(#rect945-5);fill:#ffffff;fill-opacity:1;stroke:none;"
+         transform="matrix(1.0640513,0,0,1.0640513,45.189435,-2.7720077)"><tspan
            x="22.367188"
            y="58.357785"><tspan
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;font-family:BlackwoodCastle;-inkscape-font-specification:BlackwoodCastle;fill:#ffffff">DitherPunk.jl</tspan></tspan></text>

@@ -25,7 +25,11 @@ makedocs(;
         canonical="https://adrhill.github.io/DitherPunk.jl",
         assets=String[],
     ),
-    pages=["Home" => "index.md", "Gallery" => "generated/gallery.md"],
+    pages=[
+        "Home" => "index.md",
+        "Examples" => "generated/simple_example.jl",
+        "Gallery" => "generated/gallery.md",
+    ],
 )
 
 deploydocs(; repo="github.com/adrhill/DitherPunk.jl")

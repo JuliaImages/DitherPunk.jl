@@ -32,4 +32,4 @@ makedocs(;
     ],
 )
 
-deploydocs(; repo="github.com/adrhill/DitherPunk.jl")
+deploydocs(; repo="github.com/adrhill/DitherPunk.jl", devbranch="master", branch="gh-pages")

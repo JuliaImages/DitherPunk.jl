@@ -10,15 +10,15 @@ Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
 
 [compat]
+BlockArrays = "0.15.2"
 Images = "0.23.3"
 UnicodePlots = "1.3.0"
 julia = "1.6"
 
 [extras]
-FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
 ImageInTerminal = "d8c32880-2388-543b-8c61-d9f865259254"
 SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["FileIO", "Test", "ImageInTerminal", "SafeTestsets"]
+test = ["Test", "ImageInTerminal", "SafeTestsets"]

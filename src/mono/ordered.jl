@@ -23,17 +23,19 @@ end
 Ordered dithering using the Bayer matrix as a threshold map.
 """
 function bayer_dithering(img::AbstractMatrix{<:Gray}; level=1, kwargs...)::BitMatrix
-    # Get Bayer matri and normalize it to [0, 1]
+    # Get Bayer matrix and normalize it
     bayer = bayer_matrix(level)
-    map = bayer / maximum(bayer)
+    mat = bayer / (2^(2 * level + 2))
 
-    return ordered_dithering(img, map; kwargs...)
+    return ordered_dithering(img, mat; kwargs...)
 end
 
 """
 Contruct (un-normalized) Bayer matrices through recursive definition.
 """
 function bayer_matrix(n::Int)::AbstractMatrix{Int}
+    n < 0 && throw(DomainError(n, "Bayer matrix only defined for n ≥ 0."))
+
     if n == 0
         b = [0 2; 3 1]
     else

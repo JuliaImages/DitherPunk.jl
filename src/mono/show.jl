@@ -17,20 +17,31 @@ upscale(img::BitMatrix, scale::Int)::BitMatrix = mortar(fill.(img, scale, scale)
 in braille through UnicodePlots.
 """
 function print_braille(
-    img::BitMatrix; title="DitherPunk.jl", color=:white, labels=false, kwargs...
+    img::BitMatrix;
+    invert=false,
+    title="DitherPunk.jl",
+    color=:white,
+    labels=false,
+    kwargs...,
 )
     h, w = size(img)
 
-    show(spy(
-        img;
-        # Braille character ↝ 4x2 grid
-        maxheight=ceil(Int, h / 4),
-        maxwidth=ceil(Int, w / 2),
-        title=title,
-        color=color,
-        labels=labels,
-        kwargs...,
-    ))
+    # Optionally invert Binary image before printing
+    _img = copy(img)
+    invert && (_img .= iszero.(_img))
+
+    show(
+        spy(
+            _img;
+            # Braille character ↝ 4x2 grid
+            maxheight=ceil(Int, h / 4),
+            maxwidth=ceil(Int, w / 2),
+            title=title,
+            color=color,
+            labels=labels,
+            kwargs...,
+        ),
+    )
     return nothing
 end
 

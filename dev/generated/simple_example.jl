@@ -20,7 +20,5 @@ show_dither(dither; scale=3)
 
 print_braille(dither)
 
-print_braille(dither; invert=true)
-
 # This file was generated using Literate.jl, https://github.com/fredrikekre/Literate.jl
 

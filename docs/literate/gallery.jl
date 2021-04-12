@@ -1,12 +1,9 @@
+# # Gallery
+# A simple linear gradient works well to reveal the characteristic patterns of
+# different dithering algorithms.
 using DitherPunk
 using Images
-using ImageTransformations
-using ImageContrastAdjustment
-using TestImages
 
-# # Gallery
-# A simple gradient works well to reveal the characteristic patterns of
-# different dithering algorithms.
 img = gradient_image(50, 400)
 
 # ## Threshold dithering

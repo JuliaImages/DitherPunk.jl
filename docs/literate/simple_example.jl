@@ -29,11 +29,11 @@ Gray.(dither)
 # pattern. Some algorithms work better on smaller images, for example `bayer_dithering`,
 # another [ordered dithering algorithm](https://en.wikipedia.org/wiki/Ordered_dithering)
 # that leads to characteristic cross-hatch patterns.
-img = imresize(img; ratio=1 / 4) # downscale
-dither = bayer_dithering(img)
+img = imresize(img; ratio=1 / 5) # downscale
+dither = bayer_dithering(img);
 
-# The function `show_dither` casts the resulting `BitMatrix` to `Gray.()`
-# and provides an additional integer scaling parameter to print "chunkier" pixels.
+# The function `show_dither` casts to `Gray` and provides an additional integer scaling
+# parameter to print "chunkier" pixels.
 show_dither(dither; scale=3)
 
 # Alternatively, the images can also be printed to console though `UnicodePlots`

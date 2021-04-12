@@ -30,7 +30,7 @@ makedocs(;
         "Home" => "index.md",
         "Get started" => "generated/simple_example.md",
         "Gallery" => "generated/gallery.md",
-        "API Reference" => "index.md",
+        "API Reference" => "api.md",
     ],
 )
 

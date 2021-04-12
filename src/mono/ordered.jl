@@ -3,15 +3,15 @@ Ordered dithering using threshold maps.
 https://en.wikipedia.org/wiki/Ordered_dithering#Pre-calculated_threshold_maps
 """
 function ordered_dithering(
-    img::AbstractMatrix{<:Gray}, map::AbstractMatrix; invert_map=true
+    img::AbstractMatrix{<:Gray}, mat::AbstractMatrix; invert_map=false
 )::BitMatrix
     h_img, w_img = size(img)
-    h_map, w_map = size(map)
+    h_mat, w_mat = size(mat)
 
-    # create threshold image by repeating map
-    repeat_rows = ceil(Int, h_img / h_map)
-    repeat_cols = ceil(Int, w_img / w_map)
-    threshold = repeat(map, repeat_rows, repeat_cols)[1:h_img, 1:w_img]
+    # Create full threshold map by repeating threshold matrix `mat` in x and y directions
+    repeat_rows = ceil(Int, h_img / h_mat)
+    repeat_cols = ceil(Int, w_img / w_mat)
+    threshold = repeat(mat, repeat_rows, repeat_cols)[1:h_img, 1:w_img]
 
     # Invert map ∈ [0, 1] if specified
     invert_map && (threshold .= 1 .- threshold)

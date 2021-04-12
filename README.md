@@ -6,8 +6,13 @@
 | [![][docs-stab-img]][docs-stab-url] [![][docs-dev-img]][docs-dev-url] | [![][ci-img]][ci-url] [![][codecov-img]][codecov-url] |
 
 
-A dithering / halftoning package inspired by [Lucas Pope's Obra Dinn](https://obradinn.com) and this [blog post by Surma](https://surma.dev/things/ditherpunk/).
+A [dithering / digital halftoning](https://en.wikipedia.org/wiki/Dither) package inspired by [Lucas Pope's Obra Dinn](https://obradinn.com) and [Surma](https://surma.dev/things/ditherpunk/).
 
+## Examples
+Check out [the gallery](https://adrhill.github.io/DitherPunk.jl/dev/generated/gallery/) for an overview of currently implemented algorithms.
+
+
+**Feel free to leave a GitHub Issue if you know of any cool  algorithms you'd like to see implemented! 🔬🔧**
 
 [docs-stab-img]: https://img.shields.io/badge/docs-stable-blue.svg
 [docs-stab-url]: https://adrhill.github.io/DitherPunk.jl/stable

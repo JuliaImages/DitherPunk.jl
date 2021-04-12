@@ -5,24 +5,21 @@ using ImageContrastAdjustment
 using TestImages
 
 # # Gallery
-# A simple gradient works well to show the characteristic patterns of
-# different dithering methods.
+# A simple gradient works well to reveal the characteristic patterns of
+# different dithering algorithms.
 img = gradient_image(50, 400)
 
 # ## Threshold dithering
 # ### `threshold_dithering`
-# Threshold at a constant value `threshold`, which defaults to `0.5`.
 dither = threshold_dithering(img)
 show_dither(dither; scale=2)
 
 # ### `random_noise_dithering`
-# Use random noise as a threshold map.
 dither = random_noise_dithering(img)
 show_dither(dither; scale=2)
 
 # ## Ordered dithering on small images
 # ### `bayer_dithering`
-# Use Bayer-matrices to construct the threshold map.
 dither = bayer_dithering(img)
 show_dither(dither; scale=2)
 

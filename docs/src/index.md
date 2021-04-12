@@ -2,14 +2,6 @@
 CurrentModule = DitherPunk
 ```
 
-# DitherPunk
+# DitherPunk.jl
 
-Documentation for [DitherPunk](https://github.com/adrhill/DitherPunk.jl). A {dithering / digital halftoning} package inspired by the artstyle of [Obra Dinn by Lucas Pope](https://obradinn.com) and [this article by Surma](https://surma.dev/things/ditherpunk/).
-
-
-```@index
-```
-
-```@autodocs
-Modules = [DitherPunk]
-```
+Documentation for [DitherPunk.jl](https://github.com/adrhill/DitherPunk.jl). A [dithering / digital halftoning](https://en.wikipedia.org/wiki/Dither) package inspired by [Lucas Pope's Obra Dinn](https://obradinn.com) and [Surma](https://surma.dev/things/ditherpunk/).

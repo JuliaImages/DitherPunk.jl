@@ -28,8 +28,9 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
-        "Examples" => "generated/simple_example.md",
+        "Get started" => "generated/simple_example.md",
         "Gallery" => "generated/gallery.md",
+        "API Reference" => "index.md",
     ],
 )
 

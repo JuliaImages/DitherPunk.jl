@@ -39,6 +39,3 @@ show_dither(dither; scale=3)
 # Alternatively, the images can also be printed to console though `UnicodePlots`
 # by using `print_braille`
 print_braille(dither)
-
-# which can also be inverted if desired.
-print_braille(dither; invert=true)

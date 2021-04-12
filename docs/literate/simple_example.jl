@@ -10,27 +10,35 @@ using TestImages
 # from [*TestImages.jl*](https://testimages.juliaimages.org).
 img = testimage("lighthouse")
 
-# Downscaling and normalizing the image can emphasize the effect of the algorithms.
-img = Gray.(img)                                # covert to grayscale
-img = imresize(img; ratio=1 / 4)                # downscale
+# Normalizing the image can emphasize the effect of the algorithms.
+img = Gray.(img) # covert to grayscale
 img = adjust_histogram(img, LinearStretching()) # normalize
 
 # ## Dithering
-# We can now apply dithering algorithms of our choice, for example `bayer_dithering`,
-# an [ordered dithering algorithm](https://en.wikipedia.org/wiki/Ordered_dithering)
-# that leads to characteristic cross-hatch patterns.
-dither = bayer_dithering(img)
+# We can now apply dithering algorithms of our choice,
+# for example `balanced_centered_point_dithering`.
+dither = balanced_centered_point_dithering(img);
 
 # ## Visualizing the result
 # The dithering algorithms return binary matrices of type `BitMatrix`.
 # These can be shown by casting them to grayscale using `Gray.()`.
-# The function `show_dither` provides an additional integer scaling parameter to print
-# "chunkier" pixels.
-show_dither(dither; scale=2)
+Gray.(dither)
+
+# ## Working with small images
+# The previous `balanced_centered_point_dithering` algorithm has a large characteristic
+# pattern. Some algorithms work better on smaller images, for example `bayer_dithering`,
+# another [ordered dithering algorithm](https://en.wikipedia.org/wiki/Ordered_dithering)
+# that leads to characteristic cross-hatch patterns.
+img = imresize(img; ratio=1 / 4) # downscale
+dither = bayer_dithering(img)
+
+# The function `show_dither` casts the resulting `BitMatrix` to `Gray.()`
+# and provides an additional integer scaling parameter to print "chunkier" pixels.
+show_dither(dither; scale=3)
 
 # Alternatively, the images can also be printed to console though `UnicodePlots`
 # by using `print_braille`
 print_braille(dither)
 
-# which can also be inverted if so desired.
+# which can also be inverted if desired.
 print_braille(dither; invert=true)

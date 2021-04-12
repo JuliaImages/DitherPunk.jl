@@ -13,8 +13,8 @@ dither = balanced_centered_point_dithering(img);
 
 Gray.(dither)
 
-img = imresize(img; ratio=1 / 4) # downscale
-dither = bayer_dithering(img)
+img = imresize(img; ratio=1 / 5) # downscale
+dither = bayer_dithering(img);
 
 show_dither(dither; scale=3)
 

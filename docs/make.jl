@@ -1,5 +1,6 @@
 using DitherPunk
-using Documenter, Literate
+using Documenter
+using Literate
 
 EXAMPLE_DIR = joinpath(@__DIR__, "literate")
 OUT_DIR = joinpath(@__DIR__, "src/generated")
@@ -27,9 +28,9 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
-        "Examples" => "generated/simple_example.jl",
+        "Examples" => "generated/simple_example.md",
         "Gallery" => "generated/gallery.md",
     ],
 )
 
-deploydocs(; repo="github.com/adrhill/DitherPunk.jl", devbranch="master", branch="gh-pages")
+deploydocs(; repo="github.com/adrhill/DitherPunk.jl")

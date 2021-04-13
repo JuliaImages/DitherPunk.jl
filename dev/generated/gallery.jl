@@ -1,28 +1,21 @@
 using DitherPunk
 using Images
 
-img = gradient_image(50, 400)
+threshold_dithering |> test_on_gradient
 
-dither = threshold_dithering(img)
-show_dither(dither; scale=2)
+random_noise_dithering |> test_on_gradient
 
-dither = random_noise_dithering(img)
-show_dither(dither; scale=2)
+bayer_dithering |> test_on_gradient
 
-dither = bayer_dithering(img)
-show_dither(dither; scale=2)
+img = gradient_image(100, 800)
+dithers = [Gray.(bayer_dithering(img; level=level)) for level in 0:4]
+mosaicview([img, dithers...])
 
-imgs = [show_dither(bayer_dithering(img; level=level); scale=2) for level in 0:4]
-mosaicview(imgs...)
+clustered_dots_dithering |> test_on_gradient
 
-dither = clustered_dots_dithering(img)
-show_dither(dither; scale=2)
+balanced_centered_point_dithering |> test_on_gradient
 
-dither = balanced_centered_point_dithering(img)
-show_dither(dither; scale=2)
-
-dither = rhombus_dithering(img)
-show_dither(dither; scale=2)
+rhombus_dithering |> test_on_gradient
 
 # This file was generated using Literate.jl, https://github.com/fredrikekre/Literate.jl
 

@@ -10,8 +10,9 @@ end
 """
 Upscale image by repeating individual pixels.
 """
-upscale(img::BitMatrix, scale::Int)::BitMatrix = mortar(fill.(img, scale, scale))
-
+function upscale(img::T, scale::Int)::T where {T <: AbstractMatrix}
+    return mortar(fill.(img, scale, scale))
+end
 """
 (Ab)use `spy` to interpret image as sparse array and print "sparsity pattern"
 in braille through UnicodePlots.

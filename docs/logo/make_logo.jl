@@ -5,17 +5,15 @@ using ImageTransformations
 using ImageContrastAdjustment
 
 # Load image & preprocess
-scale = 3
 img_color = load("./docs/logo/DitherPunk.png")
-img_color = imresize(img_color; ratio=scale / 5)
-img = imresize(img_color; ratio=1 / scale)
-img = Gray.(img)
+img_color = imresize(img_color; ratio=1 / 5)
+img = Gray.(img_color)
 img = adjust_histogram(img, LinearStretching())
 
 h, w = size(img_color)
 
 # Apply dither
-dither = upscale(rhombus_dithering(img), scale)
+dither = rhombus_dithering(img)
 dither_color = HSV.(RGB.(dither))
 
 # Define Julia Dots colors
@@ -49,4 +47,5 @@ for r in 1:h
     end
 end
 
+dither_color = upscale(dither_color, 3)
 save("./docs/logo/DitheredPunk.png", dither_color)

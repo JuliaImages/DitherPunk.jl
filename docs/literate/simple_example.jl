@@ -1,16 +1,18 @@
+# # Example
+# ## Preprocessing
+# We start out by loading an image, in this case the lighthouse
+# from [*TestImages.jl*](https://testimages.juliaimages.org).
 using DitherPunk
 using Images
 using ImageTransformations
 using ImageContrastAdjustment
 using TestImages
 
-# # Example
-# ## Preprocessing
-# We start out by loading an image, in this case the lighthouse
-# from [*TestImages.jl*](https://testimages.juliaimages.org).
 img = testimage("lighthouse")
 
 # Normalizing the image can emphasize the effect of the algorithms.
+# It is highly recommended to play around with algorithms such as those provided by
+# [ImageContrastAdjustment.jl](https://juliaimages.org/ImageContrastAdjustment.jl/stable/)
 img = Gray.(img) # covert to grayscale
 img = adjust_histogram(img, LinearStretching()) # normalize
 

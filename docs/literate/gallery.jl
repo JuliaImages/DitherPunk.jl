@@ -1,42 +1,36 @@
-# # Gallery
-# A simple linear gradient works well to reveal the characteristic patterns of
-# different dithering algorithms.
 using DitherPunk
 using Images
 
-img = gradient_image(50, 400)
-
+# # Gallery
+# A simple linear gradient works well to reveal the characteristic patterns of
+# different dithering algorithms.
+#
 # ## Threshold dithering
 # ### `threshold_dithering`
-dither = threshold_dithering(img)
-show_dither(dither; scale=2)
+threshold_dithering |> test_on_gradient
 
 # ### `random_noise_dithering`
-dither = random_noise_dithering(img)
-show_dither(dither; scale=2)
+random_noise_dithering |> test_on_gradient
 
 # ## Ordered dithering on small images
 # ### `bayer_dithering`
-dither = bayer_dithering(img)
-show_dither(dither; scale=2)
+bayer_dithering |> test_on_gradient
 
 # The order of the Bayer-matrix can be specified through the parameter `level`,
 # which defaults to `1`.
-imgs = [show_dither(bayer_dithering(img; level=level); scale=2) for level in 0:4]
-mosaicview(imgs...)
+img = gradient_image(100, 800)
+dithers = [Gray.(bayer_dithering(img; level=level)) for level in 0:4]
+mosaicview([img, dithers...])
 
 # ## Ordered dithering on large images
 # The following methods have large characteristic patterns and are therefore
 # better suited for large images.
 #
 # ### `clustered_dots_dithering`
-dither = clustered_dots_dithering(img)
-show_dither(dither; scale=2)
+clustered_dots_dithering |> test_on_gradient
 
 # ### `balanced_centered_point_dithering`
-dither = balanced_centered_point_dithering(img)
-show_dither(dither; scale=2)
+balanced_centered_point_dithering |> test_on_gradient
 
 # ### `rhombus_dithering`
-dither = rhombus_dithering(img)
-show_dither(dither; scale=2)
+rhombus_dithering |> test_on_gradient

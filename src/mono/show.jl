@@ -46,9 +46,18 @@ function print_braille(
 end
 
 """
-Create grayscale gradient image of specified dimensions.
+Create linear grayscale gradient image of specified dimensions.
 """
 function gradient_image(height, width)
     row = reshape(range(0; stop=1, length=width), 1, width)
     return img = Gray.(vcat(repeat(row, height)))
+end
+
+"""
+Test dithering algorithm on linear grayscale gradient and show stacked plot.
+"""
+function test_on_gradient(alg::Function)
+    img = gradient_image(100, 800)
+    dither = Gray.(alg(img))
+    return mosaicview([img, dither], ncol=1)
 end

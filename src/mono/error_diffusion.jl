@@ -8,6 +8,9 @@ function error_diffusion(
     h, w = size(_img)
     dither = BitArray(undef, h, w) # initialized to zero
 
+    # Get OffsetMatrix indices
+    drs, dcs = indices(stencil)
+
     for r in 1:h
         for c in 1:w
             px = _img[r, c]
@@ -22,7 +25,6 @@ function error_diffusion(
             end
 
             # Diffuse "error" to neighborhood in stencil
-            drs, dcs = indices(stencil)
             for dr in drs
                 for dc in dcs
                     if (r + dr > 0) &&

@@ -8,7 +8,7 @@ as a per-pixel threshold map.
 Optionally, this final threshold map can be inverted by selecting `invert_map=true`.
 """
 function ordered_dithering(
-    img::AbstractMatrix{<:Gray}, mat::AbstractMatrix; invert_map=false, to_linear=false
+    img::AbstractMatrix{<:Gray}, mat::AbstractMatrix; to_linear=false, invert_map=false
 )::BitMatrix
     # Create full threshold map by repeating threshold matrix `mat` in x and y directions
     h, w = size(img)
@@ -25,6 +25,8 @@ function ordered_dithering(
 end
 
 """
+    tile_matrix(h, w, mat)
+
 Repeatedly tile a smaller matrix `mat` to fill out an image of height `h` and width `w`.
 """
 function tile_matrix(h, w, mat)
@@ -35,6 +37,8 @@ function tile_matrix(h, w, mat)
 end
 
 """
+    bayer_dithering(img::AbstractMatrix{<:Gray}; level=1, to_linear=false, invert_map=false)::BitMatrix
+
 Ordered dithering using the Bayer matrix as a threshold matrix.
 The Bayer matrix is of dimension ``2^{n+1} \\times 2^{n+1}``, where ``n`` is the `level`,
 which defaults to `1`.
@@ -48,6 +52,8 @@ function bayer_dithering(img::AbstractMatrix{<:Gray}; level=1, kwargs...)::BitMa
 end
 
 """
+    bayer_matrix(n::Int)::AbstractMatrix{Int}
+
 Contruct (un-normalized) Bayer matrices of level `n` through recursive definition.
 """
 function bayer_matrix(n::Int)::AbstractMatrix{Int}
@@ -63,6 +69,8 @@ function bayer_matrix(n::Int)::AbstractMatrix{Int}
 end
 
 """
+    clustered_dots_dithering(img; to_linear=false, invert_map=false)
+
 Clustered dots ordered dithering.
 Uses ``6 \\times 6`` threshold matrix `CLUSTERED_DOTS_MAT`.
 """
@@ -80,6 +88,8 @@ CLUSTERED_DOTS_MAT =
     ]//37
 
 """
+    central_white_point_dithering(img; to_linear=false, invert_map=false)
+
 Central white point ordered dithering.
 Uses ``6 \\times 6`` threshold matrix `CENTRAL_WHITE_POINT_MAT`.
 """
@@ -97,6 +107,8 @@ CENTRAL_WHITE_POINT_MAT =
     ]//37
 
 """
+    balanced_centered_point_dithering(img; to_linear=false, invert_map=false)
+
 Balanced centered point ordered dithering.
 Uses ``6 \\times 6`` threshold matrix `BALANCED_CENTERED_POINT_MAT`.
 """
@@ -114,6 +126,8 @@ BALANCED_CENTERED_POINT_MAT =
     ]//37
 
 """
+    rhombus_dithering(img; to_linear=false, invert_map=false)
+
 Diagonal ordered matrix with balanced centered points, ordered dithering.
 Uses ``8 \\times 8`` threshold matrix.
 """

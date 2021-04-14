@@ -4,7 +4,6 @@ using Images
 using Random
 
 # Imports for display functions
-using BlockArrays: mortar
 using UnicodePlots: spy
 
 # Binary dithering algorithms

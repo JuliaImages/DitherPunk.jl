@@ -21,12 +21,6 @@ git-tree-sha1 = "2fbfa5f372352f92191b63976d070dc7195f47a4"
 uuid = "4fba245c-0d91-5ea0-9b3e-6abc04ee57a9"
 version = "3.1.7"
 
-[[ArrayLayouts]]
-deps = ["FillArrays", "LinearAlgebra", "SparseArrays"]
-git-tree-sha1 = "d68733034d1d5d2cd3ea68e2b4cb11f456f6d015"
-uuid = "4c555306-a7a7-4459-81d9-ec55ddd5c99a"
-version = "0.6.5"
-
 [[Artifacts]]
 uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
 
@@ -44,12 +38,6 @@ version = "0.4.3"
 
 [[Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
-
-[[BlockArrays]]
-deps = ["ArrayLayouts", "FillArrays", "LinearAlgebra"]
-git-tree-sha1 = "8ecf08b50d71b3fcf3272ee935b3eda653bad5bb"
-uuid = "8e7c35d0-a365-5155-bbbb-fb81a777f24e"
-version = "0.15.2"
 
 [[CatIndices]]
 deps = ["CustomUnitRanges", "OffsetArrays"]
@@ -174,12 +162,6 @@ deps = ["Pkg", "Requires", "UUIDs"]
 git-tree-sha1 = "b4fdad5fe06e0226348301b5163925ac1ae8b64b"
 uuid = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
 version = "1.6.5"
-
-[[FillArrays]]
-deps = ["LinearAlgebra", "Random", "SparseArrays"]
-git-tree-sha1 = "31939159aeb8ffad1d4d8ee44d07f8558273120a"
-uuid = "1a297f60-69ca-5386-bcde-b61e274b549b"
-version = "0.11.7"
 
 [[FixedPointNumbers]]
 deps = ["Statistics"]

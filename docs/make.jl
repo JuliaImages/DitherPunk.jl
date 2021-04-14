@@ -5,7 +5,7 @@ using Literate
 EXAMPLE_DIR = joinpath(@__DIR__, "literate")
 OUT_DIR = joinpath(@__DIR__, "src/generated")
 
-## Use Literate.jl to generate docs and notebooks of examples
+# Use Literate.jl to generate docs and notebooks of examples
 for example in readdir(EXAMPLE_DIR)
     EXAMPLE = joinpath(EXAMPLE_DIR, example)
 

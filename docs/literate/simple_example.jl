@@ -26,13 +26,21 @@ dither = balanced_centered_point_dithering(img);
 # These can be shown by casting them to grayscale using `Gray.()`.
 Gray.(dither)
 
+# ## Color spaces
+# Dithering in sRGB color space can lead to results that are too bright.
+# To obtain a dithered image that more closely matches the human perception of brightness,
+# grayscale images can be converted to a linear color space using `srgb2linear`.
+# Alternatively, most dithering algorithms accept the boolean keyword argument `to_linear`.
+dither = balanced_centered_point_dithering(img, to_linear=true)
+Gray.(dither)
+
 # ## Working with small images
 # The previous `balanced_centered_point_dithering` algorithm has a large characteristic
 # pattern. Some algorithms work better on smaller images, for example `bayer_dithering`,
 # another [ordered dithering algorithm](https://en.wikipedia.org/wiki/Ordered_dithering)
 # that leads to characteristic cross-hatch patterns.
 img = imresize(img; ratio=1 / 5) # downscale
-dither = bayer_dithering(img);
+dither = bayer_dithering(img, to_linear=true);
 
 # The function `show_dither` casts to `Gray` and provides an additional integer scaling
 # parameter to print "chunkier" pixels.

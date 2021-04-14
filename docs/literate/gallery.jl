@@ -47,3 +47,16 @@ test_on_gradient(balanced_centered_point_dithering)
 
 # ### `rhombus_dithering`
 test_on_gradient(rhombus_dithering)
+
+# ## Error diffusion
+# ### `simple_error_diffusion`
+test_on_gradient(simple_error_diffusion)
+
+# ### `floyd_steinberg_diffusion`
+test_on_gradient(floyd_steinberg_diffusion)
+
+# ### `jarvis_judice_diffusion`
+test_on_gradient(jarvis_judice_diffusion)
+
+# ### `atkinson_diffusion`
+test_on_gradient(atkinson_diffusion)

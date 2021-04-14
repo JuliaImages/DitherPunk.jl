@@ -10,11 +10,18 @@ println("Test image:")
 imshow(srgb)
 
 algs = [
+    # threshold methods
     threshold_dithering,
     white_noise_dithering,
+    # ordered dithering
     clustered_dots_dithering,
     balanced_centered_point_dithering,
     rhombus_dithering,
+    # error error_diffusion
+    simple_error_diffusion,
+    floyd_steinberg_diffusion,
+    jarvis_judice_diffusion,
+    atkinson_diffusion,
 ]
 
 for alg in algs

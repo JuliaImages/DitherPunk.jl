@@ -8,16 +8,20 @@ as a per-pixel threshold map.
 Optionally, this final threshold map can be inverted by selecting `invert_map=true`.
 """
 function ordered_dithering(
-    img::AbstractMatrix{<:Gray}, mat::AbstractMatrix; invert_map=false
+    img::AbstractMatrix{<:Gray}, mat::AbstractMatrix; invert_map=false, to_linear=false
 )::BitMatrix
     # Create full threshold map by repeating threshold matrix `mat` in x and y directions
     h, w = size(img)
     threshold = tile_matrix(h, w, mat)
 
+    # Optionally cast to linear colorspace
+    _img = copy(img)
+    to_linear && srgb2linear!(_img)
+
     # Optionally invert map ∈ [0, 1]
     invert_map && (threshold .= 1 .- threshold)
 
-    return img .> threshold
+    return _img .> threshold
 end
 
 """

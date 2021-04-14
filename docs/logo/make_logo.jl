@@ -13,7 +13,7 @@ img = adjust_histogram(img, LinearStretching())
 h, w = size(img_color)
 
 # Apply dither
-dither = rhombus_dithering(img, to_linear=true)
+dither = rhombus_dithering(img; to_linear=true)
 dither_color = HSV.(RGB.(dither))
 
 # Define Julia Dots colors

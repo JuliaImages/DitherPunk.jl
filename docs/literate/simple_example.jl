@@ -31,7 +31,7 @@ Gray.(dither)
 # To obtain a dithered image that more closely matches the human perception of brightness,
 # grayscale images can be converted to a linear color space using `srgb2linear`.
 # Alternatively, most dithering algorithms accept the boolean keyword argument `to_linear`.
-dither = balanced_centered_point_dithering(img, to_linear=true)
+dither = balanced_centered_point_dithering(img; to_linear=true)
 Gray.(dither)
 
 # ## Working with small images
@@ -40,7 +40,7 @@ Gray.(dither)
 # another [ordered dithering algorithm](https://en.wikipedia.org/wiki/Ordered_dithering)
 # that leads to characteristic cross-hatch patterns.
 img = imresize(img; ratio=1 / 5) # downscale
-dither = bayer_dithering(img, to_linear=true);
+dither = bayer_dithering(img; to_linear=true);
 
 # The function `show_dither` casts to `Gray` and provides an additional integer scaling
 # parameter to print "chunkier" pixels.

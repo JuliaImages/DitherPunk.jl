@@ -13,8 +13,8 @@ img = gradient_image(100, 800)
 # ### `threshold_dithering`
 test_on_gradient(threshold_dithering)
 
-# ### `random_noise_dithering`
-test_on_gradient(random_noise_dithering)
+# ### `white_noise_dithering`
+test_on_gradient(white_noise_dithering)
 
 # ## Ordered dithering on small images
 # ### `bayer_dithering`

@@ -5,13 +5,13 @@ using ImageInTerminal
 w = 200
 h = 4 * 4 # multiple of 4 for unicode braille print
 
-img = gradient_image(h, w)
+img, srgb = gradient_image(h, w)
 println("Test image:")
-imshow(img)
+imshow(srgb)
 
 algs = [
     threshold_dithering,
-    random_noise_dithering,
+    white_noise_dithering,
     clustered_dots_dithering,
     balanced_centered_point_dithering,
     rhombus_dithering,

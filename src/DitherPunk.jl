@@ -11,6 +11,7 @@ include("mono/colorspaces.jl")
 include("mono/threshold.jl")
 include("mono/ordered.jl")
 include("mono/show.jl")
+include("mono/eval.jl")
 
 export threshold_dithering, random_noise_dithering
 export ordered_dithering, bayer_dithering

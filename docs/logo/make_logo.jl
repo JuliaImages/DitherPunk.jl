@@ -23,7 +23,7 @@ PURPLE = HSV{Float32}(281.1236f0, 0.5056818f0, 0.6901961f0)
 GITHUB = HSV{Float32}(215.0f0, 0.26086953f0, 0.18039216f0)
 
 # Manually saturate & darken colors as dither brightens percieved color.
-DARK_RED = HSV{Float32}(RED.h, 0.8, 0.75)
+DARK_RED = HSV{Float32}(RED.h, 0.75, 0.75)
 DARK_GREEN = HSV{Float32}(GREEN.h, 0.75, 0.55)
 DARK_PURPLE = HSV{Float32}(PURPLE.h, 0.6, 0.65)
 
@@ -48,4 +48,4 @@ for r in 1:h
 end
 
 dither_color = upscale(dither_color, 3)
-save("./docs/logo/DitheredPunk.png", RGB.(dither_color));
+save("./docs/logo/DitheredPunk.png", RGB.(dither_color))

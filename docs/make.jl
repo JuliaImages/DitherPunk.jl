@@ -29,7 +29,10 @@ makedocs(;
     pages=[
         "Home" => "index.md",
         "Get started" => "generated/simple_example.md",
-        "Gallery" => "generated/gallery.md",
+        "Gallery" => Any[
+            "Gradient" => "generated/gallery_gradient.md",
+            "Images" => "generated/gallery_images.md",
+        ],
         "API Reference" => "api.md",
     ],
 )

@@ -135,7 +135,7 @@ deps = ["Random", "Serialization", "Sockets"]
 uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 
 [[DitherPunk]]
-deps = ["Images", "Random", "UnicodePlots"]
+deps = ["Images", "OffsetArrays", "Random", "UnicodePlots"]
 path = ".."
 uuid = "b8f752a5-abd5-43b6-a55b-e75efda20de0"
 version = "0.1.0"
@@ -483,6 +483,12 @@ deps = ["Distributed", "Printf"]
 git-tree-sha1 = "6e9c89cba09f6ef134b00e10625590746ba1e036"
 uuid = "92933f4c-e287-5a05-a399-4b506db050ca"
 version = "1.5.0"
+
+[[QuartzImageIO]]
+deps = ["ColorVectorSpace", "FileIO", "ImageCore", "Libdl"]
+git-tree-sha1 = "29c1803a9d6d1c7c2130610df5da953c49366976"
+uuid = "dca85d43-d64c-5e67-8c65-017450d5d020"
+version = "0.7.3"
 
 [[REPL]]
 deps = ["InteractiveUtils", "Markdown", "Sockets", "Unicode"]

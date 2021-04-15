@@ -25,6 +25,8 @@ test_on_gradient(floyd_steinberg_diffusion)
 
 test_on_gradient(jarvis_judice_diffusion)
 
+test_on_gradient(stucki_diffusion)
+
 test_on_gradient(atkinson_diffusion)
 
 # This file was generated using Literate.jl, https://github.com/fredrikekre/Literate.jl

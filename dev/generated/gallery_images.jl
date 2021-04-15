@@ -6,7 +6,6 @@ using TestImages
 
 function preprocess(img)
     img = Gray.(img)
-    img .= adjust_histogram(img, LinearStretching()) # normalize
     return imresize(img; ratio=1 / 2)
 end
 
@@ -16,20 +15,22 @@ file_names = [
 imgs = [preprocess(testimage(file)) for file in file_names]
 mosaicview(imgs...; ncol=3)
 
-function test_on_images(alg)
-    dithers = [Gray.(alg(img; to_linear=true)) for img in imgs]
+function test_on_images(alg; to_linear=false)
+    dithers = [Gray.(alg(img; to_linear)) for img in imgs]
     return mosaicview(dithers...; ncol=3)
 end
 
 test_on_images(threshold_dithering)
 
-test_on_images(white_noise_dithering)
+test_on_images(white_noise_dithering; to_linear=true)
 
-test_on_images(clustered_dots_dithering)
+test_on_images(bayer_dithering)
 
-test_on_images(balanced_centered_point_dithering)
+test_on_images(clustered_dots_dithering; to_linear=true)
 
-test_on_images(rhombus_dithering)
+test_on_images(balanced_centered_point_dithering; to_linear=true)
+
+test_on_images(rhombus_dithering; to_linear=true)
 
 test_on_images(simple_error_diffusion)
 

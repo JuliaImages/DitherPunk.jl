@@ -27,6 +27,14 @@ test_on_gradient(jarvis_judice_diffusion)
 
 test_on_gradient(stucki_diffusion)
 
+test_on_gradient(burkes_diffusion)
+
+test_on_gradient(sierra_diffusion)
+
+test_on_gradient(two_row_sierra_diffusion)
+
+test_on_gradient(sierra_lite_diffusion)
+
 test_on_gradient(atkinson_diffusion)
 
 # This file was generated using Literate.jl, https://github.com/fredrikekre/Literate.jl

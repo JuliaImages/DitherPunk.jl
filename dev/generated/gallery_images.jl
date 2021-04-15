@@ -4,10 +4,16 @@ using ImageTransformations
 using ImageContrastAdjustment
 using TestImages
 
+function preprocess(img)
+    img = Gray.(img)
+    img .= adjust_histogram(img, LinearStretching()) # normalize
+    return imresize(img; ratio=1 / 2)
+end
+
 file_names = [
     "cameraman", "lake_gray", "house", "fabio_gray_512", "mandril_gray", "peppers_gray"
 ]
-imgs = [imresize(Gray.(testimage(file)); ratio=1 / 2) for file in file_names]
+imgs = [preprocess(testimage(file)) for file in file_names]
 mosaicview(imgs...; ncol=3)
 
 function test_on_images(alg)
@@ -18,8 +24,6 @@ end
 test_on_images(threshold_dithering)
 
 test_on_images(white_noise_dithering)
-
-test_on_images(bayer_dithering)
 
 test_on_images(clustered_dots_dithering)
 
@@ -34,6 +38,14 @@ test_on_images(floyd_steinberg_diffusion)
 test_on_images(jarvis_judice_diffusion)
 
 test_on_images(stucki_diffusion)
+
+test_on_images(burkes_diffusion)
+
+test_on_images(sierra_diffusion)
+
+test_on_images(two_row_sierra_diffusion)
+
+test_on_images(sierra_lite_diffusion)
 
 test_on_images(atkinson_diffusion)
 

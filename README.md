@@ -6,10 +6,10 @@
 | [![][docs-stab-img]][docs-stab-url] [![][docs-dev-img]][docs-dev-url] | [![][ci-img]][ci-url] [![][codecov-img]][codecov-url] |
 
 
-A [dithering / digital halftoning](https://en.wikipedia.org/wiki/Dither) package inspired by [Lucas Pope's Obra Dinn](https://obradinn.com) and [Surma](https://surma.dev/things/ditherpunk/).
+A [dithering / digital halftoning](https://en.wikipedia.org/wiki/Dither) package inspired by [Lucas Pope's Obra Dinn](https://obradinn.com) and [this blogpost](https://surma.dev/things/ditherpunk/) by Surma.
 
 ## Examples
-Check out [the gallery](https://adrhill.github.io/DitherPunk.jl/dev/generated/gallery/) for an overview of currently implemented algorithms.
+Check out [the gallery](https://adrhill.github.io/DitherPunk.jl/dev/generated/gallery_images/) for an overview of currently implemented algorithms.
 
 
 **Feel free to leave a GitHub Issue if you know of any cool  algorithms you'd like to see implemented! 🔬🔧**

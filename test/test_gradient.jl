@@ -21,8 +21,12 @@ algs = [
     simple_error_diffusion,
     floyd_steinberg_diffusion,
     jarvis_judice_diffusion,
-    atkinson_diffusion,
     stucki_diffusion,
+    burkes_diffusion,
+    atkinson_diffusion,
+    sierra_diffusion,
+    two_row_sierra_diffusion,
+    sierra_lite_diffusion,
 ]
 
 # Run tests using conversion to linear color space

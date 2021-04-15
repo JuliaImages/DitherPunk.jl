@@ -20,41 +20,48 @@ function test_on_images(alg)
 end
 
 # ## Threshold dithering
-# ### `threshold_dithering`
+# #### `threshold_dithering`
 test_on_images(threshold_dithering)
 
-# ### `white_noise_dithering`
+# #### `white_noise_dithering`
 test_on_images(white_noise_dithering)
 
 # ## Ordered dithering on small images
-# ### `bayer_dithering`
-test_on_images(bayer_dithering)
+# #### Bayer matrices
 
-# ## Ordered dithering on large images
-# The following methods have large characteristic patterns and are therefore
-# better suited for large images.
-#
-# ### `clustered_dots_dithering`
+# #### `clustered_dots_dithering`
 test_on_images(clustered_dots_dithering)
 
-# ### `balanced_centered_point_dithering`
+# #### `balanced_centered_point_dithering`
 test_on_images(balanced_centered_point_dithering)
 
-# ### `rhombus_dithering`
+# #### `rhombus_dithering`
 test_on_images(rhombus_dithering)
 
 # ## Error diffusion
-# ### `simple_error_diffusion`
+# #### `simple_error_diffusion`
 test_on_images(simple_error_diffusion)
 
-# ### `floyd_steinberg_diffusion`
+# #### `floyd_steinberg_diffusion`
 test_on_images(floyd_steinberg_diffusion)
 
-# ### `jarvis_judice_diffusion`
+# #### `jarvis_judice_diffusion`
 test_on_images(jarvis_judice_diffusion)
 
-# ### `stucki_diffusion`
+# #### `stucki_diffusion`
 test_on_images(stucki_diffusion)
 
-# ### `atkinson_diffusion`
+# #### `burkes_diffusion`
+test_on_images(burkes_diffusion)
+
+# #### `sierra_diffusion`
+test_on_images(sierra_diffusion)
+
+# #### `two_row_sierra_diffusion`
+test_on_images(two_row_sierra_diffusion)
+
+# #### `sierra_lite_diffusion`
+test_on_images(sierra_lite_diffusion)
+
+# #### `atkinson_diffusion`
 test_on_images(atkinson_diffusion)

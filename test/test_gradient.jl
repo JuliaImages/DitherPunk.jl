@@ -22,6 +22,7 @@ algs = [
     floyd_steinberg_diffusion,
     jarvis_judice_diffusion,
     atkinson_diffusion,
+    stucki_diffusion,
 ]
 
 for alg in algs

@@ -60,5 +60,8 @@ FS_STENCIL = OffsetArray([0 0 7; 3 5 1]//16, 1:2, -1:1)
 jarvis_judice_diffusion(img; kwargs...) = error_diffusion(img, JJ_STENCIL; kwargs...)
 JJ_STENCIL = OffsetArray([0 0 0 7 5; 3 5 7 5 3; 1 3 5 3 1]//48, 1:3, -2:2)
 
+stucki_diffusion(img; kwargs...) = error_diffusion(img, STUCKI_STENCIL; kwargs...)
+STUCKI_STENCIL = OffsetArray([0 0 0 8 4; 2 4 8 4 2; 1 2 4 2 1]//42, 1:3, -2:2)
+
 atkinson_diffusion(img; kwargs...) = error_diffusion(img, ATKINSON_STENCIL; kwargs...)
 ATKINSON_STENCIL = OffsetArray([0 0 1 1; 1 1 1 0; 0 1 0 0]//8, 1:3, -1:2)

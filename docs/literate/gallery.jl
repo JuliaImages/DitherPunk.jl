@@ -58,5 +58,8 @@ test_on_gradient(floyd_steinberg_diffusion)
 # ### `jarvis_judice_diffusion`
 test_on_gradient(jarvis_judice_diffusion)
 
+# ### `stucki_diffusion`
+test_on_gradient(stucki_diffusion)
+
 # ### `atkinson_diffusion`
 test_on_gradient(atkinson_diffusion)

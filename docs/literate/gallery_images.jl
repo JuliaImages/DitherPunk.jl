@@ -6,10 +6,16 @@ using TestImages
 
 # # Test image gallery
 # This gallery uses images from [*TestImages.jl*](https://testimages.juliaimages.org).
+function preprocess(img)
+    img = Gray.(img)
+    img .= adjust_histogram(img, LinearStretching()) # normalize
+    return imresize(img; ratio=1 / 2)
+end
+
 file_names = [
     "cameraman", "lake_gray", "house", "fabio_gray_512", "mandril_gray", "peppers_gray"
 ]
-imgs = [imresize(Gray.(testimage(file)); ratio=1 / 2) for file in file_names]
+imgs = [preprocess(testimage(file)) for file in file_names]
 mosaicview(imgs...; ncol=3)
 
 # Our test function `test_on_images` just runs a dithering algorithm on all six images

@@ -27,10 +27,7 @@ function error_diffusion(
             # Diffuse "error" to neighborhood in stencil
             for dr in drs
                 for dc in dcs
-                    if (r + dr > 0) &&
-                       (r + dr <= h) &&
-                       (c + dc > 0) &&
-                       (c + dc <= w)
+                    if (r + dr > 0) && (r + dr <= h) && (c + dc > 0) && (c + dc <= w)
                         _img[r + dr, c + dc] += err * stencil[dr, dc]
                     end
                 end

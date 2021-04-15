@@ -29,5 +29,5 @@ end
 
 function white_noise_dithering(img::AbstractMatrix{<:Gray}; kwargs...)::BitMatrix
     tmap = rand(Gray{N0f16}, size(img)) # threshold map is white noise
-    return threshold_dithering(img, tmap, kwargs...)
+    return threshold_dithering(img, tmap; kwargs...)
 end

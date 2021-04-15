@@ -2,7 +2,7 @@ using DitherPunk
 using Images
 
 # # Gallery
-# ## On sRGB and linear colorspaces
+# ## On color spaces
 # A simple linear gradient works well to reveal the characteristic patterns of
 # different dithering algorithms.
 srbg, linear = gradient_image(100, 800);
@@ -16,7 +16,7 @@ mosaicview(srbg, linear)
 # It then shows a comparison of both inputs and outputs.
 #
 # Most dithering algorithms in DitherPunk.jl provide an optional parameter `to_linear`,
-# which converts the input image to a linear colorspace before applying the dithering.
+# which converts the input image to a linear color space before applying the dithering.
 # Select what looks best!
 #
 # ## Threshold dithering

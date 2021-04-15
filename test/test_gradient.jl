@@ -25,14 +25,16 @@ algs = [
     stucki_diffusion,
 ]
 
+# Run tests using conversion to linear color space
 for alg in algs
     println("")
-    print_braille(alg(img); title="$(alg)")
+    print_braille(alg(img; to_linear=true); title="$(alg)")
 end
 
 for level in 1:3
     println("")
     print_braille(
-        bayer_dithering(img; level=level); title="bayer_dithering, level $(level)"
+        bayer_dithering(img; to_linear=true, level=level);
+        title="bayer_dithering, level $(level)",
     )
 end

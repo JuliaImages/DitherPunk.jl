@@ -5,6 +5,9 @@ function error_diffusion(
     _img = copy(img)
     to_linear && srgb2linear!(_img)
 
+    # Change from normalized intensities to Float as error will get added!
+    _img = Float32.(_img)
+
     h, w = size(_img)
     dither = BitArray(undef, h, w) # initialized to zero
 

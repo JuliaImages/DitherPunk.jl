@@ -8,9 +8,19 @@
 
 A [dithering / digital halftoning](https://en.wikipedia.org/wiki/Dither) package inspired by [Lucas Pope's Obra Dinn](https://obradinn.com) and [this blogpost](https://surma.dev/things/ditherpunk/) by Surma.
 
-## Examples
-Check out [the gallery](https://adrhill.github.io/DitherPunk.jl/dev/generated/gallery_images/) for an overview of currently implemented algorithms.
 
+
+## Examples
+**[Check out the gallery](https://adrhill.github.io/DitherPunk.jl/dev/generated/gallery_images/)** for an overview of currently implemented algorithms.
+
+## Installation 
+To install this package and its dependencies, open the Julia REPL and run 
+
+```julia
+julia> ]add DitherPunk
+```
+
+___
 
 **Feel free to leave a GitHub Issue if you know of any cool  algorithms you'd like to see implemented! 🔬🔧**
 

@@ -31,7 +31,7 @@ test_on_images(threshold_dithering)
 # #### `white_noise_dithering`
 test_on_images(white_noise_dithering; to_linear=true)
 
-# ## Ordered dithering on small images
+# ## Ordered dithering
 # #### Bayer matrices
 test_on_images(bayer_dithering)
 

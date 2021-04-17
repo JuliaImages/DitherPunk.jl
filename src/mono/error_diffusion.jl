@@ -17,17 +17,15 @@ function error_diffusion(
     for r in 1:h
         for c in 1:w
             px = _img[r, c]
-            rnd = round(px)
-            err = px - rnd
+
+            # Round to closest color
+            px >= 0.5 ? (rnd = 1) : (rnd = 0)
 
             # Apply pixel to dither
-            if rnd == 1
-                dither[r, c] = 1
-            else
-                dither[r, c] = 0
-            end
+            dither[r, c] = rnd
 
             # Diffuse "error" to neighborhood in stencil
+            err = px - rnd
             for dr in drs
                 for dc in dcs
                     if (r + dr > 0) && (r + dr <= h) && (c + dc > 0) && (c + dc <= w)

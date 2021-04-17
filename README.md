@@ -11,7 +11,7 @@ A [dithering / digital halftoning](https://en.wikipedia.org/wiki/Dither) package
 
 
 ## Examples
-**[Check out the gallery](https://adrhill.github.io/DitherPunk.jl/dev/generated/gallery_images/)** for an overview of currently implemented algorithms.
+**[Check out the gallery](https://adrhill.github.io/DitherPunk.jl/stable/generated/gallery_images/)** for an overview of currently implemented algorithms.
 
 ## Installation 
 To install this package and its dependencies, open the Julia REPL and run 

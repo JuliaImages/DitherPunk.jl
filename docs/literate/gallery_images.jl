@@ -1,8 +1,7 @@
 using DitherPunk
 using Images
-using ImageTransformations
-using ImageContrastAdjustment
 using TestImages
+using ImageTransformations
 
 # # Test image gallery
 # This gallery uses images from [*TestImages.jl*](https://testimages.juliaimages.org).

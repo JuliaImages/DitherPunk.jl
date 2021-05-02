@@ -62,8 +62,8 @@ function bayer_matrix(n::Int)::AbstractMatrix{Int}
     if n == 0
         b = [0 2; 3 1]
     else
-        bₙ₋₁ = bayer_matrix(n - 1)
-        b = 4 * [(bₙ₋₁) (bₙ₋₁.+2); (bₙ₋₁.+3) (bₙ₋₁.+1)]
+        bₙ₋₁ = 4 * bayer_matrix(n - 1)
+        b = [(bₙ₋₁) (bₙ₋₁.+2); (bₙ₋₁.+3) (bₙ₋₁.+1)]
     end
     return b
 end

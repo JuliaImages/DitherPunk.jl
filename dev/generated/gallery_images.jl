@@ -1,8 +1,8 @@
 using DitherPunk
 using Images
-using ImageTransformations
-using ImageContrastAdjustment
+using TiffImages
 using TestImages
+using ImageTransformations
 
 function preprocess(img)
     img = Gray.(img)

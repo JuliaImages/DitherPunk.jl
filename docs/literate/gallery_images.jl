@@ -1,5 +1,6 @@
 using DitherPunk
 using Images
+using TiffImages
 using TestImages
 using ImageTransformations
 

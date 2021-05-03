@@ -21,7 +21,5 @@ dither = bayer_dithering(img; to_linear=true);
 
 show_dither(dither; scale=3)
 
-print_braille(dither)
-
 # This file was generated using Literate.jl, https://github.com/fredrikekre/Literate.jl
 

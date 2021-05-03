@@ -5,12 +5,12 @@ using Random
 using OffsetArrays
 
 # Binary dithering algorithms
-include("mono/colorspaces.jl")
-include("mono/threshold.jl")
-include("mono/ordered.jl")
-include("mono/error_diffusion.jl")
-include("mono/show.jl")
-include("mono/eval.jl")
+include("colorspaces.jl")
+include("threshold.jl")
+include("ordered.jl")
+include("error_diffusion.jl")
+include("show.jl")
+include("eval.jl")
 
 # Threshold dithering
 export threshold_dithering, white_noise_dithering

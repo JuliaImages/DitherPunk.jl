@@ -1,7 +1,6 @@
 using DitherPunk
 using Images
 using TestImages
-using ImageTransformations
 
 # # Test image gallery
 # This gallery uses images from [*TestImages.jl*](https://testimages.juliaimages.org).
@@ -14,13 +13,13 @@ file_names = [
     "cameraman", "lake_gray", "house", "fabio_gray_512", "mandril_gray", "peppers_gray"
 ]
 imgs = [preprocess(testimage(file)) for file in file_names]
-mosaicview(imgs...; ncol=3)
+mosaic(imgs; ncol=3)
 
 # Our test function `test_on_images` just runs a dithering algorithm on all six images
 # in linear color space (`to_liner=true`).
 function test_on_images(alg; to_linear=false)
     dithers = [Gray.(alg(img; to_linear)) for img in imgs]
-    return mosaicview(dithers...; ncol=3)
+    return mosaic(dithers; ncol=3)
 end
 
 # ## Threshold dithering

@@ -1,5 +1,5 @@
 using DitherPunk
-using Images
+using ImageCore
 using ImageInTerminal
 using UnicodePlots
 

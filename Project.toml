@@ -1,24 +1,14 @@
 name = "DitherPunk"
 uuid = "b8f752a5-abd5-43b6-a55b-e75efda20de0"
 authors = ["Adrian Hill"]
-version = "0.2.3"
+version = "0.2.4"
 
 [deps]
-Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
+ImageCore = "a09fc81d-aa75-5fe9-8630-4744c3626534"
 OffsetArrays = "6fe1bfb0-de20-5000-8ca7-80f57d26f881"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
-UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
 
 [compat]
-Images = "0.24"
-OffsetArrays = "1.6"
-UnicodePlots = "1.3"
+ImageCore = "0.8"
+OffsetArrays = "1.7"
 julia = "1.6"
-
-[extras]
-ImageInTerminal = "d8c32880-2388-543b-8c61-d9f865259254"
-SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-
-[targets]
-test = ["Test", "ImageInTerminal", "SafeTestsets"]

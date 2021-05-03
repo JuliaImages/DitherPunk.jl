@@ -45,7 +45,3 @@ dither = bayer_dithering(img; to_linear=true);
 # The function `show_dither` casts to `Gray` and provides an additional integer scaling
 # parameter to print "chunkier" pixels.
 show_dither(dither; scale=3)
-
-# Alternatively, the images can also be printed to console though `UnicodePlots`
-# by using `print_braille`
-print_braille(dither)

@@ -1,11 +1,8 @@
 module DitherPunk
 
-using Images
+using ImageCore
 using Random
 using OffsetArrays
-
-# Imports for display functions
-using UnicodePlots: spy
 
 # Binary dithering algorithms
 include("mono/colorspaces.jl")
@@ -26,7 +23,7 @@ export stucki_diffusion, burkes_diffusion
 export jarvis_judice_diffusion, atkinson_diffusion
 export sierra_diffusion, two_row_sierra_diffusion, sierra_lite_diffusion
 
-export upscale, show_dither, print_braille
+export upscale, show_dither
 export gradient_image, test_on_gradient
 
 end # module

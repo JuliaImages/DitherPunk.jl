@@ -1,9 +1,43 @@
 using DitherPunk
 using Images
 using ImageInTerminal
+using UnicodePlots
 
 w = 200
 h = 4 * 4 # multiple of 4 for unicode braille print
+
+"""
+(Ab)use `spy` to interpret image as sparse array and print "sparsity pattern"
+in braille through UnicodePlots.
+"""
+function print_braille(
+    img::BitMatrix;
+    invert=false,
+    title="DitherPunk.jl",
+    color=:white,
+    labels=false,
+    kwargs...,
+)
+    h, w = size(img)
+
+    # Optionally invert Binary image before printing
+    _img = copy(img)
+    invert && (_img .= iszero.(_img))
+
+    show(
+        spy(
+            _img;
+            # Braille character ↝ 4x2 grid
+            maxheight=ceil(Int, h / 4),
+            maxwidth=ceil(Int, w / 2),
+            title=title,
+            color=color,
+            labels=labels,
+            kwargs...,
+        ),
+    )
+    return nothing
+end
 
 img, srgb = gradient_image(h, w)
 println("Test image:")

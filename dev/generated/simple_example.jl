@@ -1,7 +1,6 @@
 using DitherPunk
 using Images
-using ImageTransformations
-using ImageContrastAdjustment
+using Images: ImageContrastAdjustment
 using TestImages
 
 img = testimage("lighthouse")

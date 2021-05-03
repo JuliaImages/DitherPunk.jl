@@ -4,6 +4,8 @@ using ImageCore
 using Random
 using OffsetArrays
 
+include("compat.jl")
+
 # Binary dithering algorithms
 include("colorspaces.jl")
 include("threshold.jl")

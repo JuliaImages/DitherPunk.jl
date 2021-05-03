@@ -1,5 +1,0 @@
-[deps]
-ImageInTerminal = "d8c32880-2388-543b-8c61-d9f865259254"
-Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"

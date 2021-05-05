@@ -1,12 +1,11 @@
 function error_diffusion(
     img::AbstractMatrix{<:Gray}, stencil::OffsetMatrix; to_linear=false
 )::BitMatrix
-    # Optionally cast to linear colorspace
-    _img = copy(img)
-    to_linear && srgb2linear!(_img)
-
     # Change from normalized intensities to Float as error will get added!
-    _img = Float32.(_img)
+    _img = floattype(eltype(img)).(img)
+
+    # Optionally cast to linear colorspace
+    to_linear && srgb2linear!(_img)
 
     h, w = size(_img)
     dither = BitArray(undef, h, w) # initialized to zero

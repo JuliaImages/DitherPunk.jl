@@ -12,7 +12,7 @@ function ordered_dithering(
 )::BitMatrix
     # Create full threshold map by repeating threshold matrix `mat` in x and y directions
     h, w = size(img)
-    threshold = tile_matrix(h, w, mat)
+    threshold = tile_matrix(mat, h, w)
 
     # Optionally cast to linear colorspace
     _img = copy(img)
@@ -29,11 +29,11 @@ end
 
 Repeatedly tile a smaller matrix `mat` to fill out an image of height `h` and width `w`.
 """
-function tile_matrix(h, w, mat)
+function tile_matrix(mat, h, w)
     h_mat, w_mat = size(mat)
     repeat_rows = ceil(Int, h / h_mat)
     repeat_cols = ceil(Int, w / w_mat)
-    return repeat(mat, repeat_rows, repeat_cols)[1:h, 1:w] # trim to image dims
+    return view(repeat(mat, repeat_rows, repeat_cols), 1:h, 1:w) # view matching image dims
 end
 
 """

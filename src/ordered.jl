@@ -25,7 +25,7 @@ function ordered_dithering(
 end
 
 """
-    tile_matrix(h, w, mat)
+    tile_matrix(mat, h, w)
 
 Repeatedly tile a smaller matrix `mat` to fill out an image of height `h` and width `w`.
 """

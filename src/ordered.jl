@@ -12,7 +12,7 @@ function ordered_dithering(
 )::BitMatrix
     # Create full threshold map by repeating threshold matrix `mat` in x and y directions
     h, w = size(img)
-    threshold = tile_matrix(h, w, mat)
+    threshold = tile_matrix(mat, h, w)
 
     # Optionally cast to linear colorspace
     _img = copy(img)
@@ -29,11 +29,11 @@ end
 
 Repeatedly tile a smaller matrix `mat` to fill out an image of height `h` and width `w`.
 """
-function tile_matrix(h, w, mat)
+function tile_matrix(mat, h, w)
     h_mat, w_mat = size(mat)
     repeat_rows = ceil(Int, h / h_mat)
     repeat_cols = ceil(Int, w / w_mat)
-    return repeat(mat, repeat_rows, repeat_cols)[1:h, 1:w] # trim to image dims
+    return view(repeat(mat, repeat_rows, repeat_cols), 1:h, 1:w) # view matching image dims
 end
 
 """
@@ -77,7 +77,7 @@ Uses ``6 \\times 6`` threshold matrix `CLUSTERED_DOTS_MAT`.
 function clustered_dots_dithering(img; kwargs...)
     return ordered_dithering(img, CLUSTERED_DOTS_MAT; kwargs...)
 end
-CLUSTERED_DOTS_MAT =
+const CLUSTERED_DOTS_MAT =
     [
         34 29 17 21 30 35
         28 14 9 16 20 31
@@ -96,7 +96,7 @@ Uses ``6 \\times 6`` threshold matrix `CENTRAL_WHITE_POINT_MAT`.
 function central_white_point_dithering(img; kwargs...)
     return ordered_dithering(img, CENTRAL_WHITE_POINT_MAT; kwargs...)
 end
-CENTRAL_WHITE_POINT_MAT =
+const CENTRAL_WHITE_POINT_MAT =
     [
         34 25 21 17 29 33
         30 13 9 5 12 24
@@ -115,7 +115,7 @@ Uses ``6 \\times 6`` threshold matrix `BALANCED_CENTERED_POINT_MAT`.
 function balanced_centered_point_dithering(img; kwargs...)
     return ordered_dithering(img, BALANCED_CENTERED_POINT_MAT; kwargs...)
 end
-BALANCED_CENTERED_POINT_MAT =
+const BALANCED_CENTERED_POINT_MAT =
     [
         30 22 16 21 33 35
         24 11 7 9 26 28
@@ -134,16 +134,16 @@ Uses ``8 \\times 8`` threshold matrix.
 function rhombus_dithering(img; kwargs...)
     return ordered_dithering(img, RHOMBUS_MAT; kwargs...)
 end
-S₁ = [
+const S₁ = [
     13 9 5 12
     6 1 0 8
     10 2 3 4
     14 7 11 15
 ]
-S₂ = [
+const S₂ = [
     18 22 26 19
     25 30 31 23
     21 29 28 27
     17 24 20 16
 ]
-RHOMBUS_MAT = [S₁ S₂; S₂ S₁]//33
+const RHOMBUS_MAT = [S₁ S₂; S₂ S₁]//33

@@ -2,7 +2,7 @@ function error_diffusion(
     img::AbstractMatrix{<:Gray}, stencil::OffsetMatrix; to_linear=false
 )::BitMatrix
     # this function does not yet support OffsetArray
-    Base.require_one_based_indexing(img)
+    require_one_based_indexing(img)
 
     # Change from normalized intensities to Float as error will get added!
     FT = floattype(eltype(img))

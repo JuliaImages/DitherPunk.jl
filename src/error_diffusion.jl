@@ -16,7 +16,7 @@ function error_diffusion(
     O = CartesianIndices(stencil)
     R = CartesianIndices(_img)
     i_first, i_last = first(R), last(R)
-    for p in CartesianIndices(_img)
+    @inbounds for p in R
         px = _img[p]
 
         # Round to closest color
@@ -27,7 +27,7 @@ function error_diffusion(
 
         # Diffuse "error" to neighborhood in stencil
         err = convert(FT, px - rnd) # type stable
-        RO = _colon(max(p+first(O), first(R)), min(p+last(O), last(R)))
+        RO = _colon(max(p+first(O), i_first), min(p+last(O), i_last))
         isempty(RO) && continue
         for po in RO
             _img[po] += err * stencil[po-p]

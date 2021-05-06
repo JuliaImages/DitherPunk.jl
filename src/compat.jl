@@ -6,6 +6,8 @@ else
 end
 
 if VERSION >= v"1.1"
+    # I:J syntax for CartesianIndex is newly introduced in
+    # https://github.com/JuliaLang/julia/pull/29440
     _colon(a::CartesianIndex, b::CartesianIndex) = a:b
 else
     _colon(a::CartesianIndex, b::CartesianIndex) = CartesianIndices(map(UnitRange, a.I, b.I))

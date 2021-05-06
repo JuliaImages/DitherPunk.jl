@@ -23,7 +23,7 @@ function ordered_dithering(
     out = BitMatrix(undef, size(img)...)
     # TODO: add Threads.@threads to this for loop further improves the performances
     #       but it has unidentified memory allocations
-    @inbounds for R in TileIterator(axes(img), size(mat))
+    for R in TileIterator(axes(img), size(mat))
         mat_size = map(length, R)
         if mat_size == size(mat)
             # `mappedarray` creates a readonly wrapper with lazy evaluation with `srgb2linear`

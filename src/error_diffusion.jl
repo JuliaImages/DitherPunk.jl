@@ -27,7 +27,7 @@ function error_diffusion(
 
         # Diffuse "error" to neighborhood in stencil
         err = convert(FT, px - rnd) # type stable
-        RO = max(p+first(O), first(R)):min(p+last(O), last(R))
+        RO = _colon(max(p+first(O), first(R)), min(p+last(O), last(R)))
         isempty(RO) && continue
         for po in RO
             _img[po] += err * stencil[po-p]

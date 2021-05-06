@@ -30,9 +30,9 @@ function ordered_dithering(
             # so that original `img` data is not modified.
             out[R...] .= @views img[R...] .> mat
         else # boundary condition
-            mat_inds = CartesianIndices(mat_size)
-            out_inds = CartesianIndices(map(getindex, R, mat_inds.indices))
-            out[out_inds] .= @views img[out_inds] .> mat[mat_inds]
+            mat_inds = map(Base.OneTo, mat_size)
+            out_inds = map(getindex, R, mat_inds)
+            out[out_inds...] .= @views img[out_inds...] .> mat[mat_inds...]
         end
     end
     return out

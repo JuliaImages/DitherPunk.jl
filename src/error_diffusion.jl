@@ -1,6 +1,9 @@
 function error_diffusion(
     img::AbstractMatrix{<:Gray}, stencil::OffsetMatrix; to_linear=false
 )::BitMatrix
+    # this function does not yet support OffsetArray
+    Base.require_one_based_indexing(img)
+
     # Change from normalized intensities to Float as error will get added!
     FT = floattype(eltype(img))
     if to_linear
@@ -10,31 +13,45 @@ function error_diffusion(
     end
     stencil = FT.(stencil) # eagerly promote to the same type to make loop run faster
 
-    dither = BitArray(undef, size(_img)...) # initialized to zero
+    h, w = size(_img)
+    dither = BitArray(undef, h, w) # initialized to zero
 
     # Get OffsetMatrix indices
-    O = CartesianIndices(stencil)
-    R = CartesianIndices(_img)
-    i_first, i_last = first(R), last(R)
-    @inbounds for p in R
-        px = _img[p]
+    drs, dcs = indices(stencil)
 
-        # Round to closest color
-        rnd = px >= 0.5 ? true : false
+    @inbounds for r in 1:h
+        for c in 1:w
+            px = _img[r, c]
 
-        # Apply pixel to dither
-        dither[p] = rnd
+            # Round to closest color
+            px >= 0.5 ? (rnd = 1) : (rnd = 0)
 
-        # Diffuse "error" to neighborhood in stencil
-        err = convert(FT, px - rnd) # type stable
-        RO = _colon(max(p+first(O), i_first), min(p+last(O), i_last))
-        isempty(RO) && continue
-        for po in RO
-            _img[po] += err * stencil[po-p]
+            # Apply pixel to dither
+            dither[r, c] = rnd
+
+            # Diffuse "error" to neighborhood in stencil
+            err = px - rnd
+            for dr in drs
+                for dc in dcs
+                    if (r + dr > 0) && (r + dr <= h) && (c + dc > 0) && (c + dc <= w)
+                        _img[r + dr, c + dc] += err * stencil[dr, dc]
+                    end
+                end
+            end
         end
     end
 
     return dither
+end
+
+"""
+Get indices from OffsetMatrix
+"""
+function indices(om::OffsetMatrix)
+    rows, cols = size(om)
+    row_range = (1:rows) .+ om.offsets[1]
+    col_range = (1:cols) .+ om.offsets[2]
+    return row_range, col_range
 end
 
 simple_error_diffusion(img; kwargs...) = error_diffusion(img, SIMPLE_STENCIL; kwargs...)

@@ -1,6 +1,8 @@
 module DitherPunk
 
 using ImageCore
+using TiledIteration
+using ImageCore.MappedArrays
 using Random
 using OffsetArrays
 

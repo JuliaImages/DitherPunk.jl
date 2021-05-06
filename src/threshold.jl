@@ -5,10 +5,7 @@ function threshold_dithering(
         DimensionMismatch("Arguments img and threshold_map need to have same dimensions"),
     )
 
-    # Optionally cast to linear colorspace
-    _img = copy(img)
-    to_linear && srgb2linear!(_img)
-
+    to_linear && (img = mappedarray(srgb2linear, img))
     return img .> threshold_map
 end
 

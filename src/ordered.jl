@@ -10,30 +10,32 @@ Optionally, this final threshold map can be inverted by selecting `invert_map=tr
 function ordered_dithering(
     img::AbstractMatrix{<:Gray}, mat::AbstractMatrix; to_linear=false, invert_map=false
 )::BitMatrix
-    # Create full threshold map by repeating threshold matrix `mat` in x and y directions
-    h, w = size(img)
-    threshold = tile_matrix(mat, h, w)
+    # eagerly promote to the same eltype to make for-loop faster
+    FT = floattype(eltype(img))
+    if invert_map
+        mat = @. FT(1 - mat)
+    else
+        mat = FT.(mat)
+    end
+    linear_fun = to_linear ? srgb2linear : identity
+    img = @. FT.(linear_fun.(img))
 
-    # Optionally cast to linear colorspace
-    _img = copy(img)
-    to_linear && srgb2linear!(_img)
-
-    # Optionally invert map ∈ [0, 1]
-    invert_map && (threshold .= 1 .- threshold)
-
-    return _img .> threshold
-end
-
-"""
-    tile_matrix(mat, h, w)
-
-Repeatedly tile a smaller matrix `mat` to fill out an image of height `h` and width `w`.
-"""
-function tile_matrix(mat, h, w)
-    h_mat, w_mat = size(mat)
-    repeat_rows = ceil(Int, h / h_mat)
-    repeat_cols = ceil(Int, w / w_mat)
-    return view(repeat(mat, repeat_rows, repeat_cols), 1:h, 1:w) # view matching image dims
+    out = BitMatrix(undef, size(img)...)
+    # TODO: add Threads.@threads to this for loop further improves the performances
+    #       but it has unidentified memory allocations
+    @inbounds for R in TileIterator(axes(img), size(mat))
+        mat_size = map(length, R)
+        if mat_size == size(mat)
+            # `mappedarray` creates a readonly wrapper with lazy evaluation with `srgb2linear`
+            # so that original `img` data is not modified.
+            out[R...] .= @views img[R...] .> mat
+        else # boundary condition
+            mat_inds = map(Base.OneTo, mat_size)
+            out_inds = map(getindex, R, mat_inds)
+            out[out_inds...] .= @views img[out_inds...] .> mat[mat_inds...]
+        end
+    end
+    return out
 end
 
 """

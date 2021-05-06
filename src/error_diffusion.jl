@@ -1,11 +1,17 @@
 function error_diffusion(
     img::AbstractMatrix{<:Gray}, stencil::OffsetMatrix; to_linear=false
 )::BitMatrix
-    # Change from normalized intensities to Float as error will get added!
-    _img = floattype(eltype(img)).(img)
+    # this function does not yet support OffsetArray
+    require_one_based_indexing(img)
 
-    # Optionally cast to linear colorspace
-    to_linear && srgb2linear!(_img)
+    # Change from normalized intensities to Float as error will get added!
+    FT = floattype(eltype(img))
+    if to_linear
+        _img = @. FT(srgb2linear(img))
+    else
+        _img = FT.(img)
+    end
+    stencil = FT.(stencil) # eagerly promote to the same type to make loop run faster
 
     h, w = size(_img)
     dither = BitArray(undef, h, w) # initialized to zero
@@ -13,7 +19,7 @@ function error_diffusion(
     # Get OffsetMatrix indices
     drs, dcs = indices(stencil)
 
-    for r in 1:h
+    @inbounds for r in 1:h
         for c in 1:w
             px = _img[r, c]
 

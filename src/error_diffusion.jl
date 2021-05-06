@@ -2,50 +2,39 @@ function error_diffusion(
     img::AbstractMatrix{<:Gray}, stencil::OffsetMatrix; to_linear=false
 )::BitMatrix
     # Change from normalized intensities to Float as error will get added!
-    _img = floattype(eltype(img)).(img)
+    FT = floattype(eltype(img))
+    if to_linear
+        _img = @. FT(srgb2linear(img))
+    else
+        _img = FT.(img)
+    end
+    stencil = FT.(stencil) # eagerly promote to the same type to make loop run faster
 
-    # Optionally cast to linear colorspace
-    to_linear && srgb2linear!(_img)
-
-    h, w = size(_img)
-    dither = BitArray(undef, h, w) # initialized to zero
+    dither = BitArray(undef, size(_img)...) # initialized to zero
 
     # Get OffsetMatrix indices
-    drs, dcs = indices(stencil)
+    O = CartesianIndices(stencil)
+    R = CartesianIndices(_img)
+    i_first, i_last = first(R), last(R)
+    for p in CartesianIndices(_img)
+        px = _img[p]
 
-    for r in 1:h
-        for c in 1:w
-            px = _img[r, c]
+        # Round to closest color
+        rnd = px >= 0.5 ? true : false
 
-            # Round to closest color
-            px >= 0.5 ? (rnd = 1) : (rnd = 0)
+        # Apply pixel to dither
+        dither[p] = rnd
 
-            # Apply pixel to dither
-            dither[r, c] = rnd
-
-            # Diffuse "error" to neighborhood in stencil
-            err = px - rnd
-            for dr in drs
-                for dc in dcs
-                    if (r + dr > 0) && (r + dr <= h) && (c + dc > 0) && (c + dc <= w)
-                        _img[r + dr, c + dc] += err * stencil[dr, dc]
-                    end
-                end
-            end
+        # Diffuse "error" to neighborhood in stencil
+        err = convert(FT, px - rnd) # type stable
+        RO = max(p+first(O), first(R)):min(p+last(O), last(R))
+        isempty(RO) && continue
+        for po in RO
+            _img[po] += err * stencil[po-p]
         end
     end
 
     return dither
-end
-
-"""
-Get indices from OffsetMatrix
-"""
-function indices(om::OffsetMatrix)
-    rows, cols = size(om)
-    row_range = (1:rows) .+ om.offsets[1]
-    col_range = (1:cols) .+ om.offsets[2]
-    return row_range, col_range
 end
 
 simple_error_diffusion(img; kwargs...) = error_diffusion(img, SIMPLE_STENCIL; kwargs...)

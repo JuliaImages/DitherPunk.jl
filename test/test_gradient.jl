@@ -1,4 +1,6 @@
 using DitherPunk
+using ReferenceTests
+
 using ImageCore
 using ImageInTerminal
 using UnicodePlots
@@ -24,6 +26,7 @@ function print_braille(
     _img = copy(img)
     invert && (_img .= iszero.(_img))
 
+    println("")
     show(
         spy(
             _img;
@@ -43,11 +46,12 @@ img, srgb = gradient_image(h, w)
 println("Test image:")
 imshow(srgb)
 
-algs = [
+## Run reference tests for deterministic algorithms
+algs_deterministic = [
     # threshold methods
     threshold_dithering,
-    white_noise_dithering,
     # ordered dithering
+    bayer_dithering,
     clustered_dots_dithering,
     balanced_centered_point_dithering,
     rhombus_dithering,
@@ -63,16 +67,37 @@ algs = [
     sierra_lite_diffusion,
 ]
 
-# Run tests using conversion to linear color space
-for alg in algs
-    println("")
-    print_braille(alg(img; to_linear=true); title="$(alg)")
+for alg in algs_deterministic
+    dither = alg(img)
+    @test_reference "references/grad_$(alg).txt" dither
+
+    dither = alg(img; to_linear=true)
+    @test_reference "references/grad_$(alg)_linear.txt" dither
+
+    # Visualize in terminal
+    print_braille(dither; title="$(alg)")
 end
 
-for level in 1:3
-    println("")
-    print_braille(
-        bayer_dithering(img; to_linear=true, level=level);
-        title="bayer_dithering, level $(level)",
-    )
+for level in 2:4
+    dither = bayer_dithering(img; level=level)
+    @test_reference "references/grad_bayer_dithering_l$(level).txt" dither
+
+    dither = bayer_dithering(img; level=level, to_linear=true)
+    @test_reference "references/grad_bayer_dithering_l$(level)_linear.txt" dither
+
+    # Visualize in terminal
+    print_braille(dither; title="bayer_dithering, level $(level)")
+end
+
+## Algorithms with random output are currently only tested visually
+algs_random = [
+    # threshold methods
+    white_noise_dithering,
+]
+
+for alg in algs_random
+    dither = alg(img; to_linear=true)
+
+    # Visualize in terminal
+    print_braille(dither; title="$(alg)")
 end

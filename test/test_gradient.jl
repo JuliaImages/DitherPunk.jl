@@ -67,7 +67,7 @@ algs_deterministic = [
     sierra_lite_diffusion,
 ]
 
-for alg in algs_deterministic
+for (alg_name, alg) in algs_deterministic
     dither = alg(img)
     @test_reference "references/grad_$(alg).txt" dither
 
@@ -80,7 +80,7 @@ end
 
 for level in 2:4
     dither = bayer_dithering(img; level=level)
-    @test_reference "references/grad_bayer_dithering_l$(level).txt" dither
+    @test_reference "references/grad_bayer_dithering_l$(level).txt" Int.(dither)
 
     dither = bayer_dithering(img; level=level, to_linear=true)
     @test_reference "references/grad_bayer_dithering_l$(level)_linear.txt" dither

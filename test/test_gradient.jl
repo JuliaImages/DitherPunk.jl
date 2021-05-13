@@ -70,10 +70,10 @@ algs_deterministic = Dict(
 
 for (name, alg) in algs_deterministic
     dither = alg(img)
-    @test_reference "references/grad_$(name).txt" dither
+    @test_reference "references/grad_$(name).txt" Int.(dither)
 
     dither = alg(img; to_linear=true)
-    @test_reference "references/grad_$(name)_linear.txt" dither
+    @test_reference "references/grad_$(name)_linear.txt" Int.(dither)
 
     # Visualize in terminal
     print_braille(dither; title=name)
@@ -81,10 +81,10 @@ end
 
 for level in 2:4
     dither = bayer_dithering(img; level=level)
-    @test_reference "references/grad_bayer_dithering_l$(level).txt" Bool.(dither)
+    @test_reference "references/grad_bayer_dithering_l$(level).txt" Int.(dither)
 
     dither = bayer_dithering(img; level=level, to_linear=true)
-    @test_reference "references/grad_bayer_dithering_l$(level)_linear.txt" Bool.(dither)
+    @test_reference "references/grad_bayer_dithering_l$(level)_linear.txt" Int.(dither)
 
     # Visualize in terminal
     print_braille(dither; title="bayer_dithering, level $(level)")

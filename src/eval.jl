@@ -12,17 +12,17 @@ end
 Test dithering algorithm `alg` on linear grayscale gradient from `gradient_image`
 and show stacked plot.
 """
-function test_on_gradient(alg::Function)
+function test_on_gradient(alg::AbstractDither)
     srgb, linear = gradient_image(100, 800)
-    dither_srgb = Gray.(alg(srgb))
-    dither_linear = Gray.(alg(linear))
+    dither_srgb = Gray.(dither(srgb, alg))
+    dither_linear = Gray.(dither(linear, alg))
 
     return mosaicview([srgb, dither_srgb, linear, dither_linear]; ncol=1)
 end
-function test_on_gradient(algs)
+function test_on_gradient(algs::AbstractArray{<:AbstractDither})
     srgb, linear = gradient_image(100, 800)
-    dithers_srgb = [Gray.(alg(srgb)) for alg in algs]
-    dithers_linear = [Gray.(alg(linear)) for alg in algs]
+    dithers_srgb = [Gray.(dither(srgb, alg)) for alg in algs]
+    dithers_linear = [Gray.(dither(linear, alg)) for alg in algs]
 
     return mosaicview([srgb, dithers_srgb..., linear, dithers_linear...]; ncol=1)
 end

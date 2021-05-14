@@ -1,9 +1,10 @@
 name = "DitherPunk"
 uuid = "b8f752a5-abd5-43b6-a55b-e75efda20de0"
 authors = ["Adrian Hill"]
-version = "0.2.6"
+version = "1.0.0"
 
 [deps]
+ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
 ImageCore = "a09fc81d-aa75-5fe9-8630-4744c3626534"
 OffsetArrays = "6fe1bfb0-de20-5000-8ca7-80f57d26f881"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
@@ -11,15 +12,16 @@ TiledIteration = "06e1c1a7-607b-532d-9fad-de7d9aa2abac"
 
 [compat]
 ImageCore = "0.8.1, 0.9"
-OffsetArrays = "1"
 TiledIteration = "0.3"
 julia = "1"
 
 [extras]
 ImageInTerminal = "d8c32880-2388-543b-8c61-d9f865259254"
+Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
 ReferenceTests = "324d217c-45ce-50fc-942e-d289b448e8cf"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+TestImages = "5e47fb64-e119-507b-a336-dd2b206d9990"
 UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
 
 [targets]
-test = ["ImageInTerminal", "ReferenceTests", "Test", "UnicodePlots"]
+test = ["ImageInTerminal", "Images", "ReferenceTests", "Test", "TestImages", "UnicodePlots"]

@@ -1,5 +1,9 @@
+struct OrderedDither{M} <: AbstractDither
+    mat::M
+end
+
 """
-    ordered_dithering(img::AbstractMatrix{<:Gray}, mat::AbstractMatrix; invert_map=false)::BitMatrix
+    dither(img::AbstractMatrix, alg::AbstractOrderedDither; to_linear=false, invert_map=false)
 
 Ordered dithering using threshold maps.
 Takes a grayscale image `img` and a normalized threshold matrix `mat`.
@@ -7,9 +11,14 @@ The threshold matrix is repeatedly tiled to match the size of `img` and is then 
 as a per-pixel threshold map.
 Optionally, this final threshold map can be inverted by selecting `invert_map=true`.
 """
-function ordered_dithering(
-    img::AbstractMatrix{<:Gray}, mat::AbstractMatrix; to_linear=false, invert_map=false
+function dither(
+    img::AbstractMatrix{<:AbstractGray},
+    alg::OrderedDither;
+    to_linear=false,
+    invert_map=false,
 )::BitMatrix
+    mat = alg.mat
+
     # eagerly promote to the same eltype to make for-loop faster
     FT = floattype(eltype(img))
     if invert_map
@@ -39,19 +48,19 @@ function ordered_dithering(
 end
 
 """
-    bayer_dithering(img::AbstractMatrix{<:Gray}; level=1, to_linear=false, invert_map=false)::BitMatrix
+    Bayer(level)
 
 Ordered dithering using the Bayer matrix as a threshold matrix.
 The Bayer matrix is of dimension ``2^{n+1} \\times 2^{n+1}``, where ``n`` is the `level`,
 which defaults to `1`.
 """
-function bayer_dithering(img::AbstractMatrix{<:Gray}; level=1, kwargs...)::BitMatrix
+function Bayer(level::Integer)
     # Get Bayer matrix and normalize it
     bayer = bayer_matrix(level)
     mat = bayer//(2^(2 * level + 2))
-
-    return ordered_dithering(img, mat; kwargs...)
+    return OrderedDither(mat)
 end
+Bayer() = Bayer(1)
 
 """
     bayer_matrix(n::Int)::AbstractMatrix{Int}
@@ -71,81 +80,77 @@ function bayer_matrix(n::Int)::AbstractMatrix{Int}
 end
 
 """
-    clustered_dots_dithering(img; to_linear=false, invert_map=false)
+    ClusteredDots()
 
-Clustered dots ordered dithering.
-Uses ``6 \\times 6`` threshold matrix `CLUSTERED_DOTS_MAT`.
+Clustered dots ordered dithering. Uses ``6 \\times 6`` threshold matrix.
 """
-function clustered_dots_dithering(img; kwargs...)
-    return ordered_dithering(img, CLUSTERED_DOTS_MAT; kwargs...)
+function ClusteredDots()
+    return OrderedDither(
+        [
+            34 29 17 21 30 35
+            28 14 9 16 20 31
+            13 8 4 5 15 19
+            12 3 0 1 10 18
+            27 7 2 6 23 24
+            33 26 11 22 25 32
+        ]//37,
+    )
 end
-const CLUSTERED_DOTS_MAT =
-    [
-        34 29 17 21 30 35
-        28 14 9 16 20 31
-        13 8 4 5 15 19
-        12 3 0 1 10 18
-        27 7 2 6 23 24
-        33 26 11 22 25 32
-    ]//37
 
 """
-    central_white_point_dithering(img; to_linear=false, invert_map=false)
+    CentralWhiteDot()
 
-Central white point ordered dithering.
-Uses ``6 \\times 6`` threshold matrix `CENTRAL_WHITE_POINT_MAT`.
+Central white point ordered dithering. Uses ``6 \\times 6`` threshold matrix.
 """
-function central_white_point_dithering(img; kwargs...)
-    return ordered_dithering(img, CENTRAL_WHITE_POINT_MAT; kwargs...)
+function CentralWhiteDot()
+    return OrderedDither(
+        [
+            34 25 21 17 29 33
+            30 13 9 5 12 24
+            18 6 1 0 8 20
+            22 10 2 3 4 16
+            26 14 7 11 15 28
+            35 31 19 23 27 32
+        ]//37,
+    )
 end
-const CENTRAL_WHITE_POINT_MAT =
-    [
-        34 25 21 17 29 33
-        30 13 9 5 12 24
-        18 6 1 0 8 20
-        22 10 2 3 4 16
-        26 14 7 11 15 28
-        35 31 19 23 27 32
-    ]//37
 
 """
-    balanced_centered_point_dithering(img; to_linear=false, invert_map=false)
+    BalancedCenteredDot()
 
-Balanced centered point ordered dithering.
-Uses ``6 \\times 6`` threshold matrix `BALANCED_CENTERED_POINT_MAT`.
+Balanced centered point ordered dithering. Uses ``6 \\times 6`` threshold matrix.
 """
-function balanced_centered_point_dithering(img; kwargs...)
-    return ordered_dithering(img, BALANCED_CENTERED_POINT_MAT; kwargs...)
+function BalancedCenteredDot()
+    return OrderedDither(
+        [
+            30 22 16 21 33 35
+            24 11 7 9 26 28
+            13 5 0 2 14 19
+            15 3 1 4 12 18
+            27 8 6 10 25 29
+            32 20 17 23 31 34
+        ]//37,
+    )
 end
-const BALANCED_CENTERED_POINT_MAT =
-    [
-        30 22 16 21 33 35
-        24 11 7 9 26 28
-        13 5 0 2 14 19
-        15 3 1 4 12 18
-        27 8 6 10 25 29
-        32 20 17 23 31 34
-    ]//37
 
 """
-    rhombus_dithering(img; to_linear=false, invert_map=false)
+    Rhombus()
 
-Diagonal ordered matrix with balanced centered points, ordered dithering.
-Uses ``8 \\times 8`` threshold matrix.
+Diagonal ordered matrix with balanced centered points. Uses ``8 \\times 8`` threshold matrix.
 """
-function rhombus_dithering(img; kwargs...)
-    return ordered_dithering(img, RHOMBUS_MAT; kwargs...)
+function Rhombus()
+    S₁ = [
+        13 9 5 12
+        6 1 0 8
+        10 2 3 4
+        14 7 11 15
+    ]
+    S₂ = [
+        18 22 26 19
+        25 30 31 23
+        21 29 28 27
+        17 24 20 16
+    ]
+    mat = [S₁ S₂; S₂ S₁]//33
+    return OrderedDither(mat)
 end
-const S₁ = [
-    13 9 5 12
-    6 1 0 8
-    10 2 3 4
-    14 7 11 15
-]
-const S₂ = [
-    18 22 26 19
-    25 30 31 23
-    21 29 28 27
-    17 24 20 16
-]
-const RHOMBUS_MAT = [S₁ S₂; S₂ S₁]//33

@@ -14,7 +14,18 @@ Convert from linear to sRGB color space.
 Return color in ColorScheme `cs` that is closest to `color`
 [according to `colordiff`](http://juliagraphics.github.io/Colors.jl/dev/colordifferences/#Color-Differences)
 """
-function closest_color(color::Colorant, cs::ColorScheme; metric=DE_2000())::Colorant
+function closest_color(
+    color::Colorant, cs::AbstractVector{<:Colorant}; metric=DE_2000()
+)::Colorant
     imin = argmin(colordiff.(color, cs; metric))
     return cs[imin]
+end
+
+"""
+Define custom color difference metric with linear distances between grayscale values.
+"""
+struct BinaryDitherMetric <: DifferenceMetric end
+
+function ImageCore.Colors._colordiff(a::Gray, b::Gray, m::BinaryDitherMetric)
+    return abs(a - b)
 end

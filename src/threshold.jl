@@ -24,17 +24,14 @@ end
 
 Use a constant threshold map. Defaults to 0.5 if `threshold` isn't specified.
 """
-struct ConstantThreshold <: AbstractThresholdDither
-    threshold::Real
+struct ConstantThreshold{T<:Real} <: AbstractThresholdDither
+    threshold::T
 
-    function ConstantThreshold(threshold)
+    function ConstantThreshold(; threshold=0.5)
         if threshold < 0 || threshold > 1
             throw(DomainError(threshold, "Threshold needs to be between 0 and 1."))
         end
-        return new(threshold)
-    end
-    function ConstantThreshold()
-        return ConstantThreshold(0.5)
+        return new{typeof(threshold)}(threshold)
     end
 end
 

@@ -75,13 +75,11 @@ algs_deterministic = Dict(
 
 for (name, alg) in algs_deterministic
     d = dither(img, alg)
+    print_braille(d; title=name) # Visualize in terminal
     @test_reference "references/grad_$(name).txt" Int.(d)
 
     d = dither(img, alg; to_linear=true)
     @test_reference "references/grad_$(name)_linear.txt" Int.(d)
-
-    # Visualize in terminal
-    print_braille(d; title=name)
 end
 
 ## Algorithms with random output are currently only tested visually

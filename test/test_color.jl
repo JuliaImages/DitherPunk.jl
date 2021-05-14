@@ -15,7 +15,7 @@ blue = RGB{Float32}(0, 0, 1)
 rubiks_colors = ColorScheme([white, yellow, green, orange, red, blue])
 
 # Test helper function
-@test closest_color(RGB{Float32}(1, 0.1, 0.1), rubiks_colors) == red
+@test closest_color(RGB{Float32}(1, 0.1, 0.1), rubiks_colors.colors) == red
 
 # Load test image
 img = testimage("fabio_color_256")

@@ -56,7 +56,7 @@ struct Bayer <: AbstractOrderedDither
     level::Integer
 
     function Bayer(; level=1)
-        new(level)
+        return new(level)
     end
 end
 function threshold_map(b::Bayer)
@@ -123,7 +123,7 @@ const CENTRAL_WHITE_POINT_MAT =
 Balanced centered point ordered dithering.
 Uses ``6 \\times 6`` threshold matrix `BALANCED_CENTERED_POINT_MAT`.
 """
-struct BalancedCenteredPoint  <: AbstractOrderedDither end
+struct BalancedCenteredPoint <: AbstractOrderedDither end
 threshold_map(::BalancedCenteredPoint) = BALANCED_CENTERED_POINT_MAT
 const BALANCED_CENTERED_POINT_MAT =
     [
@@ -141,7 +141,7 @@ const BALANCED_CENTERED_POINT_MAT =
 Diagonal ordered matrix with balanced centered points.
 Uses ``8 \\times 8`` threshold matrix `RHOMBUS_MAT`.
 """
-struct Rhombus  <: AbstractOrderedDither end
+struct Rhombus <: AbstractOrderedDither end
 threshold_map(::Rhombus) = RHOMBUS_MAT
 const S₁ = [
     13 9 5 12

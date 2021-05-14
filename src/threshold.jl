@@ -2,7 +2,7 @@ abstract type AbstractThresholdDither <: AbstractDither end
 
 function dither(
     img::AbstractMatrix{<:Gray}, alg::AbstractThresholdDither; to_linear=false
-)::BitMatrix
+)::Matrix{Gray{Bool}}
     tmap = alg(img)
     to_linear && (img = mappedarray(srgb2linear, img))
     return img .> tmap

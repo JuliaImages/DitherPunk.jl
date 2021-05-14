@@ -16,14 +16,9 @@ img = Gray.(img) # covert to grayscale
 img = adjust_histogram(img, LinearStretching()) # normalize
 
 # ## Dithering
-# We can now apply dithering algorithms of our choice,
-# for example `BalancedCenteredPoint`.
-d = dither(img, BalancedCenteredPoint());
-
-# ## Visualizing the result
-# The dithering algorithms return binary matrices of type `BitMatrix`.
-# These can be shown by casting them to grayscale using `Gray.()`.
-Gray.(d)
+# We can now apply dithering algorithms of our choice, for example `BalancedCenteredPoint`.
+# The dithering algorithms return binary matrices of type `Matrix{Gray{Bool}}`.
+d = dither(img, BalancedCenteredPoint())
 
 # ## Color spaces
 # Dithering in sRGB color space can lead to results that are too bright.
@@ -31,7 +26,6 @@ Gray.(d)
 # grayscale images can be converted to a linear color space using `srgb2linear`.
 # Alternatively, `dither` accepts the boolean keyword argument `to_linear`.
 d = dither(img, BalancedCenteredPoint(); to_linear=true)
-Gray.(d)
 
 # ## Working with small images
 # The previous `BalancedCenteredPoint` algorithm has a large characteristic
@@ -39,8 +33,7 @@ Gray.(d)
 # another [ordered dithering algorithm](https://en.wikipedia.org/wiki/Ordered_dithering)
 # that leads to characteristic cross-hatch patterns.
 img = imresize(img; ratio=1 / 5) # downscale
-d = dither(img, Bayer(); to_linear=true);
+d = dither(img, Bayer(); to_linear=true)
 
-# The function `show_dither` casts to `Gray` and provides an additional integer scaling
-# parameter to print "chunkier" pixels.
-show_dither(d; scale=3)
+# The function `upscale` provides integer scaling to print "chunkier" pixels.
+upscale(d, 3)

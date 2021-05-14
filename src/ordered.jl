@@ -14,7 +14,7 @@ function dither(
     alg::AbstractOrderedDither;
     to_linear=false,
     invert_map=false,
-)::BitMatrix
+)::Matrix{Gray{Bool}}
     mat = threshold_map(alg)
 
     # eagerly promote to the same eltype to make for-loop faster
@@ -27,7 +27,7 @@ function dither(
     linear_fun = to_linear ? srgb2linear : identity
     img = @. FT.(linear_fun.(img))
 
-    out = BitMatrix(undef, size(img)...)
+    out = zeros(Gray{Bool}, size(img))
     # TODO: add Threads.@threads to this for loop further improves the performances
     #       but it has unidentified memory allocations
     @inbounds for R in TileIterator(axes(img), size(mat))

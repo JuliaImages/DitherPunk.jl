@@ -27,6 +27,6 @@ export Bayer, ClusteredDots, CentralWhitePoint, BalancedCenteredPoint, Rhombus
 export SimpleErrorDiffusion, FloydSteinberg, JarvisJudice, Stucki, Burkes
 export Sierra, TwoRowSierra, SierraLite, Atkinson
 
-export upscale, show_dither
+export upscale
 
 end # module

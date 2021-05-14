@@ -18,7 +18,7 @@ mosaic(imgs; ncol=3)
 # Our test function `test_on_images` just runs a dithering algorithm on all six images
 # in linear color space (`to_liner=true`).
 function test_on_images(alg; to_linear=false)
-    dithers = [Gray.(dither(img, alg; to_linear)) for img in imgs]
+    dithers = [dither(img, alg; to_linear) for img in imgs]
     return mosaic(dithers; ncol=3)
 end
 

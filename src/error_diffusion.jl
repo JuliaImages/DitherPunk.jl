@@ -8,7 +8,7 @@ function dither(
     cs::Vector{<:Colorant};
     to_linear=false,
     metric::DifferenceMetric=DE_2000(),
-)::AbstractMatrix{T} where {T<:Color}
+)::Matrix{T} where {T<:Color}
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
 
@@ -73,7 +73,7 @@ function dither(
     d = dither(img, alg, cs; metric, kwargs...)
     if steps == 2
         # match return type of other binary dithering algorithms
-        return BitMatrix(d)
+        return Gray{Bool}.(d)
     end
     return d
 end

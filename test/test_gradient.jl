@@ -14,7 +14,7 @@ h = 4 * 4 # multiple of 4 for unicode braille print
 in braille through UnicodePlots.
 """
 function print_braille(
-    img::BitMatrix;
+    img::Matrix{Gray{Bool}};
     invert=false,
     title="DitherPunk.jl",
     color=:white,
@@ -24,13 +24,13 @@ function print_braille(
     h, w = size(img)
 
     # Optionally invert Binary image before printing
-    _img = copy(img)
-    invert && (_img .= iszero.(_img))
+    img = Int.(img)
+    invert && (img .= iszero.(img))
 
     println("")
     show(
         spy(
-            _img;
+            img;
             # Braille character ↝ 4x2 grid
             maxheight=ceil(Int, h / 4),
             maxwidth=ceil(Int, w / 2),

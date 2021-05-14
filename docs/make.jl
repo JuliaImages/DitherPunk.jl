@@ -33,6 +33,7 @@ makedocs(;
             "Gradient" => "generated/gallery_gradient.md",
             "Images" => "generated/gallery_images.md",
         ],
+        "Color algorithms" => "generated/color.md",
         "API Reference" => "api.md",
     ],
 )

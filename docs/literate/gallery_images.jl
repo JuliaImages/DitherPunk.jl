@@ -18,54 +18,64 @@ mosaic(imgs; ncol=3)
 # Our test function `test_on_images` just runs a dithering algorithm on all six images
 # in linear color space (`to_liner=true`).
 function test_on_images(alg; to_linear=false)
-    dithers = [Gray.(alg(img; to_linear)) for img in imgs]
+    dithers = [Gray.(dither(img, alg; to_linear)) for img in imgs]
     return mosaic(dithers; ncol=3)
 end
 
 # ## Threshold dithering
-# #### `threshold_dithering`
-test_on_images(threshold_dithering)
+# #### `ConstantThreshold`
+test_on_images(ConstantThreshold())
 
-# #### `white_noise_dithering`
-test_on_images(white_noise_dithering; to_linear=true)
+# #### `WhiteNoiseThreshold`
+test_on_images(WhiteNoiseThreshold())
 
 # ## Ordered dithering
 # #### Bayer matrices
-test_on_images(bayer_dithering)
+# **Level 1**
+test_on_images(Bayer())
+# **Level 2**
+test_on_images(Bayer(2))
+# **Level 3**
+test_on_images(Bayer(3))
+# **Level 4**
+test_on_images(Bayer(4))
 
-# #### `clustered_dots_dithering`
-test_on_images(clustered_dots_dithering; to_linear=true)
+# #### `ClusteredDots`
+test_on_images(ClusteredDots())
 
-# #### `balanced_centered_point_dithering`
-test_on_images(balanced_centered_point_dithering; to_linear=true)
+# #### `CentralWhiteDot`
+test_on_images(CentralWhiteDot())
 
-# #### `rhombus_dithering`
-test_on_images(rhombus_dithering; to_linear=true)
+# #### `BalancedCenteredDot`
+test_on_images(BalancedCenteredDot())
+
+# #### `Rhombus`
+test_on_images(Rhombus())
 
 # ## Error diffusion
-# #### `simple_error_diffusion`
-test_on_images(simple_error_diffusion)
+# #### `SimpleErrorDiffusion`
+test_on_images(SimpleErrorDiffusion())
 
-# #### `floyd_steinberg_diffusion`
-test_on_images(floyd_steinberg_diffusion)
+# #### `FloydSteinberg`
+test_on_images(FloydSteinberg())
 
-# #### `jarvis_judice_diffusion`
-test_on_images(jarvis_judice_diffusion)
+# #### `JarvisJudice`
+test_on_images(JarvisJudice())
 
-# #### `stucki_diffusion`
-test_on_images(stucki_diffusion)
+# #### `Stucki`
+test_on_images(Stucki())
 
-# #### `burkes_diffusion`
-test_on_images(burkes_diffusion)
+# #### `Burkes`
+test_on_images(Burkes())
 
-# #### `sierra_diffusion`
-test_on_images(sierra_diffusion)
+# #### `Sierra`
+test_on_images(Sierra())
 
-# #### `two_row_sierra_diffusion`
-test_on_images(two_row_sierra_diffusion)
+# #### `TwoRowSierra`
+test_on_images(TwoRowSierra())
 
-# #### `sierra_lite_diffusion`
-test_on_images(sierra_lite_diffusion)
+# #### `SierraLite`
+test_on_images(SierraLite())
 
-# #### `atkinson_diffusion`
-test_on_images(atkinson_diffusion)
+# #### `Atkinson()`
+test_on_images(Atkinson())

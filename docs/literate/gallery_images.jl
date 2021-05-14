@@ -34,20 +34,20 @@ test_on_images(WhiteNoiseThreshold())
 # **Level 1**
 test_on_images(Bayer())
 # **Level 2**
-test_on_images(Bayer(2))
+test_on_images(Bayer(; level=2))
 # **Level 3**
-test_on_images(Bayer(3))
+test_on_images(Bayer(; level=3))
 # **Level 4**
-test_on_images(Bayer(4))
+test_on_images(Bayer(; level=4))
 
 # #### `ClusteredDots`
 test_on_images(ClusteredDots())
 
-# #### `CentralWhiteDot`
-test_on_images(CentralWhiteDot())
+# #### `CentralWhitePoint`
+test_on_images(CentralWhitePoint())
 
-# #### `BalancedCenteredDot`
-test_on_images(BalancedCenteredDot())
+# #### `BalancedCenteredPoint`
+test_on_images(BalancedCenteredPoint())
 
 # #### `Rhombus`
 test_on_images(Rhombus())

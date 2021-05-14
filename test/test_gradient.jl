@@ -54,12 +54,12 @@ algs_deterministic = Dict(
     "threshold_dithering" => ConstantThreshold(),
     # ordered dithering
     "bayer_dithering" => Bayer(),
-    "bayer_dithering_l2" => Bayer(2),
-    "bayer_dithering_l3" => Bayer(3),
-    "bayer_dithering_l4" => Bayer(4),
+    "bayer_dithering_l2" => Bayer(; level=2),
+    "bayer_dithering_l3" => Bayer(; level=3),
+    "bayer_dithering_l4" => Bayer(; level=4),
     "clustered_dots_dithering" => ClusteredDots(),
-    "central_white_dot_dithering" => CentralWhiteDot(),
-    "balanced_centered_point_dithering" => BalancedCenteredDot(),
+    "central_white_dot_dithering" => CentralWhitePoint(),
+    "balanced_centered_point_dithering" => BalancedCenteredPoint(),
     "rhombus_dithering" => Rhombus(),
     # error error_diffusion
     "simple_error_diffusion" => SimpleErrorDiffusion(),

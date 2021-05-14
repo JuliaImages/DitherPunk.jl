@@ -35,11 +35,11 @@ test_on_gradient(Bayer())
 # The order of the Bayer-matrix can be specified through the parameter `level`,
 # which defaults to `1`.
 # **Level 2**
-test_on_gradient(Bayer(2))
+test_on_gradient(Bayer(; level=2))
 # **Level 3**
-test_on_gradient(Bayer(3))
+test_on_gradient(Bayer(; level=3))
 # **Level 4**
-test_on_gradient(Bayer(4))
+test_on_gradient(Bayer(; level=4))
 
 # ### Clustered / halftone dithering
 # The following methods have large characteristic patterns and are therefore
@@ -48,11 +48,11 @@ test_on_gradient(Bayer(4))
 # #### `ClusteredDots`
 test_on_gradient(ClusteredDots())
 
-# #### `CentralWhiteDot`
-test_on_gradient(CentralWhiteDot())
+# #### `CentralWhitePoint`
+test_on_gradient(CentralWhitePoint())
 
-# #### `BalancedCenteredDot`
-test_on_gradient(BalancedCenteredDot())
+# #### `BalancedCenteredPoint`
+test_on_gradient(BalancedCenteredPoint())
 
 # #### `Rhombus`
 test_on_gradient(Rhombus())

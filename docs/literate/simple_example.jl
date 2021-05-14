@@ -17,8 +17,8 @@ img = adjust_histogram(img, LinearStretching()) # normalize
 
 # ## Dithering
 # We can now apply dithering algorithms of our choice,
-# for example `BalancedCenteredDot`.
-d = dither(img, BalancedCenteredDot());
+# for example `BalancedCenteredPoint`.
+d = dither(img, BalancedCenteredPoint());
 
 # ## Visualizing the result
 # The dithering algorithms return binary matrices of type `BitMatrix`.
@@ -30,11 +30,11 @@ Gray.(d)
 # To obtain a dithered image that more closely matches the human perception of brightness,
 # grayscale images can be converted to a linear color space using `srgb2linear`.
 # Alternatively, `dither` accepts the boolean keyword argument `to_linear`.
-d = dither(img, BalancedCenteredDot(); to_linear=true)
+d = dither(img, BalancedCenteredPoint(); to_linear=true)
 Gray.(d)
 
 # ## Working with small images
-# The previous `BalancedCenteredDot` algorithm has a large characteristic
+# The previous `BalancedCenteredPoint` algorithm has a large characteristic
 # pattern. Some algorithms work better on smaller images, for example `Bayer`,
 # another [ordered dithering algorithm](https://en.wikipedia.org/wiki/Ordered_dithering)
 # that leads to characteristic cross-hatch patterns.

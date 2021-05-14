@@ -22,7 +22,7 @@ export dither
 # Threshold dithering
 export ConstantThreshold, WhiteNoiseThreshold
 # Ordered dithering
-export Bayer, ClusteredDots, CentralWhiteDot, BalancedCenteredDot, Rhombus
+export Bayer, ClusteredDots, CentralWhitePoint, BalancedCenteredPoint, Rhombus
 # Error diffusion
 export SimpleErrorDiffusion, FloydSteinberg, JarvisJudice, Stucki, Burkes
 export Sierra, TwoRowSierra, SierraLite, Atkinson

@@ -11,7 +11,9 @@ Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 TiledIteration = "06e1c1a7-607b-532d-9fad-de7d9aa2abac"
 
 [compat]
+ColorSchemes = "3.12"
 ImageCore = "0.8.1, 0.9"
+OffsetArrays = "1"
 TiledIteration = "0.3"
 julia = "1"
 

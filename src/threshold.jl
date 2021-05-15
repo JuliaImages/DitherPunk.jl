@@ -5,7 +5,7 @@ function dither(
 )::Matrix{Gray{Bool}}
     tmap = alg(img)
     to_linear && (img = mappedarray(srgb2linear, img))
-    return img .> tmap
+    return reinterpret(Gray{Bool}, img .> tmap)
 end
 
 """

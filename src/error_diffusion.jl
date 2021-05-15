@@ -22,7 +22,7 @@ function dither(
     else
         _img = FT.(img)
     end
-    stencil = alg.stencil # eagerly promote to the same type to make loop run faster
+    stencil = eltype(FT).(alg.stencil) # eagerly promote to the same type to make loop run faster
 
     h, w = size(_img)
     dither = zeros(FT, h, w) # initialized to zero

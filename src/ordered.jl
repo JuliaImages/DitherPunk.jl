@@ -53,7 +53,8 @@ The Bayer matrix is of dimension ``2^{n+1} \\times 2^{n+1}``, where ``n`` is the
 which defaults to `1`.
 """
 struct Bayer <: AbstractOrderedDither
-    level::Integer
+struct Bayer{T<:Integer} <: AbstractOrderedDither
+    level::T
 
     function Bayer(; level=1)
         return new(level)

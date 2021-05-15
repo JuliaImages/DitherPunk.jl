@@ -35,7 +35,7 @@ struct ConstantThreshold{T<:Real} <: AbstractThresholdDither
     end
 end
 
-function (alg::ConstantThreshold)(img)
-    tmap = fill(Gray{N0f16}(alg.threshold), size(img)) # constant matrix of value threshold
+function (alg::ConstantThreshold{T})(img) where {T}
+    tmap = fill(Gray{T}(alg.threshold), size(img)) # constant matrix of value threshold
     return tmap
 end

@@ -24,4 +24,5 @@ imshow(img)
 # Run & test dither
 d = dither(img, FloydSteinberg(), rubiks_colors)
 @test_reference "references/color_FloydSteinberg.txt" d
+@test eltype(d) == eltype(img)
 imshow(d)

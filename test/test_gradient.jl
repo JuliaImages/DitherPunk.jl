@@ -77,9 +77,11 @@ for (name, alg) in algs_deterministic
     d = dither(img, alg)
     print_braille(d; title=name) # Visualize in terminal
     @test_reference "references/grad_$(name).txt" Int.(d)
+    @test eltype(d) == Gray{Bool}
 
     d = dither(img, alg; to_linear=true)
     @test_reference "references/grad_$(name)_linear.txt" Int.(d)
+    @test eltype(d) == Gray{Bool}
 end
 
 ## Algorithms with random output are currently only tested visually

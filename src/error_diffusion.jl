@@ -25,7 +25,9 @@ function dither(
     else
         _img = FT.(img)
     end
-    stencil = eltype(FT).(alg.stencil) # eagerly promote to the same type to make loop run faster
+
+    # eagerly promote to the same type to make loop run faster
+    stencil = eltype(FT).(alg.stencil)
 
     h, w = size(_img)
     dither = zeros(FT, h, w) # initialized to zero
@@ -73,9 +75,9 @@ function dither(
     metric=BinaryDitherMetric(),
     kwargs...,
 )::Matrix{Gray{Bool}}
-    cs = [Gray(0), Gray(1)] # b&w color scheme
-    d = dither(img, alg, cs; metric, kwargs...)
-    return reinterpret(Gray{Bool}, d)
+    cs = [Gray(false), Gray(true)] # b&w color scheme
+    d = dither(img, alg, cs; metric=metric, kwargs...)
+    return d
 end
 
 SimpleErrorDiffusion() = ErrorDiffusion(OffsetMatrix([0 1; 1 0]//2, 0:1, 0:1))

@@ -35,7 +35,7 @@ function dither(
             px = _img[r, c]
 
             # Round to closest color
-            col = closest_color(px, cs; metric)
+            col = closest_color(px, cs; metric=metric)
 
             # Apply pixel to dither
             dither[r, c] = col
@@ -70,7 +70,7 @@ function dither(
 )
     # Construct grayscale color scheme of length `steps`
     cs = [Gray(i) for i in range(0.0, 1.0; length=steps)]
-    d = dither(img, alg, cs; metric, kwargs...)
+    d = dither(img, alg, cs; metric=metric, kwargs...)
     if steps == 2
         # match return type of other binary dithering algorithms
         return Gray{Bool}.(d)

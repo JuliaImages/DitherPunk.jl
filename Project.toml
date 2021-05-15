@@ -20,10 +20,11 @@ julia = "1"
 [extras]
 ImageInTerminal = "d8c32880-2388-543b-8c61-d9f865259254"
 Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
+ImageMagick = "6218d12a-5da1-5696-b52f-db25d2ecc6d1"
 ReferenceTests = "324d217c-45ce-50fc-942e-d289b448e8cf"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 TestImages = "5e47fb64-e119-507b-a336-dd2b206d9990"
 UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
 
 [targets]
-test = ["ImageInTerminal", "Images", "ReferenceTests", "Test", "TestImages", "UnicodePlots"]
+test = ["ImageInTerminal", "Images", "ImageMagick", "ReferenceTests", "Test", "TestImages", "UnicodePlots"]

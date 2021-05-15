@@ -52,12 +52,11 @@ Ordered dithering using the Bayer matrix as a threshold matrix.
 The Bayer matrix is of dimension ``2^{n+1} \\times 2^{n+1}``, where ``n`` is the `level`,
 which defaults to `1`.
 """
-struct Bayer <: AbstractOrderedDither
 struct Bayer{T<:Integer} <: AbstractOrderedDither
     level::T
 
     function Bayer(; level=1)
-        return new(level)
+        return new{typeof(level)}(level)
     end
 end
 function threshold_map(b::Bayer)

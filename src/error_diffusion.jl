@@ -2,6 +2,9 @@ struct ErrorDiffusion{AT<:AbstractArray} <: AbstractDither
     stencil::AT
 end
 
+"""
+Error diffusion for general color schemes `cs`.
+"""
 function dither(
     img::AbstractMatrix{T},
     alg::ErrorDiffusion,
@@ -61,21 +64,18 @@ function dither(
     return dither(img, alg, cs.colors; kwargs...)
 end
 
+"""
+Binary error diffusion.
+"""
 function dither(
     img::AbstractMatrix{<:AbstractGray},
     alg::ErrorDiffusion;
-    steps=2,
     metric=BinaryDitherMetric(),
     kwargs...,
-)
-    # Construct grayscale color scheme of length `steps`
-    cs = [Gray(i) for i in range(0.0, 1.0; length=steps)]
-    d = dither(img, alg, cs; metric=metric, kwargs...)
-    if steps == 2
-        # match return type of other binary dithering algorithms
-        return Gray{Bool}.(d)
-    end
-    return d
+)::Matrix{Gray{Bool}}
+    cs = [Gray(0), Gray(1)] # b&w color scheme
+    d = dither(img, alg, cs; metric, kwargs...)
+    return reinterpret(Gray{Bool}, d)
 end
 
 SimpleErrorDiffusion() = ErrorDiffusion(OffsetMatrix([0 1; 1 0]//2, 0:1, 0:1))

@@ -17,7 +17,7 @@ Return color in ColorScheme `cs` that is closest to `color`
 function closest_color(
     color::Colorant, cs::AbstractVector{<:Colorant}; metric=DE_2000()
 )::Colorant
-    imin = argmin(colordiff.(color, cs; metric))
+    imin = argmin(colordiff.(color, cs; metric=metric))
     return cs[imin]
 end
 

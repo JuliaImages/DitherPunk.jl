@@ -77,7 +77,7 @@ function dither(
 )::Matrix{Gray{Bool}}
     cs = [Gray(false), Gray(true)] # b&w color scheme
     d = dither(img, alg, cs; metric=metric, kwargs...)
-    return d
+    return convert(Matrix{Gray{Bool}}, d)
 end
 
 SimpleErrorDiffusion() = ErrorDiffusion(OffsetMatrix([0 1; 1 0]//2, 0:1, 0:1))

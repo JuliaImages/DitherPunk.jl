@@ -19,11 +19,9 @@ DocMeta.setdocmeta!(DitherPunk, :DocTestSetup, :(using DitherPunk); recursive=tr
 makedocs(;
     modules=[DitherPunk],
     authors="Adrian Hill",
-    repo="https://github.com/adrhill/DitherPunk.jl/blob/{commit}{path}#{line}",
     sitename="DitherPunk.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://adrhill.github.io/DitherPunk.jl",
         assets=String[],
     ),
     pages=[
@@ -38,4 +36,4 @@ makedocs(;
     ],
 )
 
-deploydocs(; repo="github.com/adrhill/DitherPunk.jl")
+deploydocs(; repo="github.com/JuliaImages/DitherPunk.jl")

@@ -11,7 +11,7 @@ A [dithering / digital halftoning](https://en.wikipedia.org/wiki/Dither) package
 
 
 ## Examples
-**[Check out the gallery](https://adrhill.github.io/DitherPunk.jl/stable/generated/gallery_images/)** for an overview of currently implemented algorithms.
+**[Check out the gallery](https://JuliaImages.github.io/DitherPunk.jl/stable/generated/gallery_images/)** for an overview of currently implemented algorithms.
 
 ## Installation 
 To install this package and its dependencies, open the Julia REPL and run 
@@ -25,13 +25,13 @@ ___
 **Feel free to leave a GitHub Issue if you know of any cool  algorithms you'd like to see implemented! 🔬🔧**
 
 [docs-stab-img]: https://img.shields.io/badge/docs-stable-blue.svg
-[docs-stab-url]: https://adrhill.github.io/DitherPunk.jl/stable
+[docs-stab-url]: https://JuliaImages.github.io/DitherPunk.jl/stable
 
 [docs-dev-img]: https://img.shields.io/badge/docs-main-blue.svg
-[docs-dev-url]: https://adrhill.github.io/DitherPunk.jl/dev
+[docs-dev-url]: https://JuliaImages.github.io/DitherPunk.jl/dev
 
-[ci-img]: https://github.com/adrhill/DitherPunk.jl/workflows/CI/badge.svg
-[ci-url]: https://github.com/adrhill/DitherPunk.jl/actions
+[ci-img]: https://github.com/JuliaImages/DitherPunk.jl/workflows/CI/badge.svg
+[ci-url]: https://github.com/JuliaImages/DitherPunk.jl/actions
 
-[codecov-img]: https://codecov.io/gh/adrhill/DitherPunk.jl/branch/master/graph/badge.svg
-[codecov-url]: https://codecov.io/gh/adrhill/DitherPunk.jl
+[codecov-img]: https://codecov.io/gh/JuliaImages/DitherPunk.jl/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/JuliaImages/DitherPunk.jl

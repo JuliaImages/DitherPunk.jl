@@ -1,4 +1,5 @@
 using DitherPunk
+using DitherPunk: gradient_image, test_on_gradient
 using Images
 
 # # Gallery
@@ -20,59 +21,66 @@ mosaicview(srbg, linear)
 # Select what looks best!
 #
 # ## Threshold dithering
-# #### `threshold_dithering`
-test_on_gradient(threshold_dithering)
+# #### `ConstantThreshold`
+test_on_gradient(ConstantThreshold())
 
-# #### `white_noise_dithering`
-test_on_gradient(white_noise_dithering)
+# #### `WhiteNoiseThreshold`
+test_on_gradient(WhiteNoiseThreshold())
 
 # ## Ordered dithering
 # ### Bayer matrices
 # #### `bayer_dithering`
-test_on_gradient(bayer_dithering)
+test_on_gradient(Bayer())
 
 # The order of the Bayer-matrix can be specified through the parameter `level`,
 # which defaults to `1`.
-bayer_dithering_algs = [(img) -> (bayer_dithering(img; level=level)) for level in 4:-1:0]
-test_on_gradient(bayer_dithering_algs)
+# **Level 2**
+test_on_gradient(Bayer(; level=2))
+# **Level 3**
+test_on_gradient(Bayer(; level=3))
+# **Level 4**
+test_on_gradient(Bayer(; level=4))
 
 # ### Clustered / halftone dithering
 # The following methods have large characteristic patterns and are therefore
 # better suited for large images.
 #
-# #### `clustered_dots_dithering`
-test_on_gradient(clustered_dots_dithering)
+# #### `ClusteredDots`
+test_on_gradient(ClusteredDots())
 
-# #### `balanced_centered_point_dithering`
-test_on_gradient(balanced_centered_point_dithering)
+# #### `CentralWhitePoint`
+test_on_gradient(CentralWhitePoint())
 
-# #### `rhombus_dithering`
-test_on_gradient(rhombus_dithering)
+# #### `BalancedCenteredPoint`
+test_on_gradient(BalancedCenteredPoint())
+
+# #### `Rhombus`
+test_on_gradient(Rhombus())
 
 # ## Error diffusion
-# #### `simple_error_diffusion`
-test_on_gradient(simple_error_diffusion)
+# #### `SimpleErrorDiffusion`
+test_on_gradient(SimpleErrorDiffusion())
 
-# #### `floyd_steinberg_diffusion`
-test_on_gradient(floyd_steinberg_diffusion)
+# #### `FloydSteinberg`
+test_on_gradient(FloydSteinberg())
 
-# #### `jarvis_judice_diffusion`
-test_on_gradient(jarvis_judice_diffusion)
+# #### `JarvisJudice`
+test_on_gradient(JarvisJudice())
 
-# #### `stucki_diffusion`
-test_on_gradient(stucki_diffusion)
+# #### `Stucki`
+test_on_gradient(Stucki())
 
-# #### `burkes_diffusion`
-test_on_gradient(burkes_diffusion)
+# #### `Burkes`
+test_on_gradient(Burkes())
 
-# #### `sierra_diffusion`
-test_on_gradient(sierra_diffusion)
+# #### `Sierra`
+test_on_gradient(Sierra())
 
-# #### `two_row_sierra_diffusion`
-test_on_gradient(two_row_sierra_diffusion)
+# #### `TwoRowSierra`
+test_on_gradient(TwoRowSierra())
 
-# #### `sierra_lite_diffusion`
-test_on_gradient(sierra_lite_diffusion)
+# #### `SierraLite`
+test_on_gradient(SierraLite())
 
-# #### `atkinson_diffusion`
-test_on_gradient(atkinson_diffusion)
+# #### `Atkinson()`
+test_on_gradient(Atkinson())

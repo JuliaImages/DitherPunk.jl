@@ -8,4 +8,7 @@ using Test
     @testset "Gradient image" begin
         include("test_gradient.jl")
     end
+    @testset "Color image" begin
+        include("test_color.jl")
+    end
 end

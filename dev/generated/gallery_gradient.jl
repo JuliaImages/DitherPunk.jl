@@ -1,41 +1,47 @@
 using DitherPunk
+using DitherPunk: gradient_image, test_on_gradient
 using Images
 
 srbg, linear = gradient_image(100, 800);
 mosaicview(srbg, linear)
 
-test_on_gradient(threshold_dithering)
+test_on_gradient(ConstantThreshold())
 
-test_on_gradient(white_noise_dithering)
+test_on_gradient(WhiteNoiseThreshold())
 
-test_on_gradient(bayer_dithering)
+test_on_gradient(Bayer())
 
-bayer_dithering_algs = [(img) -> (bayer_dithering(img; level=level)) for level in 4:-1:0]
-test_on_gradient(bayer_dithering_algs)
+test_on_gradient(Bayer(; level=2))
 
-test_on_gradient(clustered_dots_dithering)
+test_on_gradient(Bayer(; level=3))
 
-test_on_gradient(balanced_centered_point_dithering)
+test_on_gradient(Bayer(; level=4))
 
-test_on_gradient(rhombus_dithering)
+test_on_gradient(ClusteredDots())
 
-test_on_gradient(simple_error_diffusion)
+test_on_gradient(CentralWhitePoint())
 
-test_on_gradient(floyd_steinberg_diffusion)
+test_on_gradient(BalancedCenteredPoint())
 
-test_on_gradient(jarvis_judice_diffusion)
+test_on_gradient(Rhombus())
 
-test_on_gradient(stucki_diffusion)
+test_on_gradient(SimpleErrorDiffusion())
 
-test_on_gradient(burkes_diffusion)
+test_on_gradient(FloydSteinberg())
 
-test_on_gradient(sierra_diffusion)
+test_on_gradient(JarvisJudice())
 
-test_on_gradient(two_row_sierra_diffusion)
+test_on_gradient(Stucki())
 
-test_on_gradient(sierra_lite_diffusion)
+test_on_gradient(Burkes())
 
-test_on_gradient(atkinson_diffusion)
+test_on_gradient(Sierra())
+
+test_on_gradient(TwoRowSierra())
+
+test_on_gradient(SierraLite())
+
+test_on_gradient(Atkinson())
 
 # This file was generated using Literate.jl, https://github.com/fredrikekre/Literate.jl
 

@@ -26,6 +26,10 @@ rubiks_colors = ColorScheme([white, yellow, green, orange, red, blue])
 img = testimage("fabio_color_256")
 img = imresize(img, 60, 60)
 
-# and run an `ErrorDiffusion` algorithm of our choice, e.g. `FloydSteinberg`.
-# For an overview of all error diffusion algorithms, check out the gallery.
+# and run an `ErrorDiffusion` algorithm of our choice, e.g. `FloydSteinberg`
 d = dither(img, FloydSteinberg(), rubiks_colors)
+
+# or simply quantize to the closest color:
+d = dither(img, ClosestColor(), rubiks_colors)
+
+# For an overview of all error diffusion algorithms, check out the gallery.

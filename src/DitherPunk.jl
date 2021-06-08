@@ -13,6 +13,7 @@ include("colorspaces.jl")
 include("threshold.jl")
 include("ordered.jl")
 include("error_diffusion.jl")
+include("closest_color.jl")
 include("show.jl")
 include("eval.jl")
 
@@ -24,6 +25,8 @@ export Bayer, ClusteredDots, CentralWhitePoint, BalancedCenteredPoint, Rhombus
 # Error diffusion
 export SimpleErrorDiffusion, FloydSteinberg, JarvisJudice, Stucki, Burkes
 export Sierra, TwoRowSierra, SierraLite, Atkinson
+# Closest color
+export ClosestColor
 
 export upscale
 

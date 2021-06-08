@@ -6,11 +6,9 @@ using ImageCore.MappedArrays
 using ImageCore.Colors: DifferenceMetric
 using Random
 using OffsetArrays
-using ColorSchemes
-
-abstract type AbstractDither end
 
 include("compat.jl")
+include("dither_api.jl")
 include("colorspaces.jl")
 include("threshold.jl")
 include("ordered.jl")
@@ -18,7 +16,7 @@ include("error_diffusion.jl")
 include("show.jl")
 include("eval.jl")
 
-export dither
+export dither, dither!
 # Threshold dithering
 export ConstantThreshold, WhiteNoiseThreshold
 # Ordered dithering

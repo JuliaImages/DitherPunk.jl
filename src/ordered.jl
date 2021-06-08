@@ -1,4 +1,4 @@
-abstract type AbstractOrderedDither <: AbstractDither end
+abstract type AbstractOrderedDither <: AbstractGrayDither end
 
 """
     dither(img::AbstractMatrix, alg::AbstractOrderedDither; to_linear=false, invert_map=false)
@@ -9,12 +9,9 @@ The threshold matrix is repeatedly tiled to match the size of `img` and is then 
 as a per-pixel threshold map.
 Optionally, this final threshold map can be inverted by selecting `invert_map=true`.
 """
-function dither(
-    img::AbstractMatrix{<:AbstractGray},
-    alg::AbstractOrderedDither;
-    to_linear=false,
-    invert_map=false,
-)::Matrix{Gray{Bool}}
+function (alg::AbstractOrderedDither)(
+    out::GenericGrayImage, img::GenericGrayImage; invert_map=false
+)
     mat = threshold_map(alg)
 
     # eagerly promote to the same eltype to make for-loop faster
@@ -24,10 +21,7 @@ function dither(
     else
         mat = FT.(mat)
     end
-    linear_fun = to_linear ? srgb2linear : identity
-    img = @. FT.(linear_fun.(img))
 
-    out = zeros(Gray{Bool}, size(img))
     # TODO: add Threads.@threads to this for loop further improves the performances
     #       but it has unidentified memory allocations
     @inbounds for R in TileIterator(axes(img), size(mat))

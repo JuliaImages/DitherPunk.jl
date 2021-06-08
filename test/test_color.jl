@@ -1,6 +1,5 @@
 using DitherPunk
 using DitherPunk: closest_color
-using ColorSchemes
 using ImageCore
 using TestImages
 
@@ -12,17 +11,24 @@ orange = RGB{Float32}(1, 0.5, 0)
 red = RGB{Float32}(1, 0, 0)
 blue = RGB{Float32}(0, 0, 1)
 
-rubiks_colors = ColorScheme([white, yellow, green, orange, red, blue])
+cs = [white, yellow, green, orange, red, blue]
 
 # Test helper function
-@test closest_color(RGB{Float32}(1, 0.1, 0.1), rubiks_colors.colors) == red
+@test closest_color(RGB{Float32}(1, 0.1, 0.1), cs) == red
 
 # Load test image
 img = testimage("fabio_color_256")
 imshow(img)
 
 # Run & test dither
-d = dither(img, FloydSteinberg(), rubiks_colors)
-@test_reference "references/color_FloydSteinberg.txt" d
-@test eltype(d) == eltype(img)
-imshow(d)
+algs = Dict(
+    "FloydSteinberg" => FloydSteinberg(),
+    "ClosestColor" => ClosestColor(),
+)
+
+for (name, alg) in algs
+    d = dither(img, alg, cs)
+    @test_reference "references/color_$(name).txt" d
+    @test eltype(d) == eltype(cs)
+    imshow(d)
+end

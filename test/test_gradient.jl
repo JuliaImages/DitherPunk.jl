@@ -79,7 +79,7 @@ for (name, alg) in algs_deterministic
     @test_reference "references/grad_$(name).txt" Int.(d)
     @test eltype(d) == Gray{Bool}
 
-    d = dither(img, alg; to_linear=true)
+    d = dither!(d, alg; to_linear=true)
     @test_reference "references/grad_$(name)_linear.txt" Int.(d)
     @test eltype(d) == Gray{Bool}
 end

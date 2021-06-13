@@ -1,6 +1,5 @@
 using DitherPunk
 using Images
-using ColorSchemes
 using TestImages
 
 # # Color dithering
@@ -15,11 +14,7 @@ orange = RGB{Float32}(1, 0.5, 0)
 red = RGB{Float32}(1, 0, 0)
 blue = RGB{Float32}(0, 0, 1)
 
-rubiks_colors = ColorScheme([white, yellow, green, orange, red, blue])
-
-# Any of the predefined color schemes from
-# [ColorSchemes.jl](https://juliagraphics.github.io/ColorSchemes.jl/stable/basics/#Pre-defined-schemes)
-# can also be used!
+rubiks_colors = [white, yellow, green, orange, red, blue]
 
 # ## Dithering the image
 # Now we only have to pick an image
@@ -33,3 +28,15 @@ d = dither(img, FloydSteinberg(), rubiks_colors)
 d = dither(img, ClosestColor(), rubiks_colors)
 
 # For an overview of all error diffusion algorithms, check out the gallery.
+
+# ## Using ColorSchemes.jl
+# Predefined color schemes from
+# [ColorSchemes.jl](https://juliagraphics.github.io/ColorSchemes.jl/stable/basics/#Pre-defined-schemes)
+# can also be used by accessing the color scheme's `colors`.
+# Let's use the colors of the Brazilian flag 🇧🇷:
+using ColorSchemes
+cs = ColorSchemes.flag_br
+colors = cs.colors
+
+img = testimage("fabio_color_256")
+d = dither(img, Atkinson(), colors)

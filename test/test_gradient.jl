@@ -49,26 +49,26 @@ imshow(srgb)
 # using Dict for Julia 1.0 compatibility
 algs_deterministic = Dict(
     # threshold methods
-    "threshold_dithering" => ConstantThreshold(),
+    "ConstantThreshold" => ConstantThreshold(),
     # ordered dithering
-    "bayer_dithering" => Bayer(),
-    "bayer_dithering_l2" => Bayer(; level=2),
-    "bayer_dithering_l3" => Bayer(; level=3),
-    "bayer_dithering_l4" => Bayer(; level=4),
-    "clustered_dots_dithering" => ClusteredDots(),
-    "central_white_dot_dithering" => CentralWhitePoint(),
-    "balanced_centered_point_dithering" => BalancedCenteredPoint(),
-    "rhombus_dithering" => Rhombus(),
+    "Bayer" => Bayer(),
+    "Bayer_l2" => Bayer(; level=2),
+    "Bayer_l3" => Bayer(; level=3),
+    "Bayer_l4" => Bayer(; level=4),
+    "ClusteredDots" => ClusteredDots(),
+    "CentralWhitePoint" => CentralWhitePoint(),
+    "BalancedCenteredPoint" => BalancedCenteredPoint(),
+    "Rhombus" => Rhombus(),
     # error error_diffusion
-    "simple_error_diffusion" => SimpleErrorDiffusion(),
-    "floyd_steinberg_diffusion" => FloydSteinberg(),
-    "jarvis_judice_diffusion" => JarvisJudice(),
-    "stucki_diffusion" => Stucki(),
-    "burkes_diffusion" => Burkes(),
-    "atkinson_diffusion" => Atkinson(),
-    "sierra_diffusion" => Sierra(),
-    "two_row_sierra_diffusion" => TwoRowSierra(),
-    "sierra_lite_diffusion" => SierraLite(),
+    "SimpleErrorDiffusion" => SimpleErrorDiffusion(),
+    "FloydSteinberg" => FloydSteinberg(),
+    "JarvisJudice" => JarvisJudice(),
+    "Stucki" => Stucki(),
+    "Burkes" => Burkes(),
+    "Atkinson" => Atkinson(),
+    "Sierra" => Sierra(),
+    "TwoRowSierra" => TwoRowSierra(),
+    "SierraLite" => SierraLite(),
 )
 
 for (name, alg) in algs_deterministic

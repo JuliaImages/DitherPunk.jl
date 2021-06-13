@@ -2,7 +2,6 @@ abstract type AbstractDither end
 abstract type AbstractColorDither <: AbstractDither end
 abstract type AbstractGrayDither <: AbstractColorDither end
 
-const GenericGrayImage = AbstractArray{<:Union{Number,AbstractGray}}
 const GenericImage = Union{GenericGrayImage,AbstractArray{<:Colorant}}
 
 function dither!(

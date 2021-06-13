@@ -3,6 +3,7 @@ using DitherPunk: gradient_image
 using ReferenceTests
 
 using ImageCore
+using ImageCore: GenericGrayImage
 using ImageInTerminal
 using UnicodePlots
 
@@ -14,7 +15,7 @@ h = 4 * 4 # multiple of 4 for unicode braille print
 in braille through UnicodePlots.
 """
 function print_braille(
-    img::Matrix{Gray{Bool}};
+    img::GenericGrayImage;
     invert=false,
     title="DitherPunk.jl",
     color=:white,
@@ -22,10 +23,7 @@ function print_braille(
     kwargs...,
 )
     h, w = size(img)
-
-    # Optionally invert Binary image before printing
-    img = Int.(img)
-    invert && (img .= iszero.(img))
+    img = Bool.(img)
 
     println("")
     show(
@@ -74,14 +72,18 @@ algs_deterministic = Dict(
 )
 
 for (name, alg) in algs_deterministic
-    d = dither(img, alg)
-    print_braille(d; title=name) # Visualize in terminal
+    img2 = copy(img)
+    d = dither(img2, alg)
     @test_reference "references/grad_$(name).txt" Int.(d)
     @test eltype(d) == Gray{Bool}
+    @test img2 == img # image not modified
 
-    d = dither!(d, alg; to_linear=true)
+    print_braille(d; title=name) # Visualize in terminal
+
+    d = dither!(img2, alg; to_linear=true)
     @test_reference "references/grad_$(name)_linear.txt" Int.(d)
-    @test eltype(d) == Gray{Bool}
+    @test eltype(d) == eltype(img)
+    @test img2 == d # image updated in-place
 end
 
 ## Algorithms with random output are currently only tested visually
@@ -91,8 +93,14 @@ algs_random = Dict(
 )
 
 for (name, alg) in algs_random
-    d = dither(img, alg; to_linear=true)
+    img2 = copy(img)
+    d = dither(img2, alg)
+    print_braille(d; title=name) # Visualize in terminal
+    @test eltype(d) == Gray{Bool}
+    @test img2 == img # image not modified
 
-    # Visualize in terminal
-    print_braille(d; title=name)
+    d = dither!(img2, alg; to_linear=true)
+    print_braille(d; title="$(name) linear") # Visualize in terminal
+    @test eltype(d) == eltype(img)
+    @test img2 == d # image updated in-place
 end

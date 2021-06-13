@@ -21,14 +21,18 @@ img = testimage("fabio_color_256")
 imshow(img)
 
 # Run & test dither
-algs = Dict(
-    "FloydSteinberg" => FloydSteinberg(),
-    "ClosestColor" => ClosestColor(),
-)
+algs = Dict("FloydSteinberg" => FloydSteinberg(), "ClosestColor" => ClosestColor())
 
 for (name, alg) in algs
-    d = dither(img, alg, cs)
+    img2 = copy(img)
+    d = dither(img2, alg, cs)
     @test_reference "references/color_$(name).txt" d
     @test eltype(d) == eltype(cs)
+    @test img2 == img # image not modified
+
     imshow(d)
+
+    d = dither!(img2, alg, cs)
+    @test eltype(d) == eltype(img)
+    @test img2 == d # image updated in-place
 end

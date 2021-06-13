@@ -1,8 +1,8 @@
 module DitherPunk
 
-using ImageCore
 using TiledIteration
-using ImageCore.MappedArrays
+using ImageCore
+using ImageCore: GenericGrayImage, MappedArrays
 using ImageCore.Colors: DifferenceMetric
 using Random
 using OffsetArrays

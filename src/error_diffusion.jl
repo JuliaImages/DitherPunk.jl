@@ -53,7 +53,7 @@ function (alg::ErrorDiffusion)(
         end
     end
 
-    return dither
+    return out
 end
 
 """

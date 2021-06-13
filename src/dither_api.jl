@@ -48,7 +48,7 @@ end
 
 # Default return type for grayscale algs: type of color scheme `cs`
 function dither(
-    img::GenericImage, alg::AbstractDither, cs::AbstractVector{T}, args...; kwargs...
+    img::GenericImage, alg::AbstractColorDither, cs::AbstractVector{T}, args...; kwargs...
 ) where {T<:Colorant}
     return dither(T, img, alg, cs, args...; kwargs...)
 end

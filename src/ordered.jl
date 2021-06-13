@@ -1,4 +1,6 @@
-abstract type AbstractOrderedDither <: AbstractGrayDither end
+struct OrderedDither{T<:AbstractMatrix} <: AbstractGrayDither
+    mat::T
+end
 
 """
     dither(img::AbstractMatrix, alg::AbstractOrderedDither; to_linear=false, invert_map=false)
@@ -9,17 +11,15 @@ The threshold matrix is repeatedly tiled to match the size of `img` and is then 
 as a per-pixel threshold map.
 Optionally, this final threshold map can be inverted by selecting `invert_map=true`.
 """
-function (alg::AbstractOrderedDither)(
+function (alg::OrderedDither)(
     out::GenericGrayImage, img::GenericGrayImage; invert_map=false
 )
-    mat = threshold_map(alg)
-
     # eagerly promote to the same eltype to make for-loop faster
     FT = floattype(eltype(img))
     if invert_map
-        mat = @. FT(1 - mat)
+        mat = @. FT(1 - alg.mat)
     else
-        mat = FT.(mat)
+        mat = FT.(alg.mat)
     end
 
     # TODO: add Threads.@threads to this for loop further improves the performances
@@ -46,16 +46,9 @@ Ordered dithering using the Bayer matrix as a threshold matrix.
 The Bayer matrix is of dimension ``2^{n+1} \\times 2^{n+1}``, where ``n`` is the `level`,
 which defaults to `1`.
 """
-struct Bayer{T<:Integer} <: AbstractOrderedDither
-    level::T
-
-    function Bayer(; level=1)
-        return new{typeof(level)}(level)
-    end
-end
-function threshold_map(b::Bayer)
-    bayer = bayer_matrix(b.level)
-    return bayer//(2^(2 * b.level + 2))
+function Bayer(; level=1)
+    bayer = bayer_matrix(level)
+    return OrderedDither(bayer//(2^(2 * level + 2)))
 end
 
 """
@@ -81,8 +74,7 @@ end
 Clustered dots ordered dithering.
 Uses ``6 \\times 6`` threshold matrix `CLUSTERED_DOTS_MAT`.
 """
-struct ClusteredDots <: AbstractOrderedDither end
-threshold_map(::ClusteredDots) = CLUSTERED_DOTS_MAT
+ClusteredDots() = OrderedDither(CLUSTERED_DOTS_MAT)
 const CLUSTERED_DOTS_MAT =
     [
         34 29 17 21 30 35
@@ -99,8 +91,7 @@ const CLUSTERED_DOTS_MAT =
 Central white point ordered dithering.
 Uses ``6 \\times 6`` threshold matrix `CENTRAL_WHITE_POINT_MAT`.
 """
-struct CentralWhitePoint <: AbstractOrderedDither end
-threshold_map(::CentralWhitePoint) = CENTRAL_WHITE_POINT_MAT
+CentralWhitePoint() = OrderedDither(CENTRAL_WHITE_POINT_MAT)
 const CENTRAL_WHITE_POINT_MAT =
     [
         34 25 21 17 29 33
@@ -117,8 +108,7 @@ const CENTRAL_WHITE_POINT_MAT =
 Balanced centered point ordered dithering.
 Uses ``6 \\times 6`` threshold matrix `BALANCED_CENTERED_POINT_MAT`.
 """
-struct BalancedCenteredPoint <: AbstractOrderedDither end
-threshold_map(::BalancedCenteredPoint) = BALANCED_CENTERED_POINT_MAT
+BalancedCenteredPoint() = OrderedDither(BALANCED_CENTERED_POINT_MAT)
 const BALANCED_CENTERED_POINT_MAT =
     [
         30 22 16 21 33 35
@@ -135,8 +125,7 @@ const BALANCED_CENTERED_POINT_MAT =
 Diagonal ordered matrix with balanced centered points.
 Uses ``8 \\times 8`` threshold matrix `RHOMBUS_MAT`.
 """
-struct Rhombus <: AbstractOrderedDither end
-threshold_map(::Rhombus) = RHOMBUS_MAT
+Rhombus() = OrderedDither(RHOMBUS_MAT)
 const S₁ = [
     13 9 5 12
     6 1 0 8

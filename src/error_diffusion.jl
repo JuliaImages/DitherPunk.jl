@@ -26,7 +26,7 @@ function (alg::ErrorDiffusion)(
     stencil = eltype(FT).(alg.stencil)
 
     h, w = size(img)
-    out .*= 0  # initialize to zero
+    fill!(out, zero(eltype(out)))
 
     drs = axes(alg.stencil, 1)
     dcs = axes(alg.stencil, 2)

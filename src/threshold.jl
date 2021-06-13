@@ -1,12 +1,4 @@
-abstract type AbstractThresholdDither <: AbstractDither end
-
-function dither(
-    img::AbstractMatrix{<:Gray}, alg::AbstractThresholdDither; to_linear=false
-)::Matrix{Gray{Bool}}
-    tmap = alg(img)
-    to_linear && (img = mappedarray(srgb2linear, img))
-    return reinterpret(Gray{Bool}, img .> tmap)
-end
+abstract type AbstractThresholdDither <: AbstractGrayDither end
 
 """
     WhiteNoiseThreshold()
@@ -14,9 +6,11 @@ end
 Use white noise as a threshold map.
 """
 struct WhiteNoiseThreshold <: AbstractThresholdDither end
-function (alg::WhiteNoiseThreshold)(img)
-    tmap = rand(Gray{N0f16}, size(img)) # threshold map is white noise
-    return tmap
+
+function (alg::WhiteNoiseThreshold)(out::GenericGrayImage, img::GenericGrayImage)
+    tmap = rand(eltype(img), size(img))
+    out .= img .> tmap
+    return out
 end
 
 """
@@ -35,7 +29,8 @@ struct ConstantThreshold{T<:Real} <: AbstractThresholdDither
     end
 end
 
-function (alg::ConstantThreshold{T})(img) where {T}
-    tmap = fill(Gray{T}(alg.threshold), size(img)) # constant matrix of value threshold
-    return tmap
+function (alg::ConstantThreshold)(out::GenericGrayImage, img::GenericGrayImage)
+    tmap = fill(alg.threshold, size(img)) # constant matrix of value threshold
+    out .= img .> tmap
+    return out
 end

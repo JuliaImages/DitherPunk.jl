@@ -1,17 +1,16 @@
-struct ErrorDiffusion{AT<:AbstractArray} <: AbstractDither
+struct ErrorDiffusion{AT<:AbstractArray} <: AbstractColorDither
     stencil::AT
 end
 
 """
 Error diffusion for general color schemes `cs`.
 """
-function dither(
-    img::AbstractMatrix{T},
-    alg::ErrorDiffusion,
-    cs::Vector{<:Colorant};
-    to_linear=false,
+function (alg::ErrorDiffusion)(
+    out::GenericImage,
+    img::GenericImage,
+    cs::AbstractVector{<:Colorant};
     metric::DifferenceMetric=DE_2000(),
-)::Matrix{T} where {T<:Color}
+)
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
 
@@ -19,38 +18,35 @@ function dither(
         throw(DomainError(steps, "Color scheme for dither needs >= 2 colors."))
 
     # Change from normalized intensities to Float as error will get added!
-    FT = floattype(T)
-    if to_linear
-        _img = @. FT(srgb2linear(img))
-    else
-        _img = FT.(img)
-    end
+    FT = floattype(eltype(out))
 
     # eagerly promote to the same type to make loop run faster
+    img = FT.(img)
+    cs = FT.(cs)
     stencil = eltype(FT).(alg.stencil)
 
-    h, w = size(_img)
-    dither = zeros(FT, h, w) # initialized to zero
+    h, w = size(img)
+    fill!(out, zero(eltype(out)))
 
     drs = axes(alg.stencil, 1)
     dcs = axes(alg.stencil, 2)
 
     @inbounds for r in 1:h
         for c in 1:w
-            px = _img[r, c]
+            px = img[r, c]
 
             # Round to closest color
             col = closest_color(px, cs; metric=metric)
 
             # Apply pixel to dither
-            dither[r, c] = col
+            out[r, c] = col
 
             # Diffuse "error" to neighborhood in stencil
             err = px - col
             for dr in drs
                 for dc in dcs
                     if (r + dr > 0) && (r + dr <= h) && (c + dc > 0) && (c + dc <= w)
-                        _img[r + dr, c + dc] += err * stencil[dr, dc]
+                        img[r + dr, c + dc] += err * stencil[dr, dc]
                     end
                 end
             end
@@ -60,24 +56,15 @@ function dither(
     return dither
 end
 
-function dither(
-    img::AbstractMatrix{T}, alg::ErrorDiffusion, cs::ColorScheme; kwargs...
-)::AbstractMatrix{T} where {T<:Color}
-    return dither(img, alg, cs.colors; kwargs...)
-end
-
 """
 Binary error diffusion.
 """
-function dither(
-    img::AbstractMatrix{<:AbstractGray},
-    alg::ErrorDiffusion;
-    metric=BinaryDitherMetric(),
-    kwargs...,
-)::Matrix{Gray{Bool}}
+function (alg::ErrorDiffusion)(
+    out::GenericGrayImage, img::GenericGrayImage; metric=BinaryDitherMetric()
+)
     cs = [Gray(false), Gray(true)] # b&w color scheme
-    d = dither(img, alg, cs; metric=metric, kwargs...)
-    return convert(Matrix{Gray{Bool}}, d)
+    alg(out, img, cs; metric=metric)
+    return out
 end
 
 SimpleErrorDiffusion() = ErrorDiffusion(OffsetMatrix([0 1; 1 0]//2, 0:1, 0:1))

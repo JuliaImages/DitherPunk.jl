@@ -20,10 +20,7 @@ makedocs(;
     modules=[DitherPunk],
     authors="Adrian Hill",
     sitename="DitherPunk.jl",
-    format=Documenter.HTML(;
-        prettyurls=get(ENV, "CI", "false") == "true",
-        assets=String[],
-    ),
+    format=Documenter.HTML(; prettyurls=get(ENV, "CI", "false") == "true", assets=String[]),
     pages=[
         "Home" => "index.md",
         "Get started" => "generated/simple_example.md",

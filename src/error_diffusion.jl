@@ -1,5 +1,5 @@
 struct ErrorDiffusion{AT<:AbstractArray} <: AbstractColorDither
-    stencil::AT
+    filter::AT
 end
 
 """
@@ -23,13 +23,13 @@ function (alg::ErrorDiffusion)(
     # eagerly promote to the same type to make loop run faster
     img = FT.(img)
     cs = FT.(cs)
-    stencil = eltype(FT).(alg.stencil)
+    filter = eltype(FT).(alg.filter)
 
     h, w = size(img)
     fill!(out, zero(eltype(out)))
 
-    drs = axes(alg.stencil, 1)
-    dcs = axes(alg.stencil, 2)
+    drs = axes(alg.filter, 1)
+    dcs = axes(alg.filter, 2)
 
     @inbounds for r in 1:h
         for c in 1:w
@@ -41,12 +41,12 @@ function (alg::ErrorDiffusion)(
             # Apply pixel to dither
             out[r, c] = col
 
-            # Diffuse "error" to neighborhood in stencil
+            # Diffuse "error" to neighborhood in filter
             err = px - col
             for dr in drs
                 for dc in dcs
                     if (r + dr > 0) && (r + dr <= h) && (c + dc > 0) && (c + dc <= w)
-                        img[r + dr, c + dc] += err * stencil[dr, dc]
+                        img[r + dr, c + dc] += err * filter[dr, dc]
                     end
                 end
             end
@@ -68,13 +68,118 @@ function (alg::ErrorDiffusion)(
 end
 
 SimpleErrorDiffusion() = ErrorDiffusion(OffsetMatrix([0 1; 1 0]//2, 0:1, 0:1))
+
+"""
+    FloydSteinberg()
+
+Error diffusion algorithm using the filter
+```
+    *   7
+3   5   1     (1//16)
+```
+
+[1]  Floyd, R.W. and L. Steinberg, "An Adaptive Algorithm for Spatial Gray
+     Scale."  SID 1975, International Symposium Digest of Technical Papers,
+     vol 1975m, pp. 36-37.
+"""
 FloydSteinberg() = ErrorDiffusion(OffsetMatrix([0 0 7; 3 5 1]//16, 0:1, -1:1))
+
+"""
+    JarvisJudice()
+
+Error diffusion algorithm using the filter
+```
+        *   7   5
+3   5   7   5   3
+1   3   5   3   1   (1//48)
+```
+Also known as the Jarvis, Judice, and Ninke filter.
+
+[1]  Jarvis, J.F., C.N. Judice, and W.H. Ninke, "A Survey of Techniques for
+     the Display of Continuous Tone Pictures on Bi-Level Displays," Computer
+     Graphics and Image Processing, vol. 5, pp. 13-40, 1976.
+"""
 function JarvisJudice()
     return ErrorDiffusion(OffsetMatrix([0 0 0 7 5; 3 5 7 5 3; 1 3 5 3 1]//48, 0:2, -2:2))
 end
+
+"""
+    Stucki()
+
+Error diffusion algorithm using the filter
+```
+        *   8   4
+2   4   8   4   2
+1   2   4   2   1   (1//42)
+```
+
+[1]  Stucki, P., "MECCA - a multiple-error correcting computation algorithm
+     for bilevel image hardcopy reproduction."  Research Report RZ1060, IBM
+     Research Laboratory, Zurich, Switzerland, 1981.
+"""
 Stucki() = ErrorDiffusion(OffsetMatrix([0 0 0 8 4; 2 4 8 4 2; 1 2 4 2 1]//42, 0:2, -2:2))
+
+"""
+    Burkes()
+
+Error diffusion algorithm using the filter
+```
+        *   8   4
+2   4   8   4   2
+1   2   4   2   1   (1//42)
+```
+
+[1] Burkes, D., "Presentation of the Burkes error filter for use in preparing
+continuous-tone images for presentation on bi-level devices." Unpublished, 1988.
+"""
 Burkes() = ErrorDiffusion(OffsetMatrix([0 0 0 8 4; 2 4 8 4 2]//32, 0:1, -2:2))
+
+"""
+    Sierra()
+
+Error diffusion algorithm using the filter
+```
+        *   5   3
+2   4   5   4   2
+    2   3   2       (1//32)
+```
+Also known as Sierra3 or three-row Sierra due to the filter shape.
+"""
 Sierra() = ErrorDiffusion(OffsetMatrix([0 0 0 5 3; 2 4 5 4 2; 0 2 3 2 0]//32, 0:2, -2:2))
+
+"""
+    TwoRowSierra()
+
+Error diffusion algorithm using the filter
+```
+        *   4   3
+1   2   3   2   1   (1//16)
+```
+Also known as Sierra2.
+"""
 TwoRowSierra() = ErrorDiffusion(OffsetMatrix([0 0 0 4 3; 1 2 3 2 1]//16, 0:1, -2:2))
+
+"""
+    SierraLite()
+
+Error diffusion algorithm using the filter
+```
+    *   2
+1   1               (1//4)
+```
+Also known as Sierra-2-4A filter.
+"""
 SierraLite() = ErrorDiffusion(OffsetMatrix([0 0 2; 1 1 0]//4, 0:1, -1:1))
+
+
+"""
+    Atkinson()
+
+Error diffusion algorithm using the filter
+```
+    *   1   1
+1   1   1
+    1               (1//8)
+```
+"""
 Atkinson() = ErrorDiffusion(OffsetMatrix([0 0 1 1; 1 1 1 0; 0 1 0 0]//8, 0:2, -1:2))

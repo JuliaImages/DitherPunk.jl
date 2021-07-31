@@ -82,5 +82,14 @@ test_on_gradient(TwoRowSierra())
 # #### `SierraLite`
 test_on_gradient(SierraLite())
 
+# #### `Fan()`
+test_on_gradient(Fan())
+
+# #### `ShiauFan()`
+test_on_gradient(ShiauFan())
+
+# #### `ShiauFan2()`
+test_on_gradient(ShiauFan2())
+
 # #### `Atkinson()`
 test_on_gradient(Atkinson())

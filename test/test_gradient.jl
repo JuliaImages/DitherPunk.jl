@@ -69,6 +69,10 @@ algs_deterministic = Dict(
     "Sierra" => Sierra(),
     "TwoRowSierra" => TwoRowSierra(),
     "SierraLite" => SierraLite(),
+    "Fan" => Fan(),
+    "ShiauFan" => ShiauFan(),
+    "ShiauFan2" => ShiauFan2(),
+    "FalseFloydSteinberg" => DitherPunk.FalseFloydSteinberg(),
 )
 
 for (name, alg) in algs_deterministic

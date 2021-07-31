@@ -130,7 +130,7 @@ Error diffusion algorithm using the filter
 ```
 
 [1] Burkes, D., "Presentation of the Burkes error filter for use in preparing
-continuous-tone images for presentation on bi-level devices." Unpublished, 1988.
+    continuous-tone images for presentation on bi-level devices." Unpublished, 1988.
 """
 Burkes() = ErrorDiffusion(OffsetMatrix([0 0 0 8 4; 2 4 8 4 2]//32, 0:1, -2:2))
 
@@ -171,7 +171,6 @@ Also known as Sierra-2-4A filter.
 """
 SierraLite() = ErrorDiffusion(OffsetMatrix([0 0 2; 1 1 0]//4, 0:1, -1:1))
 
-
 """
     Atkinson()
 
@@ -183,3 +182,67 @@ Error diffusion algorithm using the filter
 ```
 """
 Atkinson() = ErrorDiffusion(OffsetMatrix([0 0 1 1; 1 1 1 0; 0 1 0 0]//8, 0:2, -1:2))
+
+"""
+    Fan()
+
+Error diffusion algorithm using the filter
+```
+      *  7
+1  3  5            (1//16)
+```
+A modification of the weights used in the Floyd-Steinberg algorithm.
+
+[1] Z. Fan, "A Simple Modification of Error Diffusion Weights",
+    IS&T's 46th Annual Conference, May 9-14, 1993, Final Program and Advanced Printing of
+    Paper Summaries, pp 113-115 (1993).
+"""
+Fan() = ErrorDiffusion(OffsetMatrix([0 0 0 7; 1 3 5 0]//16, 0:1, -2:1))
+
+"""
+    ShiauFan()
+
+Error diffusion algorithm using the filter
+```
+        *   4
+1   1   2           (1//8)
+```
+
+[1]  J. N. Shiau and Z. Fan. "Method for quantization gray level pixel data with extended
+     distribution set", US 5353127A, United States Patent and Trademark Office, Oct. 4, 1993
+"""
+ShiauFan() = ErrorDiffusion(OffsetMatrix([0 0 0 4; 1 1 2 0]//8, 0:1, -2:1))
+
+"""
+    ShiauFan2()
+
+Error diffusion algorithm using the filter
+```
+            *   8
+1   1   2   4       (1//16)
+```
+
+[1]  J. N. Shiau and Z. Fan. "Method for quantization gray level pixel data with extended
+     distribution set", US 5353127A, United States Patent and Trademark Office, Oct. 4, 1993
+[2]  J. N. Shiau and Z. Fan. "A set of easily implementable coefficients in error-diffusion
+     with reduced worm artifacts" Color Imaging: Device-Independent Color, Color Hard Copy,
+     and Graphics Arts, volume 2658, pages 222–225. SPIE, March 1996.
+"""
+ShiauFan2() = ErrorDiffusion(OffsetMatrix([0 0 0 0 8; 1 1 2 4 0]//16, 0:1, -3:1))
+
+"""
+    FalseFloydSteinberg()
+
+Error diffusion algorithm using the filter
+```
+*   3
+3   2         (1//16)
+```
+Occasionally, you will see this filter erroneously called the Floyd-Steinberg filter.
+
+# Note
+There is no reason to use this algorithm, which is why DitherPunk doesn't export it.
+
+[1] http://www.efg2.com/Lab/Library/ImageProcessing/DHALF.TXT
+"""
+FalseFloydSteinberg() = ErrorDiffusion(OffsetMatrix([0 3; 3 2]//8, 0:1, 0:1))

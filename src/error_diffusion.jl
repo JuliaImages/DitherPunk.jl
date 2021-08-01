@@ -236,7 +236,7 @@ ShiauFan2() = ErrorDiffusion(OffsetMatrix([0 0 0 0 8; 1 1 2 4 0]//16, 0:1, -3:1)
 Error diffusion algorithm using the filter
 ```
 *   3
-3   2         (1//16)
+3   2         (1//8)
 ```
 Occasionally, you will see this filter erroneously called the Floyd-Steinberg filter.
 

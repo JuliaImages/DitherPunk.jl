@@ -41,6 +41,12 @@ test_on_gradient(TwoRowSierra())
 
 test_on_gradient(SierraLite())
 
+test_on_gradient(Fan93())
+
+test_on_gradient(ShiauFan())
+
+test_on_gradient(ShiauFan2())
+
 test_on_gradient(Atkinson())
 
 # This file was generated using Literate.jl, https://github.com/fredrikekre/Literate.jl

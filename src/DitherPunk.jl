@@ -24,7 +24,7 @@ export ConstantThreshold, WhiteNoiseThreshold
 export Bayer, ClusteredDots, CentralWhitePoint, BalancedCenteredPoint, Rhombus
 # Error diffusion
 export SimpleErrorDiffusion, FloydSteinberg, JarvisJudice, Stucki, Burkes
-export Sierra, TwoRowSierra, SierraLite, Atkinson
+export Sierra, TwoRowSierra, SierraLite, Atkinson, Fan93, ShiauFan, ShiauFan2
 # Closest color
 export ClosestColor
 

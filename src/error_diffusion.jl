@@ -184,7 +184,7 @@ Error diffusion algorithm using the filter
 Atkinson() = ErrorDiffusion(OffsetMatrix([0 0 1 1; 1 1 1 0; 0 1 0 0]//8, 0:2, -1:2))
 
 """
-    Fan()
+    Fan93()
 
 Error diffusion algorithm using the filter
 ```
@@ -197,7 +197,7 @@ A modification of the weights used in the Floyd-Steinberg algorithm.
     IS&T's 46th Annual Conference, May 9-14, 1993, Final Program and Advanced Printing of
     Paper Summaries, pp 113-115 (1993).
 """
-Fan() = ErrorDiffusion(OffsetMatrix([0 0 0 7; 1 3 5 0]//16, 0:1, -2:1))
+Fan93() = ErrorDiffusion(OffsetMatrix([0 0 0 7; 1 3 5 0]//16, 0:1, -2:1))
 
 """
     ShiauFan()

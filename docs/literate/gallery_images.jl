@@ -77,8 +77,8 @@ test_on_images(TwoRowSierra())
 # #### `SierraLite`
 test_on_images(SierraLite())
 
-# #### `Fan()`
-test_on_images(Fan())
+# #### `Fan93()`
+test_on_images(Fan93())
 
 # #### `ShiauFan()`
 test_on_images(ShiauFan())

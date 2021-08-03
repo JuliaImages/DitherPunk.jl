@@ -64,7 +64,7 @@ If `out` is specified, it will be changed in place. Otherwise `img` will be chan
 dither!
 
 """
-    binarize([T::Type,] img, alg::AbstractDither, args...; kwargs...)
+    dither([T::Type,] img, alg::AbstractDither, args...; kwargs...)
 
 Dither `img` using algorithm `alg`.
 

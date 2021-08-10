@@ -5,10 +5,7 @@
 |:--------------------------------------------------------------------- |:----------------------------------------------------- |
 | [![][docs-stab-img]][docs-stab-url] [![][docs-dev-img]][docs-dev-url] | [![][ci-img]][ci-url] [![][codecov-img]][codecov-url] |
 
-
-A [dithering / digital halftoning](https://en.wikipedia.org/wiki/Dither) package inspired by [Lucas Pope's Obra Dinn](https://obradinn.com) and [this blogpost](https://surma.dev/things/ditherpunk/) by Surma.
-
-
+A [dithering / digital halftoning](https://en.wikipedia.org/wiki/Dither) package inspired by [Lucas Pope's Obra Dinn](https://obradinn.com) and [Surma's blogpost](https://surma.dev/things/ditherpunk/) of the same name.
 
 ## Examples
 **[Check out the gallery](https://JuliaImages.github.io/DitherPunk.jl/stable/generated/gallery_images/)** for an overview of currently implemented algorithms.
@@ -16,10 +13,9 @@ A [dithering / digital halftoning](https://en.wikipedia.org/wiki/Dither) package
 ## Installation 
 To install this package and its dependencies, open the Julia REPL and run 
 
-```julia
+```julia-repl
 julia> ]add DitherPunk
 ```
-
 ___
 
 **Feel free to leave a GitHub Issue if you know of any cool  algorithms you'd like to see implemented! 🔬🔧**

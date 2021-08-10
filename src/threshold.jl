@@ -1,4 +1,4 @@
-abstract type AbstractThresholdDither <: AbstractGrayDither end
+abstract type AbstractThresholdDither <: AbstractBinaryDither end
 
 """
     WhiteNoiseThreshold()

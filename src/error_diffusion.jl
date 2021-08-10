@@ -1,10 +1,8 @@
-struct ErrorDiffusion{AT<:AbstractArray} <: AbstractColorDither
+struct ErrorDiffusion{AT<:AbstractArray} <: AbstractCustomColorDither
     filter::AT
 end
 
-"""
-Error diffusion for general color schemes `cs`.
-"""
+# Error diffusion for general color schemes `cs`.
 function (alg::ErrorDiffusion)(
     out::GenericImage,
     img::GenericImage,
@@ -56,9 +54,7 @@ function (alg::ErrorDiffusion)(
     return out
 end
 
-"""
-Binary error diffusion.
-"""
+# default to binary dithering if no color scheme is provided
 function (alg::ErrorDiffusion)(
     out::GenericGrayImage, img::GenericGrayImage; metric=BinaryDitherMetric()
 )

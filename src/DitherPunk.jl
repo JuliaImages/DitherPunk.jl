@@ -2,7 +2,7 @@ module DitherPunk
 
 using TiledIteration
 using ImageCore
-using ImageCore: GenericGrayImage, MappedArrays
+using ImageCore: NumberLike, Pixel, GenericImage, GenericGrayImage, MappedArrays
 using ImageCore.Colors: DifferenceMetric
 using Random
 using OffsetArrays

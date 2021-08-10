@@ -1,8 +1,14 @@
 abstract type AbstractDither end
-abstract type AbstractColorDither <: AbstractDither end
-abstract type AbstractGrayDither <: AbstractColorDither end
 
-const GenericImage = Union{GenericGrayImage,AbstractArray{<:Colorant}}
+# Algorithms for which the user can define a custom output color palette.
+# If no palette is specified, algorithms of this type will default to a binary color palette
+# and act similarly to algorithms of type AbstractBinaryDither.
+abstract type AbstractCustomColorDither <: AbstractDither end
+
+# Algorithms whose output uses predefined sets of color, e.g. separate space dithering:
+abstract type AbstractFixedColorDither <: AbstractDither end
+# Algorithms which strictly do binary dithering:
+abstract type AbstractBinaryDither <: AbstractFixedColorDither end
 
 function dither!(
     out::GenericImage,
@@ -41,15 +47,21 @@ function dither(::Type{T}, img, alg::AbstractDither, args...; kwargs...) where {
     return out
 end
 
-# Default return type for grayscale algs: `Gray{Bool}`
-function dither(img::GenericGrayImage, alg::AbstractDither, args...; kwargs...)
-    return dither(Gray{Bool}, img, alg, args...; kwargs...)
+# Default return type for fixed color palette algs: type of input image
+function dither(
+    img::GenericImage{T,N}, alg::AbstractDither, args...; kwargs...
+) where {T<:Pixel,N}
+    return dither(T, img, alg, args...; kwargs...)
 end
 
-# Default return type for grayscale algs: type of color scheme `cs`
+# Default return type for custom color palette algs: type of color scheme `cs`
 function dither(
-    img::GenericImage, alg::AbstractColorDither, cs::AbstractVector{T}, args...; kwargs...
-) where {T<:Colorant}
+    img::GenericImage,
+    alg::AbstractCustomColorDither,
+    cs::AbstractVector{T},
+    args...;
+    kwargs...,
+) where {T<:Pixel}
     return dither(T, img, alg, cs, args...; kwargs...)
 end
 

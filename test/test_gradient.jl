@@ -50,6 +50,7 @@ imshow(srgb)
 algs_deterministic = Dict(
     # threshold methods
     "ConstantThreshold" => ConstantThreshold(),
+    "ClosestColor" => ClosestColor(),
     # ordered dithering
     "Bayer" => Bayer(),
     "Bayer_l2" => Bayer(; level=2),
@@ -79,7 +80,7 @@ for (name, alg) in algs_deterministic
     img2 = copy(img)
     d = dither(img2, alg)
     @test_reference "references/grad_$(name).txt" Int.(d)
-    @test eltype(d) == Gray{Bool}
+    @test eltype(d) == eltype(img)
     @test img2 == img # image not modified
 
     print_braille(d; title=name) # Visualize in terminal
@@ -98,7 +99,7 @@ algs_random = Dict(
 
 for (name, alg) in algs_random
     img2 = copy(img)
-    d = dither(img2, alg)
+    d = dither(Gray{Bool}, img2, alg)
     print_braille(d; title=name) # Visualize in terminal
     @test eltype(d) == Gray{Bool}
     @test img2 == img # image not modified

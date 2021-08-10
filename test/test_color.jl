@@ -20,7 +20,7 @@ cs = [white, yellow, green, orange, red, blue]
 img = testimage("fabio_color_256")
 imshow(img)
 
-# Run & test dither
+# Run & test custom color pallete dithering methods
 algs = Dict("FloydSteinberg" => FloydSteinberg(), "ClosestColor" => ClosestColor())
 
 for (name, alg) in algs

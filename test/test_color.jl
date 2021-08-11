@@ -1,6 +1,8 @@
 using DitherPunk
 using DitherPunk: closest_color
 using ImageCore
+using ImageInTerminal
+using ReferenceTests
 using TestImages
 
 ## Define color scheme
@@ -20,7 +22,7 @@ cs = [white, yellow, green, orange, red, blue]
 img = testimage("fabio_color_256")
 imshow(img)
 
-# Run & test dither
+# Run & test custom color pallete dithering methods
 algs = Dict("FloydSteinberg" => FloydSteinberg(), "ClosestColor" => ClosestColor())
 
 for (name, alg) in algs

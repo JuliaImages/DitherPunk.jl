@@ -40,3 +40,18 @@ colors = cs.colors
 
 img = testimage("fabio_color_256")
 d = dither(img, Atkinson(), colors)
+
+# # Separate-space dithering
+# All dithering algorithms in DitherPunk can also be applied to color images through the
+# meta-method `SeparateSpace`. This method takes any gray-scale dithering algorithm and
+# applies channel-wise binary dithering.
+dither(img, SeparateSpace(Atkinson()))
+
+# Any algorithm can be used, not only error diffusion!
+dither(img, SeparateSpace(Bayer()))
+#
+dither(img, SeparateSpace(ClusteredDots()))
+
+# Because the algorithm is applied channel-wise, the output of this algorithm depends on the
+# color type of input image. RGB is recommended, but feel free to experiment!
+dither(HSV.(img), SeparateSpace(ClusteredDots()))

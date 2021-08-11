@@ -4,8 +4,13 @@
 A meta-algorithm that takes any gray-scale dithering algorithm and applies channel-wise
 binary dithering.
 
-# Note:
+# Note
 The output of this algorithm depends on the color type of input image. RGB is recommended.
+
+# Examples
+```julia-repl
+julia> dither!(img, SeparateSpace(Bayer()))
+```
 """
 struct SeparateSpace{A<:AbstractDither} <: AbstractFixedColorDither
     alg::A

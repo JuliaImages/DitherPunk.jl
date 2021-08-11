@@ -25,5 +25,13 @@ colors = cs.colors
 img = testimage("fabio_color_256")
 d = dither(img, Atkinson(), colors)
 
+dither(img, SeparateSpace(Atkinson()))
+
+dither(img, SeparateSpace(Bayer()))
+
+dither(img, SeparateSpace(ClusteredDots()))
+
+dither(HSV.(img), SeparateSpace(ClusteredDots()))
+
 # This file was generated using Literate.jl, https://github.com/fredrikekre/Literate.jl
 

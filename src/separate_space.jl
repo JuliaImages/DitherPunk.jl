@@ -15,6 +15,7 @@ julia> dither!(img, SeparateSpace(Bayer()))
 struct SeparateSpace{A<:AbstractDither} <: AbstractFixedColorDither
     alg::A
 end
+SeparateSpace(alg::SeparateSpace) = alg
 
 function (ssd::SeparateSpace)(out::GenericImage, img::GenericImage, args...; kwargs...)
     cvout = channelview(out)

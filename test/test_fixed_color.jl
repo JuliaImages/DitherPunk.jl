@@ -1,5 +1,7 @@
 using DitherPunk
 using ImageCore
+using ImageInTerminal
+using ReferenceTests
 using TestImages
 
 # Load test image
@@ -28,3 +30,8 @@ for C in [RGB, HSV]
         @test img2 == d # image updated in-place
     end
 end
+
+# Chained applications of SeparateSpace should not affect the output
+d1 = dither(img, SeparateSpace(Bayer()))
+d2 = dither(img, SeparateSpace(SeparateSpace(SeparateSpace(Bayer()))))
+@test d1 == d2

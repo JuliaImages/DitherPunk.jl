@@ -1,6 +1,8 @@
 using DitherPunk
 using DitherPunk: closest_color
 using ImageCore
+using ImageInTerminal
+using ReferenceTests
 using TestImages
 
 ## Define color scheme

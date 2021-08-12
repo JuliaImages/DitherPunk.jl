@@ -33,6 +33,7 @@ All algorithms can be used for binary or channel-wise dithering:
 | ![][atkinson-col]   | ![][bayer-col]        | ![][ordered-col]       |
 
 and all error diffusion methods support custom color palettes:
+
 ![][fs-pal]
 
 For a more in-depth introduction, [take a look at the docs](https://juliaimages.org/DitherPunk.jl/stable/generated/simple_example/).

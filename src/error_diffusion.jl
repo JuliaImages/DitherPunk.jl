@@ -13,9 +13,6 @@ function (alg::ErrorDiffusion)(
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
 
-    length(cs) >= 2 ||
-        throw(DomainError(steps, "Color scheme for dither needs >= 2 colors."))
-
     # Change from normalized intensities to Float as error will get added!
     FT = floattype(eltype(out))
 

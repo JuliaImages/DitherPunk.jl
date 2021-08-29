@@ -62,6 +62,8 @@ function dither(
     args...;
     kwargs...,
 ) where {T<:Pixel}
+    length(cs) >= 2 ||
+        throw(DomainError(steps, "Color scheme for dither needs >= 2 colors."))
     return dither(T, img, alg, cs, args...; kwargs...)
 end
 

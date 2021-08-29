@@ -1,5 +1,27 @@
-struct ErrorDiffusion{AT<:AbstractArray} <: AbstractCustomColorDither
-    filter::AT
+"""
+    ErrorDiffusion(filter::AbstractMatrix)
+
+Generalized error diffusion algorithm. When calling `dither` using a color palette `cs`,
+this will iterate over pixels and round them to the closest color in `cs` according to
+the chosen color difference metric `metric` (defaults to `DE_2000()` on color images).
+The rounding error is then "diffused" over the neighborhood defined by the matrix `filter`.
+This diffused error can additionally be clamped to ``[0, 1]`` by setting
+`clamp_error = true` (default on color images).
+
+When calling `dither` on a grayscale image without specifying a palette, `ErrorDiffusion`
+algorithms will default to settings for binary dithering: `clamp_error=false` and the metric
+`BinaryDitherMetric()`, which simply rounds to the closest binary number.
+
+# Example
+```julia-repl
+julia> alg = FloydSteinberg() # returns ErrorDiffusion instance
+DitherPunk.ErrorDiffusion{OffsetArrays.OffsetMatrix{Rational{Int64}, Matrix{Rational{Int64}}}}(Rational{Int64}[0//1 0//1 7//16; 3//16 5//16 1//16])
+julia> cs = ColorSchemes.PuOr_7.colors; # using ColorSchemes.jl for color palette presets
+julia> dither!(img, alg, cs; metric=DE_94(), clamp_error=true);
+```
+"""
+struct ErrorDiffusion{T<:AbstractMatrix} <: AbstractCustomColorDither
+    filter::T
 end
 
 # Error diffusion for general color schemes `cs`.

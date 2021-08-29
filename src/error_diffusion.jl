@@ -8,6 +8,7 @@ function (alg::ErrorDiffusion)(
     img::GenericImage,
     cs::AbstractVector{<:Colorant};
     metric::DifferenceMetric=DE_2000(),
+    clamp_error::Bool=true,
 )
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
@@ -41,10 +42,17 @@ function (alg::ErrorDiffusion)(
 
             # Diffuse "error" to neighborhood in filter
             err = px - col
+
             for dr in drs
                 for dc in dcs
                     if (r + dr > 0) && (r + dr <= h) && (c + dc > 0) && (c + dc <= w)
-                        img[r + dr, c + dc] += err * filter[dr, dc]
+                        if clamp_error
+                            img[r + dr, c + dc] = clamp01(
+                                img[r + dr, c + dc] + err * filter[dr, dc]
+                            )
+                        else
+                            img[r + dr, c + dc] += err * filter[dr, dc]
+                        end
                     end
                 end
             end
@@ -56,10 +64,13 @@ end
 
 # default to binary dithering if no color scheme is provided
 function (alg::ErrorDiffusion)(
-    out::GenericGrayImage, img::GenericGrayImage; metric=BinaryDitherMetric()
+    out::GenericGrayImage,
+    img::GenericGrayImage;
+    metric=BinaryDitherMetric(),
+    clamp_error=false,
 )
     cs = [Gray(false), Gray(true)] # b&w color scheme
-    alg(out, img, cs; metric=metric)
+    alg(out, img, cs; metric=metric, clamp_error)
     return out
 end
 

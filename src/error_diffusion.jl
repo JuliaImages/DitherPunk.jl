@@ -52,6 +52,7 @@ function (alg::ErrorDiffusion)(
     @inbounds for r in 1:h
         for c in 1:w
             px = img[r, c]
+            clamp_error && (px = clamp01(px))
 
             # Round to closest color
             col = closest_color(px, cs; metric=metric)
@@ -65,13 +66,7 @@ function (alg::ErrorDiffusion)(
             for dr in drs
                 for dc in dcs
                     if (r + dr > 0) && (r + dr <= h) && (c + dc > 0) && (c + dc <= w)
-                        if clamp_error
-                            img[r + dr, c + dc] = clamp01(
-                                img[r + dr, c + dc] + err * filter[dr, dc]
-                            )
-                        else
-                            img[r + dr, c + dc] += err * filter[dr, dc]
-                        end
+                        img[r + dr, c + dc] += err * filter[dr, dc]
                     end
                 end
             end

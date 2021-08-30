@@ -1,12 +1,11 @@
 """
-    ErrorDiffusion(filter::AbstractMatrix)
+    ErrorDiffusion(filter::AbstractMatrix, clamp_error::Bool)
 
 Generalized error diffusion algorithm. When calling `dither` using a color palette `cs`,
-this will iterate over pixels and round them to the closest color in `cs` according to
-the chosen color difference metric `metric` (defaults to `DE_2000()` on color images).
+this will iterate over pixels and round them to the closest color in `cs`.
 The rounding error is then "diffused" over the neighborhood defined by the matrix `filter`.
 This diffused error can additionally be clamped to ``[0, 1]`` by setting
-`clamp_error = true` (default on color images).
+`clamp_error = true` (default).
 
 When calling `dither` on a grayscale image without specifying a palette, `ErrorDiffusion`
 algorithms will default to settings for binary dithering: `clamp_error=false` and the metric
@@ -15,16 +14,18 @@ algorithms will default to settings for binary dithering: `clamp_error=false` an
 # Example
 ```julia-repl
 julia> alg = FloydSteinberg() # returns ErrorDiffusion instance
-DitherPunk.ErrorDiffusion{OffsetArrays.OffsetMatrix{Rational{Int64}, Matrix{Rational{Int64}}}}(Rational{Int64}[0//1 0//1 7//16; 3//16 5//16 1//16])
+DitherPunk.ErrorDiffusion{OffsetArrays.OffsetMatrix{Rational{Int64}, Matrix{Rational{Int64}}}}(Rational{Int64}[0//1 0//1 7//16; 3//16 5//16 1//16], true)
 
 julia> cs = ColorSchemes.PuOr_7.colors; # using ColorSchemes.jl for color palette presets
 
-julia> dither!(img, alg, cs; metric=DE_94(), clamp_error=true);
+julia> dither!(img, alg, cs);
 ```
 """
 struct ErrorDiffusion{T<:AbstractMatrix} <: AbstractCustomColorDither
     filter::T
+    clamp_error::Bool
 end
+ErrorDiffusion(filter) = ErrorDiffusion(filter, true)
 
 # Error diffusion for general color schemes `cs`.
 function (alg::ErrorDiffusion)(
@@ -54,7 +55,7 @@ function (alg::ErrorDiffusion)(
     @inbounds for r in 1:h
         for c in 1:w
             px = img[r, c]
-            clamp_error && (px = clamp01(px))
+            alg.clamp_error && (px = clamp01(px))
 
             # Round to closest color
             col = closest_color(px, cs; metric=metric)
@@ -86,7 +87,7 @@ function (alg::ErrorDiffusion)(
     clamp_error=false,
 )
     cs = [Gray(false), Gray(true)] # b&w color scheme
-    alg(out, img, cs; metric=metric, clamp_error)
+    alg(out, img, cs; metric=metric)
     return out
 end
 

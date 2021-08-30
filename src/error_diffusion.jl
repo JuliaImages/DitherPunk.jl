@@ -16,7 +16,9 @@ algorithms will default to settings for binary dithering: `clamp_error=false` an
 ```julia-repl
 julia> alg = FloydSteinberg() # returns ErrorDiffusion instance
 DitherPunk.ErrorDiffusion{OffsetArrays.OffsetMatrix{Rational{Int64}, Matrix{Rational{Int64}}}}(Rational{Int64}[0//1 0//1 7//16; 3//16 5//16 1//16])
+
 julia> cs = ColorSchemes.PuOr_7.colors; # using ColorSchemes.jl for color palette presets
+
 julia> dither!(img, alg, cs; metric=DE_94(), clamp_error=true);
 ```
 """

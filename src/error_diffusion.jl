@@ -31,9 +31,8 @@ ErrorDiffusion(filter) = ErrorDiffusion(filter, true)
 function (alg::ErrorDiffusion)(
     out::GenericImage,
     img::GenericImage,
-    cs::AbstractVector{<:Colorant};
-    metric::DifferenceMetric=DE_2000(),
-    clamp_error::Bool=true,
+    cs::AbstractVector{<:Pixel},
+    metric::DifferenceMetric,
 )
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
@@ -80,14 +79,9 @@ function (alg::ErrorDiffusion)(
 end
 
 # default to binary dithering if no color scheme is provided
-function (alg::ErrorDiffusion)(
-    out::GenericGrayImage,
-    img::GenericGrayImage;
-    metric=BinaryDitherMetric(),
-    clamp_error=false,
-)
-    cs = [Gray(false), Gray(true)] # b&w color scheme
-    alg(out, img, cs; metric=metric)
+function (alg::ErrorDiffusion)(out::GenericGrayImage,img::GenericGrayImage)
+    cs = eltype(out).([false, true]) # b&w color scheme
+    alg(out, img, cs, BinaryDitherMetric())
     return out
 end
 

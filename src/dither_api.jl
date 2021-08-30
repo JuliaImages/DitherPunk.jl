@@ -92,19 +92,6 @@ function dither(
     return dither(T, img, alg, args...; kwargs...)
 end
 
-# Default return type for custom color palette algs: type of color scheme `cs`
-function dither(
-    img::GenericImage,
-    alg::AbstractCustomColorDither,
-    cs::AbstractVector{T},
-    args...;
-    kwargs...,
-) where {T<:Pixel}
-    length(cs) >= 2 ||
-        throw(DomainError(steps, "Color scheme for dither needs >= 2 colors."))
-    return dither(T, img, alg, cs, args...; kwargs...)
-end
-
 """
     dither!([out,] img, alg::AbstractDither, args...; kwargs...)
 
@@ -121,7 +108,6 @@ dither!
 Dither `img` using algorithm `alg`.
 
 # Output
-If no return type is specified, the default return type for binary dithering algorithms
-is `Gray{Bool}`. For color algorithms, the type of the colorscheme is used.
+If no return type is specified, it defaults to the type of the input image.
 """
 dither

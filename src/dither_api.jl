@@ -10,7 +10,12 @@ abstract type AbstractFixedColorDither <: AbstractDither end
 # Algorithms which strictly do binary dithering:
 abstract type AbstractBinaryDither <: AbstractFixedColorDither end
 
-function dither!(
+####################
+# Low-level checks #
+####################
+
+# Lowest-level call that dispatches to the algorithms
+function __dither!(
     out::GenericImage,
     img::GenericImage,
     alg::AbstractDither,
@@ -36,33 +41,55 @@ function dither!(
     return alg(out, img, args...; kwargs...)
 end
 
-function dither!(img::GenericImage, alg::AbstractDither, args...; kwargs...)
-    tmp = copy(img)
-    return dither!(img, tmp, alg, args...; kwargs...)
+# Before `__dither!` is called, additional checks and defaults are run for AbstractCustomColorDither...
+function _dither!(
+    out::GenericImage,
+    img::GenericImage,
+    alg::AbstractCustomColorDither,
+    cs::AbstractVector{<:Pixel},
+    args...;
+    metric::DifferenceMetric=DE_2000(),
+    kwargs...,
+)
+    length(cs) >= 2 ||
+        throw(DomainError(steps, "Color scheme for dither needs >= 2 colors."))
+    return __dither!(out, img, alg, cs, metric, args...; kwargs...)
+end
+# ...that get skipped for AbstractBinaryDither & AbstractFixedColorDither.
+_dither!(args...; kwargs...) = __dither!(args...; kwargs...)
+
+##############
+# Public API #
+##############
+
+# If `out` is specified, it will be changed in place...
+function dither!(
+    out::GenericImage, img::GenericImage, alg::AbstractDither, args...; kwargs...
+)
+    return _dither!(out, img, alg, args...; kwargs...)
 end
 
-function dither(::Type{T}, img, alg::AbstractDither, args...; kwargs...) where {T}
+# ...otherwise `img` will be changed in place.
+function dither!(img::GenericImage, alg::AbstractDither, args...; kwargs...)
+    tmp = copy(img)
+    return _dither!(img, tmp, alg, args...; kwargs...)
+end
+
+
+# The return type can be chosen...
+function dither(
+    ::Type{T}, img::GenericImage, alg::AbstractDither, args...; kwargs...
+) where {T}
     out = similar(Array{T}, axes(img))
-    dither!(out, img, alg, args...; kwargs...)
+    _dither!(out, img, alg, args...; kwargs...)
     return out
 end
 
-# Default return type for fixed color palette algs: type of input image
+# ...and defaults to the type of the input image.
 function dither(
     img::GenericImage{T,N}, alg::AbstractDither, args...; kwargs...
 ) where {T<:Pixel,N}
     return dither(T, img, alg, args...; kwargs...)
-end
-
-# Default return type for custom color palette algs: type of color scheme `cs`
-function dither(
-    img::GenericImage,
-    alg::AbstractCustomColorDither,
-    cs::AbstractVector{T},
-    args...;
-    kwargs...,
-) where {T<:Pixel}
-    return dither(T, img, alg, cs, args...; kwargs...)
 end
 
 """
@@ -81,7 +108,6 @@ dither!
 Dither `img` using algorithm `alg`.
 
 # Output
-If no return type is specified, the default return type for binary dithering algorithms
-is `Gray{Bool}`. For color algorithms, the type of the colorscheme is used.
+If no return type is specified, it defaults to the type of the input image.
 """
 dither

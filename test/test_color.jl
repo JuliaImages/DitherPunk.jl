@@ -29,7 +29,7 @@ for (name, alg) in algs
     img2 = copy(img)
     d = dither(img2, alg, cs)
     @test_reference "references/color_$(name).txt" d
-    @test eltype(d) == eltype(cs)
+    @test eltype(d) == eltype(img2)
     @test img2 == img # image not modified
 
     imshow(d)

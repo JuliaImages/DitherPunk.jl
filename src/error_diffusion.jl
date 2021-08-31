@@ -1,19 +1,41 @@
-struct ErrorDiffusion{AT<:AbstractArray} <: AbstractCustomColorDither
-    filter::AT
+"""
+    ErrorDiffusion(filter::AbstractMatrix; clamp_error=true)
+
+Generalized error diffusion algorithm. When calling `dither` using a color palette `cs`,
+this will iterate over pixels and round them to the closest color in `cs`.
+The rounding error is then "diffused" over the neighborhood defined by the matrix `filter`.
+This diffused error can additionally be clamped to ``[0, 1]`` by setting
+`clamp_error = true` (default).
+
+When calling `dither` on a grayscale image without specifying a palette, `ErrorDiffusion`
+algorithms will default to settings for binary dithering: `clamp_error=false` and the metric
+`BinaryDitherMetric()`, which simply rounds to the closest binary number.
+
+# Example
+```julia-repl
+julia> alg = FloydSteinberg() # returns ErrorDiffusion instance
+DitherPunk.ErrorDiffusion{OffsetArrays.OffsetMatrix{Rational{Int64}, Matrix{Rational{Int64}}}}(Rational{Int64}[0//1 0//1 7//16; 3//16 5//16 1//16], true)
+
+julia> cs = ColorSchemes.PuOr_7.colors; # using ColorSchemes.jl for color palette presets
+
+julia> dither!(img, alg, cs);
+```
+"""
+struct ErrorDiffusion{T<:AbstractMatrix} <: AbstractCustomColorDither
+    filter::T
+    clamp_error::Bool
 end
+ErrorDiffusion(filter; clamp_error=true) = ErrorDiffusion(filter, clamp_error)
 
 # Error diffusion for general color schemes `cs`.
 function (alg::ErrorDiffusion)(
     out::GenericImage,
     img::GenericImage,
-    cs::AbstractVector{<:Colorant};
-    metric::DifferenceMetric=DE_2000(),
+    cs::AbstractVector{<:Pixel},
+    metric::DifferenceMetric,
 )
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
-
-    length(cs) >= 2 ||
-        throw(DomainError(steps, "Color scheme for dither needs >= 2 colors."))
 
     # Change from normalized intensities to Float as error will get added!
     FT = floattype(eltype(out))
@@ -32,6 +54,7 @@ function (alg::ErrorDiffusion)(
     @inbounds for r in 1:h
         for c in 1:w
             px = img[r, c]
+            alg.clamp_error && (px = clamp01(px))
 
             # Round to closest color
             col = closest_color(px, cs; metric=metric)
@@ -41,6 +64,7 @@ function (alg::ErrorDiffusion)(
 
             # Diffuse "error" to neighborhood in filter
             err = px - col
+
             for dr in drs
                 for dc in dcs
                     if (r + dr > 0) && (r + dr <= h) && (c + dc > 0) && (c + dc <= w)
@@ -55,11 +79,9 @@ function (alg::ErrorDiffusion)(
 end
 
 # default to binary dithering if no color scheme is provided
-function (alg::ErrorDiffusion)(
-    out::GenericGrayImage, img::GenericGrayImage; metric=BinaryDitherMetric()
-)
-    cs = [Gray(false), Gray(true)] # b&w color scheme
-    alg(out, img, cs; metric=metric)
+function (alg::ErrorDiffusion)(out::GenericGrayImage,img::GenericGrayImage)
+    cs = eltype(out).([false, true]) # b&w color scheme
+    alg(out, img, cs, BinaryDitherMetric())
     return out
 end
 

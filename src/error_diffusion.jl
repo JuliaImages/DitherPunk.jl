@@ -1,5 +1,5 @@
 """
-    ErrorDiffusion(filter::AbstractMatrix, clamp_error::Bool)
+    ErrorDiffusion(filter::AbstractMatrix; clamp_error=true)
 
 Generalized error diffusion algorithm. When calling `dither` using a color palette `cs`,
 this will iterate over pixels and round them to the closest color in `cs`.
@@ -25,7 +25,7 @@ struct ErrorDiffusion{T<:AbstractMatrix} <: AbstractCustomColorDither
     filter::T
     clamp_error::Bool
 end
-ErrorDiffusion(filter) = ErrorDiffusion(filter, true)
+ErrorDiffusion(filter; clamp_error=true) = ErrorDiffusion(filter, clamp_error)
 
 # Error diffusion for general color schemes `cs`.
 function (alg::ErrorDiffusion)(

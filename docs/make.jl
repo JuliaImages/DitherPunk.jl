@@ -22,7 +22,7 @@ makedocs(;
     sitename="DitherPunk.jl",
     format=Documenter.HTML(; prettyurls=get(ENV, "CI", "false") == "true", assets=String[]),
     pages=[
-        "Get started" => "generated/simple_example.md",
+        "Getting started" => "generated/simple_example.md",
         "Gallery" => Any[
             "Gradient" => "generated/gallery_gradient.md",
             "Images" => "generated/gallery_images.md",

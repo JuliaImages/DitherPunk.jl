@@ -27,7 +27,7 @@ dither!(img, FloydSteinberg())    # or in-place modify image
 ```
 
 All algorithms can be used for binary or channel-wise dithering:
-| **Error diffusion** | **Ordered Dithering** | **Digital halftoning** |
+| **Error diffusion** | **Ordered dithering** | **Digital halftoning** |
 |:-------------------:|:---------------------:|:----------------------:|
 | ![][atkinson-bw]    | ![][bayer-bw]         | ![][ordered-bw]        |
 | ![][atkinson-col]   | ![][bayer-col]        | ![][ordered-col]       |

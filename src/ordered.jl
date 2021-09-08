@@ -41,7 +41,7 @@ function (alg::OrderedDither)(
 end
 
 """
-    Bayer(level)
+    Bayer(; level)
 
 Ordered dithering using the Bayer matrix as a threshold matrix.
 The Bayer matrix is of dimension ``2^{n+1} \\times 2^{n+1}``, where ``n`` is the `level`,

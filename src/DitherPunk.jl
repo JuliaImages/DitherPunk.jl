@@ -24,8 +24,10 @@ export SeparateSpace
 # Threshold dithering
 export ConstantThreshold, WhiteNoiseThreshold
 # Ordered dithering
+export OrderedDither
 export Bayer, ClusteredDots, CentralWhitePoint, BalancedCenteredPoint, Rhombus
 # Error diffusion
+export ErrorDiffusion
 export SimpleErrorDiffusion, FloydSteinberg, JarvisJudice, Stucki, Burkes
 export Sierra, TwoRowSierra, SierraLite, Atkinson, Fan93, ShiauFan, ShiauFan2
 # Closest color

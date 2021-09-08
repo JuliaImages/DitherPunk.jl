@@ -95,7 +95,7 @@ end
 """
     dither!([out,] img, alg::AbstractDither, args...; kwargs...)
 
-Dither `img` using algorithm `alg`.
+Dither image `img` using algorithm `alg`.
 
 # Output
 If `out` is specified, it will be changed in place. Otherwise `img` will be changed in place.
@@ -105,9 +105,9 @@ dither!
 """
     dither([T::Type,] img, alg::AbstractDither, args...; kwargs...)
 
-Dither `img` using algorithm `alg`.
+Dither image `img` using algorithm `alg`.
 
 # Output
-If no return type is specified, it defaults to the type of the input image.
+If no return type is specified, `dither` will default to the type of the input image.
 """
 dither

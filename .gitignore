@@ -4,6 +4,8 @@
 Manifest.toml
 /docs/build/
 /docs/src/generated/
+/.benchmarkci
+/benchmark/*.json
 
 .vscode
 *.DS_Store

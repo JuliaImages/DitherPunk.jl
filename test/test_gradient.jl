@@ -67,7 +67,6 @@ algs_deterministic = Dict(
     "IM_h4x4o" => IM_h4x4o(),
     "IM_h6x6o" => IM_h6x6o(),
     "IM_h8x8o" => IM_h8x8o(),
-    "IM_h16x16o" => IM_h16x16o(),
     "IM_c5x5" => IM_c5x5(),
     "IM_c6x6" => IM_c6x6(),
     "IM_c7x7" => IM_c7x7(),

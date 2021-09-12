@@ -38,3 +38,8 @@ for (name, alg) in algs
     @test eltype(d) == eltype(img)
     @test img2 == d # image updated in-place
 end
+
+# Test conditional dependency on ColorSchemes.jl
+using ColorSchemes
+alg = FloydSteinberg()
+@test dither(img, alg, ColorSchemes.jet) == dither(img, alg, :jet)

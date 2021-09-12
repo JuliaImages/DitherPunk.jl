@@ -6,6 +6,7 @@ using ImageCore: NumberLike, Pixel, GenericImage, GenericGrayImage, MappedArrays
 using ImageCore.Colors: DifferenceMetric
 using Random
 using OffsetArrays
+using Requires
 
 include("compat.jl")
 include("dither_api.jl")
@@ -18,6 +19,7 @@ include("error_diffusion.jl")
 include("closest_color.jl")
 include("show.jl")
 include("eval.jl")
+include("requires.jl")
 
 export dither, dither!
 # Meta algorithms
@@ -35,7 +37,7 @@ export SimpleErrorDiffusion, FloydSteinberg, JarvisJudice, Stucki, Burkes
 export Sierra, TwoRowSierra, SierraLite, Atkinson, Fan93, ShiauFan, ShiauFan2
 # Closest color
 export ClosestColor
-
+# Other utilities
 export upscale
 
 end # module

@@ -165,10 +165,6 @@ const CHECKS = [
     IM_h4x4a()
 
 ImageMagick's Halftone 4x4 - Angled 45 degrees
-
-This pattern initially start as circles, but then forms diamond
-patterns at the 50% threshold level, before forming negated circles,
-as it approaches the other threshold extreme.
 """
 IM_h4x4a() = OrderedDither(H4X4A)
 const H4X4A = [
@@ -182,10 +178,6 @@ const H4X4A = [
     IM_h6x6a()
 
 ImageMagick's Halftone 6x6 - Angled 45 degrees
-
-This pattern initially start as circles, but then forms diamond
-patterns at the 50% threshold level, before forming negated circles,
-as it approaches the other threshold extreme.
 """
 IM_h6x6a() = OrderedDither(H6X6A)
 const H6X6A =
@@ -202,10 +194,6 @@ const H6X6A =
     IM_h8x8a()
 
 ImageMagick's Halftone 8x8 - Angled 45 degrees
-
-This pattern initially start as circles, but then forms diamond
-patterns at the 50% threshold level, before forming negated circles,
-as it approaches the other threshold extreme.
 """
 IM_h8x8a() = OrderedDither(H8X8A)
 const H8X8A =
@@ -229,10 +217,6 @@ const H8X8A =
     IM_h4x4o()
 
 ImageMagick's Halftone 4x4 - Orthogonally Aligned
-
-This pattern initially starts as circles, but then forms square
-patterns at the 50% threshold level, before forming negated circles,
-as it approaches the other threshold extreme.
 """
 IM_h4x4o() = OrderedDither(H4X4O)
 const H4X4O = [
@@ -246,10 +230,6 @@ const H4X4O = [
     IM_h6x6o()
 
 ImageMagick's Halftone 6x6 - Orthogonally Aligned
-
-This pattern initially starts as circles, but then forms square
-patterns at the 50% threshold level, before forming negated circles,
-as it approaches the other threshold extreme.
 """
 IM_h6x6o() = OrderedDither(H6X6O)
 const H6X6O =
@@ -266,10 +246,6 @@ const H6X6O =
     IM_h8x8o()
 
 ImageMagick's Halftone 8x8 - Orthogonally Aligned
-
-This pattern initially starts as circles, but then forms square
-patterns at the 50% threshold level, before forming negated circles,
-as it approaches the other threshold extreme.
 """
 IM_h8x8o() = OrderedDither(H8X8O)
 const H8X8O =
@@ -290,14 +266,6 @@ const H8X8O =
     IM_c5x5()
 
 ImageMagick's Halftone 5x5 - Orthogonally Expanding Circle Patterns
-
-Rather than producing a diamond 50% threshold pattern, these continue to generate larger
-(overlapping) circles. They are more like a true halftone pattern formed by covering
-a surface with either pure white or pure black circular dots.
-
-Note:
-True halftone patterns only use true circles even in areas of highly varying intensity.
-Threshold dither patterns can generate distorted circles in such areas.
 """
 IM_c5x5() = OrderedDither(C5X5)
 const C5X5 = [
@@ -312,14 +280,6 @@ const C5X5 = [
     IM_c6x6()
 
 ImageMagick's Halftone 6x6 - Orthogonally Expanding Circle Patterns
-
-Rather than producing a diamond 50% threshold pattern, these continue to generate larger
-(overlapping) circles. They are more like a true halftone pattern formed by covering
-a surface with either pure white or pure black circular dots.
-
-Note:
-True halftone patterns only use true circles even in areas of highly varying intensity.
-Threshold dither patterns can generate distorted circles in such areas.
 """
 IM_c6x6() = OrderedDither(C6X6)
 const C6X6 =
@@ -336,14 +296,6 @@ const C6X6 =
     IM_c7x7()
 
 ImageMagick's Halftone 7x7 - Orthogonally Expanding Circle Patterns
-
-Rather than producing a diamond 50% threshold pattern, these continue to generate larger
-(overlapping) circles. They are more like a true halftone pattern formed by covering
-a surface with either pure white or pure black circular dots.
-
-Note:
-True halftone patterns only use true circles even in areas of highly varying intensity.
-Threshold dither patterns can generate distorted circles in such areas.
 """
 IM_c7x7() = OrderedDither(C7X7)
 const C7X7 =

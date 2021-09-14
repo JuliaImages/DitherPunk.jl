@@ -52,8 +52,8 @@ which defaults to `1`.
      Conference Records, 1973, pp. 26-11 to 26-15.
 """
 function Bayer(; level=1)
-    bayer = bayer_matrix(level)
-    return OrderedDither(bayer//(2^(2 * level + 2)))
+    bayer = bayer_matrix(level) .+ 1
+    return OrderedDither(bayer//(2^(2 * level + 2) + 1))
 end
 
 """
@@ -82,12 +82,12 @@ Uses ``6 \\times 6`` threshold matrix `CLUSTERED_DOTS_MAT`.
 ClusteredDots() = OrderedDither(CLUSTERED_DOTS_MAT)
 const CLUSTERED_DOTS_MAT =
     [
-        34 29 17 21 30 35
-        28 14 9 16 20 31
-        13 8 4 5 15 19
-        12 3 0 1 10 18
-        27 7 2 6 23 24
-        33 26 11 22 25 32
+        35 30 18 22 31 36
+        29 15 10 17 21 32
+        14 9 5 6 16 20
+        13 4 1 2 11 19
+        28 8 3 7 24 25
+        34 27 12 23 26 33
     ]//37
 
 """
@@ -99,12 +99,12 @@ Uses ``6 \\times 6`` threshold matrix `CENTRAL_WHITE_POINT_MAT`.
 CentralWhitePoint() = OrderedDither(CENTRAL_WHITE_POINT_MAT)
 const CENTRAL_WHITE_POINT_MAT =
     [
-        34 25 21 17 29 33
-        30 13 9 5 12 24
-        18 6 1 0 8 20
-        22 10 2 3 4 16
-        26 14 7 11 15 28
-        35 31 19 23 27 32
+        35 26 22 18 30 34
+        31 14 10 6 13 25
+        19 7 2 1 9 21
+        23 11 3 4 5 17
+        27 15 8 12 16 29
+        36 32 20 24 28 33
     ]//37
 
 """
@@ -116,12 +116,12 @@ Uses ``6 \\times 6`` threshold matrix `BALANCED_CENTERED_POINT_MAT`.
 BalancedCenteredPoint() = OrderedDither(BALANCED_CENTERED_POINT_MAT)
 const BALANCED_CENTERED_POINT_MAT =
     [
-        30 22 16 21 33 35
-        24 11 7 9 26 28
-        13 5 0 2 14 19
-        15 3 1 4 12 18
-        27 8 6 10 25 29
-        32 20 17 23 31 34
+        31 23 17 22 34 36
+        25 12 8 10 27 29
+        14 6 1 3 15 20
+        16 4 2 5 13 19
+        28 9 7 11 26 30
+        33 21 18 24 32 35
     ]//37
 
 """
@@ -131,16 +131,14 @@ Diagonal ordered matrix with balanced centered points.
 Uses ``8 \\times 8`` threshold matrix `RHOMBUS_MAT`.
 """
 Rhombus() = OrderedDither(RHOMBUS_MAT)
-const S₁ = [
-    13 9 5 12
-    6 1 0 8
-    10 2 3 4
-    14 7 11 15
-]
-const S₂ = [
-    18 22 26 19
-    25 30 31 23
-    21 29 28 27
-    17 24 20 16
-]
-const RHOMBUS_MAT = [S₁ S₂; S₂ S₁]//33
+const RHOMBUS_MAT =
+    [
+        14 10 6 13 19 23 27 20
+        7 2 1 9 26 31 32 24
+        11 3 4 5 22 30 29 28
+        15 8 12 16 18 25 21 17
+        19 23 27 20 14 10 6 13
+        26 31 32 24 7 2 1 9
+        22 30 29 28 11 3 4 5
+        18 25 21 17 15 8 12 16
+    ]//33

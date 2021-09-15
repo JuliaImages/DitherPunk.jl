@@ -25,6 +25,26 @@ test_on_gradient(BalancedCenteredPoint())
 
 test_on_gradient(Rhombus())
 
+test_on_gradient(IM_checks())
+
+test_on_gradient(IM_h4x4a())
+
+test_on_gradient(IM_h6x6a())
+
+test_on_gradient(IM_h8x8a())
+
+test_on_gradient(IM_h4x4o())
+
+test_on_gradient(IM_h6x6o())
+
+test_on_gradient(IM_h8x8o())
+
+test_on_gradient(IM_c5x5())
+
+test_on_gradient(IM_c6x6())
+
+test_on_gradient(IM_c7x7())
+
 test_on_gradient(SimpleErrorDiffusion())
 
 test_on_gradient(FloydSteinberg())

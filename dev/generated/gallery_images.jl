@@ -38,6 +38,26 @@ test_on_images(BalancedCenteredPoint())
 
 test_on_images(Rhombus())
 
+test_on_images(IM_checks())
+
+test_on_images(IM_h4x4a())
+
+test_on_images(IM_h6x6a())
+
+test_on_images(IM_h8x8a())
+
+test_on_images(IM_h4x4o())
+
+test_on_images(IM_h6x6o())
+
+test_on_images(IM_h8x8o())
+
+test_on_images(IM_c5x5())
+
+test_on_images(IM_c6x6())
+
+test_on_images(IM_c7x7())
+
 test_on_images(SimpleErrorDiffusion())
 
 test_on_images(FloydSteinberg())

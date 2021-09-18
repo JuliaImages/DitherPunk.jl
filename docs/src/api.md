@@ -59,10 +59,6 @@ ClosestColor
 ```
 
 ## Other
-```@docs
-SeparateSpace
-```
-
 # Utilities
 ```@docs
 upscale

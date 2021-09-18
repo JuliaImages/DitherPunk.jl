@@ -11,7 +11,6 @@ using Requires
 include("compat.jl")
 include("dither_api.jl")
 include("colorspaces.jl")
-include("separate_space.jl")
 include("threshold.jl")
 include("ordered.jl")
 include("ordered_imagemagick.jl")
@@ -21,8 +20,6 @@ include("show.jl")
 include("eval.jl")
 
 export dither, dither!
-# Meta algorithms
-export SeparateSpace
 # Threshold dithering
 export ConstantThreshold, WhiteNoiseThreshold
 # Ordered dithering

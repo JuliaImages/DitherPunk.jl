@@ -34,14 +34,9 @@ dither(img_gray, Bayer())
 dither(img_gray, Bayer(); to_linear=true)
 
 # ## Separate-space dithering
-# All dithering algorithms in DitherPunk can also be applied to color images through the meta-method `SeparateSpace`.
-# This method takes any dithering algorithm and applies channel-wise binary dithering.
-dither(img_color, SeparateSpace(Bayer()))
-
-# Any algorithm can be used, not only bayer dithering!
-dither(img_color, SeparateSpace(FloydSteinberg()))
-#
-dither(img_color, SeparateSpace(Rhombus()))
+# All dithering algorithms in DitherPunk can also be applied to color images
+# and will automatically apply channel-wise binary dithering.
+dither(img_color, Bayer())
 
 #
 # !!! note

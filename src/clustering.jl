@@ -1,10 +1,6 @@
 # These functions are only conditionally loaded with Clustering.jl
 
-# Implement colordistancemetric according to Distances.jl interface
-# struct SqColor{T} <: UnionSemiMetric
-#     ctype::T
-# end
-# @inline eval_op(distan::SqColor, ai, bi) = abs2(ai - bi)
+# Code adapted from @cormullion's [ColorSchemeTools](https://github.com/JuliaGraphics/ColorSchemeTools.jl).
 
 function _dither!(
     out,

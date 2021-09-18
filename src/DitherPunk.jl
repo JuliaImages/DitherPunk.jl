@@ -19,7 +19,6 @@ include("error_diffusion.jl")
 include("closest_color.jl")
 include("show.jl")
 include("eval.jl")
-include("requires.jl")
 
 export dither, dither!
 # Meta algorithms
@@ -39,5 +38,15 @@ export Sierra, TwoRowSierra, SierraLite, Atkinson, Fan93, ShiauFan, ShiauFan2
 export ClosestColor
 # Other utilities
 export upscale
+
+# Conditional dependencies using Requires.jl
+function __init__()
+    @require ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4" begin
+        include("colorschemes.jl")
+    end
+    @require Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5" begin
+        include("clustering.jl")
+    end
+end
 
 end # module

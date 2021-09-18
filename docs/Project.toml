@@ -1,4 +1,5 @@
 [deps]
+Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
 DitherPunk = "b8f752a5-abd5-43b6-a55b-e75efda20de0"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"

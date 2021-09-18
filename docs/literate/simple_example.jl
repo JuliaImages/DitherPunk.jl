@@ -15,9 +15,11 @@ using DitherPunk
 using Images
 using TestImages
 
-img_color = testimage("lighthouse")
-img_color = imresize(img_color; ratio = 1//2)
-img_gray = Gray.(img_color) # covert to grayscale
+img = testimage("lighthouse")
+img = imresize(img; ratio=1//2)
+
+# To apply binary dithering, we also need to convert the image to grayscale.
+img_gray = Gray.(img)
 
 #
 # !!! note " Preprocessing"
@@ -36,14 +38,14 @@ dither(img_gray, Bayer(); to_linear=true)
 # ## Separate-space dithering
 # All dithering algorithms in DitherPunk can also be applied to color images
 # and will automatically apply channel-wise binary dithering.
-dither(img_color, Bayer())
+dither(img, Bayer())
 
 #
 # !!! note
 #     Because the algorithm is applied once per channel, the output of this algorithm depends on the color type of input image. `RGB` is recommended, but feel free to experiment!
 #
 # ## Dithering with custom colors
-# Let's assume we want to recreate an image by stacking ``50 \times 50`` Rubik's cubes. Dithering algorithms are perfect for this task!
+# Let's assume we want to recreate an image by stacking a bunch of Rubik's cubes. Dithering algorithms are perfect for this task!
 # We start out by defining a custom color scheme:
 white = RGB{Float32}(1, 1, 1)
 yellow = RGB{Float32}(1, 1, 0)
@@ -54,11 +56,7 @@ blue = RGB{Float32}(0, 0, 1)
 
 rubiks_colors = [white, yellow, green, orange, red, blue]
 
-# Now we only have to pick an image
-img = testimage("fabio_color_256")
-img = imresize(img, 150, 150)
-
-# and run an `ErrorDiffusion` algorithm of our choice, e.g. `FloydSteinberg`:
+# Currently, dithering in custom colors is limited to `ErrorDiffusion` algorithms such as `FloydSteinberg`.
 d = dither(img, FloydSteinberg(), rubiks_colors)
 
 # this looks much better than simply quantizing to the closest color!
@@ -66,10 +64,20 @@ d = dither(img, ClosestColor(), rubiks_colors)
 
 # For an overview of all error diffusion algorithms, check out the [gallery].
 #
-# ### Using ColorSchemes.jl
-# Predefined color schemes from [ColorSchemes.jl](https://juliagraphics.github.io/ColorSchemes.jl/stable/basics/#Pre-defined-schemes) can also be used by accessing the color scheme's `colors`.
-# Here we use ColorSchemes.jl to dither in the colors of the Brazilian flag 🇧🇷:
+# ### ColorSchemes.jl
+# Predefined color schemes from [ColorSchemes.jl](https://juliagraphics.github.io/ColorSchemes.jl/stable/basics/#Pre-defined-schemes) can also be used.
+# Here we use ColorSchemes.jl to dither in the colors of the French flag 🇫🇷:
 using ColorSchemes
-cs = ColorSchemes.flag_br
 
-dither(img, Atkinson(), cs.colors)
+dither(img, FloydSteinberg(), ColorSchemes.flag_fr)
+
+# You can also directly use the corresponding symbol from the
+# [ColorSchemes catalogue](https://juliagraphics.github.io/ColorSchemes.jl/stable/catalogue/):
+dither(img, FloydSteinberg(), :flag_fr)
+
+# ### Clustering.jl
+# Using [Clustering.jl](https://github.com/JuliaStats/Clustering.jl) allows you to generate
+# optimized color schemes. Simply pass the size of the desired color palette:
+using Clustering
+
+dither(img, FloydSteinberg(), 8)

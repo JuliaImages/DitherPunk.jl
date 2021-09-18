@@ -1,5 +1,6 @@
 using DitherPunk
 using DitherPunk: closest_color
+using Images
 using ImageCore
 using ImageInTerminal
 using ReferenceTests
@@ -43,3 +44,7 @@ end
 using ColorSchemes
 alg = FloydSteinberg()
 @test dither(img, alg, ColorSchemes.jet) == dither(img, alg, :jet)
+
+# Dry-run conditional dependency on Clustering.jl
+using Clustering
+dither(img, alg, 4)

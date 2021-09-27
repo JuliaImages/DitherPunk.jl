@@ -6,7 +6,7 @@
 Binary dither with algorithm `alg`, then print image in braille.
 """
 function braille(img::GenericImage, alg::AbstractDither, args...; kwargs...)
-    return brailleprint(dither(Gray{Bool}, img, alg, args...; kwargs...))
+    return brailleprint(dither(Gray{Bool}, Gray.(img), alg, args...; kwargs...))
 end
 
 """
@@ -15,11 +15,13 @@ end
 Interpret binary image `img` as sparse array and print it in braille through UnicodePlots.
 Refer to the UnicodePlots.jl documentation of `spy` for plot arguments.
 """
-function brailleprint(img::GenericGrayImage; show_braille=true, title="", margin=0, padding=0, border=:none, kwargs...)
+function brailleprint(
+    img::GenericGrayImage; title="", margin=0, padding=0, border=:none, kwargs...
+)
     h, w = size(img)
     img = Bool.(img)
 
-    p = UnicodePlots.spy(
+    return UnicodePlots.spy(
         img;
         # One braille character corresponds to a 4x2 grid
         maxheight=ceil(Int, h / 4),
@@ -31,6 +33,4 @@ function brailleprint(img::GenericGrayImage; show_braille=true, title="", margin
         labels=false,
         kwargs...,
     )
-    show_braille && show(p)
-    return p
 end

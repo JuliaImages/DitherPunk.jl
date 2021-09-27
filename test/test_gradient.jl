@@ -61,7 +61,7 @@ for (name, alg) in algs_deterministic
     @test eltype(d) == eltype(img)
     @test img2 == img # image not modified
 
-    brailleprint(d; title=name) # Visualize in terminal
+    show(brailleprint(d; title=name)) # Visualize in terminal
 
     d = dither!(img2, alg; to_linear=true)
     @test_reference "references/grad_$(name)_linear.txt" Int.(d)
@@ -78,12 +78,12 @@ algs_random = Dict(
 for (name, alg) in algs_random
     img2 = copy(img)
     d = dither(Gray{Bool}, img2, alg)
-    brailleprint(d; title=name) # Visualize in terminal
+    show(brailleprint(d; title=name)) # Visualize in terminal
     @test eltype(d) == Gray{Bool}
     @test img2 == img # image not modified
 
     d = dither!(img2, alg; to_linear=true)
-    brailleprint(d; title="$(name) linear") # Visualize in terminal
+    show(brailleprint(d; title="$(name) linear")) # Visualize in terminal
     @test eltype(d) == eltype(img)
     @test img2 == d # image updated in-place
 end

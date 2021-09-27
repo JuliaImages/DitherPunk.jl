@@ -47,4 +47,5 @@ alg = FloydSteinberg()
 
 # Dry-run conditional dependency on Clustering.jl
 using Clustering
-dither(img, alg, 4)
+d = dither(img, alg, 4)
+imshow(d)

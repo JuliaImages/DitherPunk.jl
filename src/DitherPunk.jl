@@ -39,9 +39,11 @@ export upscale
 # Conditional dependencies using Requires.jl
 function __init__()
     @require ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4" begin
+        @info "DitherPunk: ColorSchemes are available."
         include("colorschemes.jl")
     end
     @require Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5" begin
+        @info "DitherPunk: Clustering is available."
         include("clustering.jl")
     end
     @require UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228" begin

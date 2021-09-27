@@ -88,19 +88,18 @@ For an overview of all error diffusion algorithms, check out the [gallery].
 
 ### ColorSchemes.jl
 Predefined color schemes from [ColorSchemes.jl](https://juliagraphics.github.io/ColorSchemes.jl/stable/basics/#Pre-defined-schemes) can also be used.
-Here we use ColorSchemes.jl to dither in the colors of the French flag 🇫🇷:
 
 ````@example simple_example
 using ColorSchemes
 
-dither(img, FloydSteinberg(), ColorSchemes.flag_fr)
+dither(img, FloydSteinberg(), ColorSchemes.PuOr_7)
 ````
 
 You can also directly use the corresponding symbol from the
 [ColorSchemes catalogue](https://juliagraphics.github.io/ColorSchemes.jl/stable/catalogue/):
 
 ````@example simple_example
-dither(img, FloydSteinberg(), :flag_fr)
+dither(img, FloydSteinberg(), :PuOr_7)
 ````
 
 ### Clustering.jl
@@ -112,3 +111,20 @@ using Clustering
 
 dither(img, FloydSteinberg(), 8)
 ````
+
+## UnicodePlots.jl
+Using [UnicodePlots.jl](https://github.com/JuliaPlots/UnicodePlots.jl), it is also possible
+to dither images directly to Braille-characters using `braille`. The interface is the same
+as for binary dithering with `dither`:
+
+````@example simple_example
+using UnicodePlots
+img = imresize(img; ratio=1//3)
+
+braille(img, FloydSteinberg())
+````
+
+---
+
+*This page was generated using [Literate.jl](https://github.com/fredrikekre/Literate.jl).*
+

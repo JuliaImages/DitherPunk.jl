@@ -66,14 +66,13 @@ d = dither(img, ClosestColor(), rubiks_colors)
 #
 # ### ColorSchemes.jl
 # Predefined color schemes from [ColorSchemes.jl](https://juliagraphics.github.io/ColorSchemes.jl/stable/basics/#Pre-defined-schemes) can also be used.
-# Here we use ColorSchemes.jl to dither in the colors of the French flag 🇫🇷:
 using ColorSchemes
 
-dither(img, FloydSteinberg(), ColorSchemes.flag_fr)
+dither(img, FloydSteinberg(), ColorSchemes.PuOr_7)
 
 # You can also directly use the corresponding symbol from the
 # [ColorSchemes catalogue](https://juliagraphics.github.io/ColorSchemes.jl/stable/catalogue/):
-dither(img, FloydSteinberg(), :flag_fr)
+dither(img, FloydSteinberg(), :PuOr_7)
 
 # ### Clustering.jl
 # Using [Clustering.jl](https://github.com/JuliaStats/Clustering.jl) allows you to generate
@@ -81,3 +80,12 @@ dither(img, FloydSteinberg(), :flag_fr)
 using Clustering
 
 dither(img, FloydSteinberg(), 8)
+
+# ## UnicodePlots.jl
+# Using [UnicodePlots.jl](https://github.com/JuliaPlots/UnicodePlots.jl), it is also possible
+# to dither images directly to Braille-characters using `braille`. The interface is the same
+# as for binary dithering with `dither`:
+using UnicodePlots
+img = imresize(img; ratio=1//3)
+
+braille(img, FloydSteinberg())

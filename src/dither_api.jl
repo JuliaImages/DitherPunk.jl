@@ -62,8 +62,7 @@ function dither(
     ::Type{T}, img::GenericImage, alg::AbstractDither, args...; kwargs...
 ) where {T}
     out = similar(Array{T}, axes(img))
-    _dither!(out, img, alg, args...; kwargs...)
-    return out
+    return _dither!(out, img, alg, args...; kwargs...)
 end
 
 # ...and defaults to the type of the input image.
@@ -111,7 +110,7 @@ end
 function _dither!(
     out::GenericImage,
     img::GenericImage,
-    alg::AbstractCustomColorDither,
+    alg::AbstractDither,
     cs::AbstractVector{<:Pixel};
     metric::DifferenceMetric=DE_2000(),
     to_linear=false,
@@ -122,4 +121,16 @@ function _dither!(
     return alg(out, img, cs, metric)
 end
 
-# TODO: test for errors on images w/ alpha etc.
+# A special case occurs when a grayscale output image is to be dithered in colors.
+# Since this is not possible, instead the return image will be of type of the color scheme.
+function _dither!(
+    out::GenericGrayImage,
+    img::GenericGrayImage,
+    alg::AbstractDither,
+    cs::AbstractVector{<:Color{<:Any,3}};
+    metric::DifferenceMetric=DE_2000(),
+    to_linear=false,
+)
+    T = eltype(cs)
+    return _dither!(T.(out), T.(img), alg, cs; metric=metric, to_linear=to_linear)
+end

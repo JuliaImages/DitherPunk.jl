@@ -44,6 +44,11 @@ function __init__()
     @require Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5" begin
         include("clustering.jl")
     end
+    @require UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228" begin
+        @info "DitherPunk: braille is available via UnicodePlots."
+        include("braille.jl")
+        export braille, brailleprint
+    end
 end
 
 end # module

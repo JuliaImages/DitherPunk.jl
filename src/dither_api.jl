@@ -5,11 +5,14 @@ abstract type AbstractDither end
 # and act similarly to algorithms of type AbstractBinaryDither.
 abstract type AbstractCustomColorDither <: AbstractDither end
 
-# Algorithms whose output uses predefined sets of color, e.g. separate space dithering:
-abstract type AbstractFixedColorDither <: AbstractDither end
 # Algorithms which strictly do binary dithering:
-abstract type AbstractBinaryDither <: AbstractFixedColorDither end
-
+abstract type AbstractBinaryDither <: AbstractDither end
+function (alg::AbstractBinaryDither)(out, img, cs, metric)
+    return throw(
+        ArgumentError("""Algorithms of type $(Base.typename(typeof(alg)))
+                      currently don't support dithering in custom color palettes.""")
+    )
+end
 ##############
 # Public API #
 ##############

@@ -7,12 +7,17 @@ abstract type AbstractCustomColorDither <: AbstractDither end
 
 # Algorithms which strictly do binary dithering:
 abstract type AbstractBinaryDither <: AbstractDither end
-function (alg::AbstractBinaryDither)(out, img, cs, metric)
-    return throw(
-        ArgumentError("""Algorithms of type $(Base.typename(typeof(alg)))
-                      currently don't support dithering in custom color palettes.""")
-    )
+
+if VERSION >= v"1.5"
+    function (alg::AbstractBinaryDither)(out, img, cs, metric)
+        return throw(
+            ArgumentError(
+                """$alg algorithm currently doesn't support dithering in custom color palettes.""",
+            ),
+        )
+    end
 end
+
 ##############
 # Public API #
 ##############

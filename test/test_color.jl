@@ -54,8 +54,10 @@ for (name, alg) in algs
 end
 
 # Test for argument errors on AbstractBinaryDither algorithms
-for alg in [Bayer(), WhiteNoiseThreshold(), ConstantThreshold()]
-    @test_throws ArgumentError dither(img, alg, cs)
+if VERSION >= v"1.5"
+    for alg in [Bayer(), WhiteNoiseThreshold(), ConstantThreshold()]
+        @test_throws ArgumentError dither(img, alg, cs)
+    end
 end
 
 # Test conditional dependency on ColorSchemes.jl

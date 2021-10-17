@@ -24,3 +24,21 @@ function _dither!(
 
     return _dither!(out, img, alg, T.(cs); kwargs...)
 end
+
+"""
+    dither!([out,] img, alg::AbstractDither, ncolors; maxiter, tol, kwargs...)
+
+Dither image `img` using algorithm `alg`.
+A color palette with `ncolors` is computed by Clustering.jl's K-means clustering.
+The amount of `maxiter` and tolerance `tol` default to those exported by Clustering.jl.
+"""
+dither!
+
+"""
+    dither([T::Type,] img, alg::AbstractDither, ncolors; maxiter, tol, kwargs...)
+
+Dither image `img` using algorithm `alg`.
+A color palette with `ncolors` is computed by Clustering.jl's K-means clustering.
+The amount of `maxiter` and tolerance `tol` default to those exported by Clustering.jl.
+"""
+dither

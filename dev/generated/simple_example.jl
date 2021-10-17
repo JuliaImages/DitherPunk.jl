@@ -2,19 +2,16 @@ using DitherPunk
 using Images
 using TestImages
 
-img_color = testimage("lighthouse")
-img_color = imresize(img_color; ratio = 1//2)
-img_gray = Gray.(img_color) # covert to grayscale
+img = testimage("lighthouse")
+img = imresize(img; ratio=1//2)
+
+img_gray = Gray.(img)
 
 dither(img_gray, Bayer())
 
 dither(img_gray, Bayer(); to_linear=true)
 
-dither(img_color, SeparateSpace(Bayer()))
-
-dither(img_color, SeparateSpace(FloydSteinberg()))
-
-dither(img_color, SeparateSpace(Rhombus()))
+dither(img, Bayer())
 
 white = RGB{Float32}(1, 1, 1)
 yellow = RGB{Float32}(1, 1, 0)
@@ -25,17 +22,24 @@ blue = RGB{Float32}(0, 0, 1)
 
 rubiks_colors = [white, yellow, green, orange, red, blue]
 
-img = testimage("fabio_color_256")
-img = imresize(img, 150, 150)
-
 d = dither(img, FloydSteinberg(), rubiks_colors)
 
 d = dither(img, ClosestColor(), rubiks_colors)
 
 using ColorSchemes
-cs = ColorSchemes.flag_br
 
-dither(img, Atkinson(), cs.colors)
+dither(img, FloydSteinberg(), ColorSchemes.PuOr_7)
+
+dither(img, FloydSteinberg(), :PuOr_7)
+
+using Clustering
+
+dither(img, FloydSteinberg(), 8)
+
+using UnicodePlots
+img = imresize(img; ratio=1//3)
+
+braille(img, FloydSteinberg())
 
 # This file was generated using Literate.jl, https://github.com/fredrikekre/Literate.jl
 

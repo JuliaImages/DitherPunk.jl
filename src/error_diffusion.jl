@@ -79,7 +79,7 @@ function (alg::ErrorDiffusion)(
 end
 
 # default to binary dithering if no color scheme is provided
-function (alg::ErrorDiffusion)(out::GenericGrayImage,img::GenericGrayImage)
+function (alg::ErrorDiffusion)(out::GenericGrayImage, img::GenericGrayImage)
     cs = eltype(out).([false, true]) # b&w color scheme
     alg(out, img, cs, BinaryDitherMetric())
     return out
@@ -113,7 +113,9 @@ Error diffusion algorithm using the filter
      Scale."  SID 1975, International Symposium Digest of Technical Papers,
      vol 1975m, pp. 36-37.
 """
-FloydSteinberg() = ErrorDiffusion(OffsetMatrix([0 0 7; 3 5 1]//16, 0:1, -1:1))
+function FloydSteinberg(; kwargs...)
+    return ErrorDiffusion(OffsetMatrix([0 0 7; 3 5 1]//16, 0:1, -1:1); kwargs...)
+end
 
 """
     JarvisJudice()
@@ -130,8 +132,10 @@ Also known as the Jarvis, Judice, and Ninke filter.
      the Display of Continuous Tone Pictures on Bi-Level Displays," Computer
      Graphics and Image Processing, vol. 5, pp. 13-40, 1976.
 """
-function JarvisJudice()
-    return ErrorDiffusion(OffsetMatrix([0 0 0 7 5; 3 5 7 5 3; 1 3 5 3 1]//48, 0:2, -2:2))
+function JarvisJudice(; kwargs...)
+    return ErrorDiffusion(
+        OffsetMatrix([0 0 0 7 5; 3 5 7 5 3; 1 3 5 3 1]//48, 0:2, -2:2); kwargs...
+    )
 end
 
 """
@@ -148,7 +152,11 @@ Error diffusion algorithm using the filter
      for bilevel image hardcopy reproduction."  Research Report RZ1060, IBM
      Research Laboratory, Zurich, Switzerland, 1981.
 """
-Stucki() = ErrorDiffusion(OffsetMatrix([0 0 0 8 4; 2 4 8 4 2; 1 2 4 2 1]//42, 0:2, -2:2))
+function Stucki(; kwargs...)
+    return ErrorDiffusion(
+        OffsetMatrix([0 0 0 8 4; 2 4 8 4 2; 1 2 4 2 1]//42, 0:2, -2:2); kwargs...
+    )
+end
 
 """
     Burkes()
@@ -163,7 +171,9 @@ Error diffusion algorithm using the filter
 [1] Burkes, D., "Presentation of the Burkes error filter for use in preparing
     continuous-tone images for presentation on bi-level devices." Unpublished, 1988.
 """
-Burkes() = ErrorDiffusion(OffsetMatrix([0 0 0 8 4; 2 4 8 4 2]//32, 0:1, -2:2))
+function Burkes(; kwargs...)
+    return ErrorDiffusion(OffsetMatrix([0 0 0 8 4; 2 4 8 4 2]//32, 0:1, -2:2); kwargs...)
+end
 
 """
     Sierra()
@@ -176,7 +186,11 @@ Error diffusion algorithm using the filter
 ```
 Also known as Sierra3 or three-row Sierra due to the filter shape.
 """
-Sierra() = ErrorDiffusion(OffsetMatrix([0 0 0 5 3; 2 4 5 4 2; 0 2 3 2 0]//32, 0:2, -2:2))
+function Sierra(; kwargs...)
+    return ErrorDiffusion(
+        OffsetMatrix([0 0 0 5 3; 2 4 5 4 2; 0 2 3 2 0]//32, 0:2, -2:2); kwargs...
+    )
+end
 
 """
     TwoRowSierra()
@@ -188,7 +202,9 @@ Error diffusion algorithm using the filter
 ```
 Also known as Sierra2.
 """
-TwoRowSierra() = ErrorDiffusion(OffsetMatrix([0 0 0 4 3; 1 2 3 2 1]//16, 0:1, -2:2))
+function TwoRowSierra(; kwargs...)
+    return ErrorDiffusion(OffsetMatrix([0 0 0 4 3; 1 2 3 2 1]//16, 0:1, -2:2); kwargs...)
+end
 
 """
     SierraLite()
@@ -200,7 +216,9 @@ Error diffusion algorithm using the filter
 ```
 Also known as Sierra-2-4A filter.
 """
-SierraLite() = ErrorDiffusion(OffsetMatrix([0 0 2; 1 1 0]//4, 0:1, -1:1))
+function SierraLite(; kwargs...)
+    return ErrorDiffusion(OffsetMatrix([0 0 2; 1 1 0]//4, 0:1, -1:1); kwargs...)
+end
 
 """
     Atkinson()
@@ -212,7 +230,11 @@ Error diffusion algorithm using the filter
     1               (1//8)
 ```
 """
-Atkinson() = ErrorDiffusion(OffsetMatrix([0 0 1 1; 1 1 1 0; 0 1 0 0]//8, 0:2, -1:2))
+function Atkinson(; kwargs...)
+    return ErrorDiffusion(
+        OffsetMatrix([0 0 1 1; 1 1 1 0; 0 1 0 0]//8, 0:2, -1:2); kwargs...
+    )
+end
 
 """
     Fan93()
@@ -228,7 +250,9 @@ A modification of the weights used in the Floyd-Steinberg algorithm.
     IS&T's 46th Annual Conference, May 9-14, 1993, Final Program and Advanced Printing of
     Paper Summaries, pp 113-115 (1993).
 """
-Fan93() = ErrorDiffusion(OffsetMatrix([0 0 0 7; 1 3 5 0]//16, 0:1, -2:1))
+function Fan93(; kwargs...)
+    return ErrorDiffusion(OffsetMatrix([0 0 0 7; 1 3 5 0]//16, 0:1, -2:1); kwargs...)
+end
 
 """
     ShiauFan()
@@ -242,7 +266,9 @@ Error diffusion algorithm using the filter
 [1]  J. N. Shiau and Z. Fan. "Method for quantization gray level pixel data with extended
      distribution set", US 5353127A, United States Patent and Trademark Office, Oct. 4, 1993
 """
-ShiauFan() = ErrorDiffusion(OffsetMatrix([0 0 0 4; 1 1 2 0]//8, 0:1, -2:1))
+function ShiauFan(; kwargs...)
+    return ErrorDiffusion(OffsetMatrix([0 0 0 4; 1 1 2 0]//8, 0:1, -2:1); kwargs...)
+end
 
 """
     ShiauFan2()
@@ -259,7 +285,9 @@ Error diffusion algorithm using the filter
      with reduced worm artifacts" Color Imaging: Device-Independent Color, Color Hard Copy,
      and Graphics Arts, volume 2658, pages 222–225. SPIE, March 1996.
 """
-ShiauFan2() = ErrorDiffusion(OffsetMatrix([0 0 0 0 8; 1 1 2 4 0]//16, 0:1, -3:1))
+function ShiauFan2(; kwargs...)
+    return ErrorDiffusion(OffsetMatrix([0 0 0 0 8; 1 1 2 4 0]//16, 0:1, -3:1); kwargs...)
+end
 
 """
     FalseFloydSteinberg()
@@ -276,4 +304,6 @@ There is no reason to use this algorithm, which is why DitherPunk doesn't export
 
 [1] http://www.efg2.com/Lab/Library/ImageProcessing/DHALF.TXT
 """
-FalseFloydSteinberg() = ErrorDiffusion(OffsetMatrix([0 3; 3 2]//8, 0:1, 0:1))
+function FalseFloydSteinberg(; kwargs...)
+    return ErrorDiffusion(OffsetMatrix([0 3; 3 2]//8, 0:1, 0:1); kwargs...)
+end

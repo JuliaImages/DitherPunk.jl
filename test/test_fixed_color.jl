@@ -6,12 +6,10 @@ using TestImages
 
 # Load test image
 img = testimage("fabio_color_256")
-imshow(img)
 
 # Run & test fixed pallete dithering methods
 algs = Dict(
-    "SeparateSpaceFloydSteinberg" => SeparateSpace(FloydSteinberg()),
-    "SeparateSpaceBayer" => SeparateSpace(Bayer()),
+    "SeparateSpaceFloydSteinberg" => FloydSteinberg(), "SeparateSpaceBayer" => Bayer()
 )
 
 for C in [RGB, HSV]
@@ -30,8 +28,3 @@ for C in [RGB, HSV]
         @test img2 == d # image updated in-place
     end
 end
-
-# Chained applications of SeparateSpace should not affect the output
-d1 = dither(img, SeparateSpace(Bayer()))
-d2 = dither(img, SeparateSpace(SeparateSpace(SeparateSpace(Bayer()))))
-@test d1 == d2

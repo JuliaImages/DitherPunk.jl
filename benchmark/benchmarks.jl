@@ -38,11 +38,15 @@ for (algname, alg) in algs
     SUITE[algname]["binary new"] = @benchmarkable dither($(img_gray), $(alg))
     SUITE[algname]["binary inplace"] = @benchmarkable dither!($(copy(img_gray)), $(alg))
 
-    SUITE[algname]["per-channel new"] = @benchmarkable dither($(img_color), SeparateSpace($(alg)))
-    SUITE[algname]["per-channel inplace"] = @benchmarkable dither!($(copy(img_color)), SeparateSpace($(alg)))
+    SUITE[algname]["per-channel new"] = @benchmarkable dither($(img_color), $(alg))
+    SUITE[algname]["per-channel inplace"] = @benchmarkable dither!(
+        $(copy(img_color)), $(alg)
+    )
 
     if "color" in SUITE[algname].tags
         SUITE[algname]["color new"] = @benchmarkable dither($(img_color), $(alg), $(cs))
-        SUITE[algname]["color inplace"] = @benchmarkable dither!($(copy(img_color)), $(alg), $(cs))
+        SUITE[algname]["color inplace"] = @benchmarkable dither!(
+            $(copy(img_color)), $(alg), $(cs)
+        )
     end
 end

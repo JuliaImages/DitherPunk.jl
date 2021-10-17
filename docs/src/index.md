@@ -17,9 +17,14 @@ using DitherPunk
 using Images
 using TestImages
 
-img_color = testimage("lighthouse")
-img_color = imresize(img_color; ratio = 1//2)
-img_gray = Gray.(img_color) # covert to grayscale
+img = testimage("lighthouse")
+img = imresize(img; ratio=1//2)
+````
+
+To apply binary dithering, we also need to convert the image to grayscale.
+
+````@example simple_example
+img_gray = Gray.(img)
 ````
 
 !!! note " Preprocessing"
@@ -42,28 +47,18 @@ dither(img_gray, Bayer(); to_linear=true)
 ````
 
 ## Separate-space dithering
-All dithering algorithms in DitherPunk can also be applied to color images through the meta-method `SeparateSpace`.
-This method takes any dithering algorithm and applies channel-wise binary dithering.
+All dithering algorithms in DitherPunk can also be applied to color images
+and will automatically apply channel-wise binary dithering.
 
 ````@example simple_example
-dither(img_color, SeparateSpace(Bayer()))
-````
-
-Any algorithm can be used, not only bayer dithering!
-
-````@example simple_example
-dither(img_color, SeparateSpace(FloydSteinberg()))
-````
-
-````@example simple_example
-dither(img_color, SeparateSpace(Rhombus()))
+dither(img, Bayer())
 ````
 
 !!! note
     Because the algorithm is applied once per channel, the output of this algorithm depends on the color type of input image. `RGB` is recommended, but feel free to experiment!
 
 ## Dithering with custom colors
-Let's assume we want to recreate an image by stacking ``50 \times 50`` Rubik's cubes. Dithering algorithms are perfect for this task!
+Let's assume we want to recreate an image by stacking a bunch of Rubik's cubes. Dithering algorithms are perfect for this task!
 We start out by defining a custom color scheme:
 
 ````@example simple_example
@@ -77,14 +72,7 @@ blue = RGB{Float32}(0, 0, 1)
 rubiks_colors = [white, yellow, green, orange, red, blue]
 ````
 
-Now we only have to pick an image
-
-````@example simple_example
-img = testimage("fabio_color_256")
-img = imresize(img, 150, 150)
-````
-
-and run an `ErrorDiffusion` algorithm of our choice, e.g. `FloydSteinberg`:
+Currently, dithering in custom colors is limited to `ErrorDiffusion` algorithms such as `FloydSteinberg`.
 
 ````@example simple_example
 d = dither(img, FloydSteinberg(), rubiks_colors)
@@ -98,13 +86,45 @@ d = dither(img, ClosestColor(), rubiks_colors)
 
 For an overview of all error diffusion algorithms, check out the [gallery].
 
-### Using ColorSchemes.jl
-Predefined color schemes from [ColorSchemes.jl](https://juliagraphics.github.io/ColorSchemes.jl/stable/basics/#Pre-defined-schemes) can also be used by accessing the color scheme's `colors`.
-Here we use ColorSchemes.jl to dither in the colors of the Brazilian flag 🇧🇷:
+### ColorSchemes.jl
+Predefined color schemes from [ColorSchemes.jl](https://juliagraphics.github.io/ColorSchemes.jl/stable/basics/#Pre-defined-schemes) can also be used.
 
 ````@example simple_example
 using ColorSchemes
-cs = ColorSchemes.flag_br
 
-dither(img, Atkinson(), cs.colors)
+dither(img, FloydSteinberg(), ColorSchemes.PuOr_7)
 ````
+
+You can also directly use the corresponding symbol from the
+[ColorSchemes catalogue](https://juliagraphics.github.io/ColorSchemes.jl/stable/catalogue/):
+
+````@example simple_example
+dither(img, FloydSteinberg(), :PuOr_7)
+````
+
+### Clustering.jl
+Using [Clustering.jl](https://github.com/JuliaStats/Clustering.jl) allows you to generate
+optimized color schemes. Simply pass the size of the desired color palette:
+
+````@example simple_example
+using Clustering
+
+dither(img, FloydSteinberg(), 8)
+````
+
+## UnicodePlots.jl
+Using [UnicodePlots.jl](https://github.com/JuliaPlots/UnicodePlots.jl), it is also possible
+to dither images directly to Braille-characters using `braille`. The interface is the same
+as for binary dithering with `dither`:
+
+````@example simple_example
+using UnicodePlots
+img = imresize(img; ratio=1//3)
+
+braille(img, FloydSteinberg())
+````
+
+---
+
+*This page was generated using [Literate.jl](https://github.com/fredrikekre/Literate.jl).*
+

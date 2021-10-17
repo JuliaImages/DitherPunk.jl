@@ -6,11 +6,11 @@ using ImageCore: NumberLike, Pixel, GenericImage, GenericGrayImage, MappedArrays
 using ImageCore.Colors: DifferenceMetric
 using Random
 using OffsetArrays
+using Requires
 
 include("compat.jl")
 include("dither_api.jl")
 include("colorspaces.jl")
-include("separate_space.jl")
 include("threshold.jl")
 include("ordered.jl")
 include("ordered_imagemagick.jl")
@@ -20,8 +20,6 @@ include("show.jl")
 include("eval.jl")
 
 export dither, dither!
-# Meta algorithms
-export SeparateSpace
 # Threshold dithering
 export ConstantThreshold, WhiteNoiseThreshold
 # Ordered dithering
@@ -35,7 +33,21 @@ export SimpleErrorDiffusion, FloydSteinberg, JarvisJudice, Stucki, Burkes
 export Sierra, TwoRowSierra, SierraLite, Atkinson, Fan93, ShiauFan, ShiauFan2
 # Closest color
 export ClosestColor
-
+# Other utilities
 export upscale
+
+# Conditional dependencies using Requires.jl
+function __init__()
+    @require ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4" begin
+        include("colorschemes.jl")
+    end
+    @require Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5" begin
+        include("clustering.jl")
+    end
+    @require UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228" begin
+        include("braille.jl")
+        export braille, brailleprint
+    end
+end
 
 end # module

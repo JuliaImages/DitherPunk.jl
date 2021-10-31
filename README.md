@@ -32,13 +32,28 @@ All algorithms can be used for binary or channel-wise dithering:
 | ![][atkinson-bw]    | ![][bayer-bw]         | ![][ordered-bw]        |
 | ![][atkinson-col]   | ![][bayer-col]        | ![][ordered-col]       |
 
-and all error diffusion methods support custom color palettes:
+All error diffusion methods support custom color palettes. Define your own palette or use the symbols from the [ColorSchemes.jl catalogue](https://juliagraphics.github.io/ColorSchemes.jl/stable/catalogue) directly:
 ```julia
+using DitherPunk
 using ColorSchemes
 
-dither(img, FloydSteinberg(), ColorSchemes.PuOr_7)
+dither(img, FloydSteinberg(), :flag_us)
 ```
-![][fs-pal]
+| `:flag_us`      | `:PuOr_6`      | `:websafe`   |
+|:---------------:|:--------------:|:------------:|
+| ![][cs_flag_us] | ![][cs_PuOr_6] | ![][websafe] |
+
+DitherPunk also works with [Clustering.jl](https://github.com/JuliaStats/Clustering.jl) to let you generate optimized color palettes for each input image:
+```julia
+using DitherPunk
+using Clustering
+
+ncolors = 8
+dither(img, FloydSteinberg(), ncolors)
+```
+| 2 colors          | 8 colors          | 32 colors          |
+|:-----------------:|:-----------------:|:------------------:|
+| ![][clustering_2] | ![][clustering_8] | ![][clustering_32] |
 
 For a more in-depth introduction, [take a look at the docs](https://juliaimages.org/DitherPunk.jl/stable/generated/simple_example/).
 ___
@@ -65,4 +80,11 @@ ___
 [ordered-col]: https://raw.githubusercontent.com/JuliaImages/DitherPunk.jl/gh-pages/assets/RhombusColor.png
 [fs-bw]: https://raw.githubusercontent.com/JuliaImages/DitherPunk.jl/gh-pages/assets/FloydSteinberg.png
 [fs-col]: https://raw.githubusercontent.com/JuliaImages/DitherPunk.jl/gh-pages/assets/FloydSteinbergColor.png
-[fs-pal]: https://raw.githubusercontent.com/JuliaImages/DitherPunk.jl/gh-pages/assets/FloydSteinbergPuOr7.png
+
+[cs_PuOr_6]: https://raw.githubusercontent.com/JuliaImages/DitherPunk.jl/gh-pages/assets/FloydSteinberg_PuOr_6.png
+[cs_flag_us]: https://raw.githubusercontent.com/JuliaImages/DitherPunk.jl/gh-pages/assets/FloydSteinberg_flag_us.png
+[websafe]: https://raw.githubusercontent.com/JuliaImages/DitherPunk.jl/gh-pages/assets/FloydSteinberg_websafe.png
+
+[clustering_2]: https://raw.githubusercontent.com/JuliaImages/DitherPunk.jl/gh-pages/assets/FloydSteinberg_2.png
+[clustering_8]: https://raw.githubusercontent.com/JuliaImages/DitherPunk.jl/gh-pages/assets/FloydSteinberg_8.png
+[clustering_32]: https://raw.githubusercontent.com/JuliaImages/DitherPunk.jl/gh-pages/assets/FloydSteinberg_32.png

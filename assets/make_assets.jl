@@ -20,7 +20,7 @@ for cs in [:PuOr_6, :RdBu_10, :websafe, :flag_us]
 end
 
 # Clustering
-imgc = imresize(testimage("lake_color"), ratio=1//2)
+imgc = imresize(testimage("peppers_color"), ratio=1//2)
 for ncols in 2 .^ (1:5)
     save("assets/FloydSteinberg_$(ncols).png", dither(imgc, FloydSteinberg(), ncols))
 end

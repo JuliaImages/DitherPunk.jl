@@ -12,8 +12,8 @@ struct OrderedDither{T<:AbstractMatrix} <: AbstractBinaryDither
     mat::T
 end
 
-function (alg::OrderedDither)(
-    out::GenericGrayImage, img::GenericGrayImage; invert_map=false
+function binarydither!(
+    alg::OrderedDither, out::GenericGrayImage, img::GenericGrayImage; invert_map=false
 )
     # eagerly promote to the same eltype to make for-loop faster
     FT = floattype(eltype(img))

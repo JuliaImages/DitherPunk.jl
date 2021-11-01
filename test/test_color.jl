@@ -1,5 +1,5 @@
 using DitherPunk
-using DitherPunk: closest_color
+using DitherPunk: closest_color, ColorNotImplementedError
 using Images
 using ImageCore
 using ImageInTerminal
@@ -54,10 +54,8 @@ for (name, alg) in algs
 end
 
 # Test for argument errors on AbstractBinaryDither algorithms
-if VERSION >= v"1.5"
-    for alg in [Bayer(), WhiteNoiseThreshold(), ConstantThreshold()]
-        @test_throws ArgumentError dither(img, alg, cs)
-    end
+for alg in [Bayer(), WhiteNoiseThreshold(), ConstantThreshold()]
+    @test_throws ColorNotImplementedError dither(img, alg, cs)
 end
 
 # Test conditional dependency on ColorSchemes.jl

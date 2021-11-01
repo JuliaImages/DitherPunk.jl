@@ -8,15 +8,16 @@ abstract type AbstractCustomColorDither <: AbstractDither end
 # Algorithms which strictly do binary dithering:
 abstract type AbstractBinaryDither <: AbstractDither end
 
-if VERSION >= v"1.5"
-    function (alg::AbstractBinaryDither)(out, img, cs, metric)
-        return throw(
-            ArgumentError(
-                """$alg algorithm currently doesn't support dithering in custom color palettes.""",
-            ),
-        )
-    end
+struct ColorNotImplementedError <: Exception
+    algname::String
+    ColorNotImplementedError(alg::AbstractDither) = new("$alg")
 end
+function Base.showerror(io::IO, e::ColorNotImplementedError)
+    return print(
+        io, e.algname, " algorithm currently doesn't support custom color palettes."
+    )
+end
+colordither!(alg, out, img, cs, metric) = throw(ColorNotImplementedError(alg))
 
 ##############
 # Public API #
@@ -87,7 +88,7 @@ function _dither!(
     out::GenericGrayImage, img::GenericGrayImage, alg::AbstractDither; to_linear=false
 )
     to_linear && (img = srgb2linear.(img))
-    return alg(out, img)
+    return binarydither!(alg, out, img)
 end
 
 # Dispatch to per-channel dithering on color images
@@ -105,7 +106,7 @@ function _dither!(
     for c in axes(cvout, 1)
         # Note: the input `out` will be modified
         # since the dithering algorithms modify the view of the channelview of `out`.
-        alg(view(cvout, c, :, :), view(cvimg, c, :, :))
+        binarydither!(alg, view(cvout, c, :, :), view(cvimg, c, :, :))
     end
     return out
 end
@@ -123,7 +124,7 @@ function _dither!(
     to_linear && (@warn "Skipping transformation `to_linear` when dithering in color.")
     length(cs) >= 2 ||
         throw(DomainError(steps, "Color scheme for dither needs >= 2 colors."))
-    return alg(out, img, cs, metric)
+    return colordither!(alg, out, img, cs, metric)
 end
 
 # A special case occurs when a grayscale output image is to be dithered in colors.

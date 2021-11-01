@@ -45,8 +45,8 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
     dcs = axes(alg.filter, 2)
     FT0, FT1 = FT(0), FT(1)
 
-    @inbounds for r in 1:h
-        for c in 1:w
+    @inbounds for r in axes(img, 1)
+        for c in axes(img, 2)
             px = img[r, c]
             alg.clamp_error && (px = clamp01(px))
 
@@ -56,7 +56,7 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
 
             for dr in drs
                 for dc in dcs
-                    if (r + dr > 0) && (r + dr <= h) && (c + dc > 0) && (c + dc <= w)
+                    if (r + dr) in axes(img, 1) && (c + dc) in axes(img, 2)
                         img[r + dr, c + dc] += err * filter[dr, dc]
                     end
                 end
@@ -91,8 +91,8 @@ function colordither!(
     drs = axes(alg.filter, 1)
     dcs = axes(alg.filter, 2)
 
-    @inbounds for r in 1:h
-        for c in 1:w
+    @inbounds for r in axes(img, 1)
+        for c in axes(img, 2)
             px = img[r, c]
             alg.clamp_error && (px = clamp01(px))
 
@@ -102,7 +102,7 @@ function colordither!(
 
             for dr in drs
                 for dc in dcs
-                    if (r + dr > 0) && (r + dr <= h) && (c + dc > 0) && (c + dc <= w)
+                    if (r + dr) in axes(img, 1) && (c + dc) in axes(img, 2)
                         img[r + dr, c + dc] += err * filter[dr, dc]
                     end
                 end

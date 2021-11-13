@@ -1,5 +1,5 @@
 using DitherPunk
-using DitherPunk: closest_color, ColorNotImplementedError
+using DitherPunk: ColorNotImplementedError
 using Images
 using ImageCore
 using ImageInTerminal
@@ -15,9 +15,6 @@ red = RGB{Float32}(1, 0, 0)
 blue = RGB{Float32}(0, 0, 1)
 
 cs = [white, yellow, green, orange, red, blue]
-
-# Test helper function
-@test closest_color(RGB{Float32}(1, 0.1, 0.1), cs) == red
 
 # Load test image
 img = testimage("fabio_color_256")
@@ -53,7 +50,7 @@ for (name, alg) in algs
     imshow(img2_gray)
 end
 
-# Test for argument errors on AbstractBinaryDither algorithms
+# Test for argument errors on algorithms that don't support custom color palletes
 for alg in [Bayer(), WhiteNoiseThreshold(), ConstantThreshold()]
     @test_throws ColorNotImplementedError dither(img, alg, cs)
 end

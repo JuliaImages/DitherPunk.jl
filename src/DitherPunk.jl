@@ -9,8 +9,8 @@ using OffsetArrays
 using Requires
 
 include("compat.jl")
+include("utils.jl")
 include("dither_api.jl")
-include("colorspaces.jl")
 include("threshold.jl")
 include("ordered.jl")
 include("ordered_imagemagick.jl")

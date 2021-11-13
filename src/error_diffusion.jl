@@ -21,39 +21,42 @@ julia> cs = ColorSchemes.PuOr_7.colors; # using ColorSchemes.jl for color palett
 julia> dither!(img, alg, cs);
 ```
 """
-struct ErrorDiffusion{T<:AbstractMatrix} <: AbstractCustomColorDither
+struct ErrorDiffusion{T<:AbstractMatrix} <: AbstractDither
     filter::T
     clamp_error::Bool
 end
 ErrorDiffusion(filter; clamp_error=true) = ErrorDiffusion(filter, clamp_error)
 
-function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericGrayImage)
+function binarydither(alg::ErrorDiffusion, img::GenericGrayImage)
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
 
     # Change from normalized intensities to Float as error will get added!
-    FT = floattype(eltype(out))
-
     # eagerly promote to the same type to make loop run faster
+    FT = floattype(eltype(img))
     img = FT.(img)
     filter = eltype(FT).(alg.filter)
-
-    h, w = size(img)
-    fill!(out, zero(eltype(out)))
 
     drs = axes(alg.filter, 1)
     dcs = axes(alg.filter, 2)
     FT0, FT1 = FT(0), FT(1)
+
+    out = Matrix{Int}(undef, size(img)...)
 
     @inbounds for r in axes(img, 1)
         for c in axes(img, 2)
             px = img[r, c]
             alg.clamp_error && (px = clamp01(px))
 
-            px >= 0.5 ? (col = FT1) : (col = FT0) # round to closest color
-            out[r, c] = col # apply pixel to dither
-            err = px - col  # diffuse "error" to neighborhood in filter
+            if px > 0.5
+                out[r, c] = 1 # apply pixel to dither, which is a BinaryIndirectArray
+                col = FT1 # round to closest color
+            else
+                out[r, c] = 0
+                col = FT0
+            end
 
+            err = px - col  # diffuse "error" to neighborhood in filter
             for dr in drs
                 for dc in dcs
                     if (r + dr) in axes(img, 1) && (c + dc) in axes(img, 2)
@@ -67,9 +70,8 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
     return out
 end
 
-function colordither!(
+function colordither(
     alg::ErrorDiffusion,
-    out::GenericImage,
     img::GenericImage,
     cs::AbstractVector{<:Pixel},
     metric::DifferenceMetric,
@@ -77,16 +79,14 @@ function colordither!(
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
 
-    # Change from normalized intensities to Float as error will get added!
-    FT = floattype(eltype(out))
+    out = Matrix{Int}(undef, size(img)...) # allocate matrix of color indices
 
+    # Change from normalized intensities to Float as error will get added!
     # eagerly promote to the same type to make loop run faster
+    FT = floattype(eltype(img))
     img = FT.(img)
     cs = FT.(cs)
     filter = eltype(FT).(alg.filter)
-
-    h, w = size(img)
-    fill!(out, zero(eltype(out)))
 
     drs = axes(alg.filter, 1)
     dcs = axes(alg.filter, 2)
@@ -96,9 +96,9 @@ function colordither!(
             px = img[r, c]
             alg.clamp_error && (px = clamp01(px))
 
-            col = closest_color(px, cs; metric=metric) # round to closest color
-            out[r, c] = col # apply pixel to dither
-            err = px - col  # diffuse "error" to neighborhood in filter
+            colorindex = argmin(colordiff.(px, cs; metric=metric)) # find closest color
+            out[r, c] = colorindex # apply pixel to dither, which is an IndirectArray
+            err = px - cs[colorindex]  # diffuse "error" to neighborhood in filter
 
             for dr in drs
                 for dc in dcs

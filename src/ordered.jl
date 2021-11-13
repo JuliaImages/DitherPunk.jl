@@ -8,13 +8,11 @@ When applying the algorithm to an image, the threshold matrix is repeatedly tile
 to match the size of the image. It is then applied as a per-pixel threshold map.
 Optionally, this final threshold map can be inverted by selecting `invert_map=true`.
 """
-struct OrderedDither{T<:AbstractMatrix} <: AbstractBinaryDither
+struct OrderedDither{T<:AbstractMatrix} <: AbstractDither
     mat::T
 end
 
-function binarydither!(
-    alg::OrderedDither, out::GenericGrayImage, img::GenericGrayImage; invert_map=false
-)
+function binarydither(alg::OrderedDither, img::GenericGrayImage; invert_map=false)
     # eagerly promote to the same eltype to make for-loop faster
     FT = floattype(eltype(img))
     if invert_map
@@ -22,6 +20,8 @@ function binarydither!(
     else
         mat = FT.(alg.mat)
     end
+
+    out = Matrix{Int}(undef, size(img)...)
 
     # TODO: add Threads.@threads to this for loop further improves the performances
     #       but it has unidentified memory allocations

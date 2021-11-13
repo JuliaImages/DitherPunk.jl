@@ -1,16 +1,15 @@
 # These functions are only conditionally loaded with Clustering.jl
 # Code adapted from @cormullion's [ColorSchemeTools](https://github.com/JuliaGraphics/ColorSchemeTools.jl).
 
-function _dither!(
-    out,
+function _dither(
+    ::Type{T},
     img,
     alg,
     ncolors::Int;
     maxiter=Clustering._kmeans_default_maxiter,
     tol=Clustering._kmeans_default_tol,
     kwargs...,
-)
-    T = eltype(img)
+) where {T}
 
     # Cluster in Lab color space
     data = reshape(channelview(Lab.(img)), 3, :)
@@ -22,7 +21,7 @@ function _dither!(
         push!(cs, Lab(R.centers[i], R.centers[i + 1], R.centers[i + 2]))
     end
 
-    return _dither!(out, img, alg, T.(cs); kwargs...)
+    return _dither(T, img, alg, cs; kwargs...)
 end
 
 """

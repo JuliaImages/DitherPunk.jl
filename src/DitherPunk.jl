@@ -5,6 +5,7 @@ using ImageCore
 using ImageCore: NumberLike, Pixel, GenericImage, GenericGrayImage, MappedArrays
 using ImageCore.Colors: DifferenceMetric
 using Random
+using IndirectArrays
 using OffsetArrays
 using Requires
 

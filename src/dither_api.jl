@@ -79,13 +79,18 @@ function _dither(
     to_linear && (@warn "Skipping transformation `to_linear` when dithering color images.")
 
     cs = perchannelbinarycolors(T) # color scheme with binary respresentation
-    index = ones(Int, size(img)...) # allocate indices
 
+    # We want to reconstruct indices 1..8 from binary colorscheme indices 1,2.
+    # Let's assume three channels r, g, b. Using `perchannelbinarycolors`, the color scheme
+    # can be reconstructed as:
+    #   2^2 * (r-1) + 2^1 * (g-1) + 2^0 * (b-1) + 1
+    # We can skip subtracting 1 from each channel by doing:
+    #   4*r + 2*g + b - 6
+    index = fill(Int(-6), size(img)...)
     for c in 1:3
         channelindex = binarydither(alg, view(channelview(img), c, :, :), kwargs...)
-        index += 2^(3 - c) * (channelindex .- 1) # reconstruct "decimal" indices
+        index += 2^(3 - c) * channelindex
     end
-
     return IndirectArray(index, cs)
 end
 

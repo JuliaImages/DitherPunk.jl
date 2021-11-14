@@ -28,5 +28,5 @@ struct ConstantThreshold{T<:Real} <: AbstractThresholdDither
 end
 
 function binarydither(alg::ConstantThreshold, img::GenericGrayImage)
-    return (img .> alg.threshold) .+ 1 # add one for index b=1, w=2
+    return map(px -> px > alg.threshold ? INDEX_WHITE : INDEX_BLACK, img)
 end

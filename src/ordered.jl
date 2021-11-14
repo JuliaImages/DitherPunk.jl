@@ -12,6 +12,10 @@ struct OrderedDither{T<:AbstractMatrix} <: AbstractDither
     mat::T
 end
 
+@inline function modindex(i::CartesianIndex, size)
+    return mod1.(Tuple(i), size)
+end
+
 function binarydither(alg::OrderedDither, img::GenericGrayImage; invert_map=false)
     # eagerly promote to the same eltype to make for-loop faster
     FT = floattype(eltype(img))
@@ -20,22 +24,11 @@ function binarydither(alg::OrderedDither, img::GenericGrayImage; invert_map=fals
     else
         mat = FT.(alg.mat)
     end
+    matsize = size(mat)
 
     out = Matrix{Int}(undef, size(img)...)
-
-    # TODO: add Threads.@threads to this for loop further improves the performances
-    #       but it has unidentified memory allocations
-    @inbounds for R in TileIterator(axes(img), size(mat))
-        mat_size = map(length, R)
-        if mat_size == size(mat)
-            # `mappedarray` creates a readonly wrapper with lazy evaluation with `srgb2linear`
-            # so that original `img` data is not modified.
-            out[R...] .= @views img[R...] .> mat
-        else # boundary condition
-            mat_inds = map(Base.OneTo, mat_size)
-            out_inds = map(getindex, R, mat_inds)
-            out[out_inds...] .= @views img[out_inds...] .> mat[mat_inds...]
-        end
+    @inbounds for i in CartesianIndices(img)
+        out[i] = img[i] > mat[modindex(i, matsize)...] ? INDEX_WHITE : INDEX_BLACK
     end
     return out
 end

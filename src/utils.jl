@@ -17,18 +17,6 @@ Convert pixel `u` from linear to sRGB color space.
 @inline linear2srgb(u::Bool) = u
 
 """
-    BinaryIndirectArray(T, img)
-
-Black and white IndirectArray of gray type `T` with offset indices.
-An index of 0 corresponds to black and 1 to white to avoid confusion.
-Initialized as a black image.
-"""
-function BinaryIndirectArray(::Type{T}, img) where {T<:NumberLike}
-    cs = OffsetVector([T(0), T(1)], 0:1)
-    return IndirectArray(ones(Int, size(img)...), cs)
-end
-
-"""
     perchannelbinarycolors(T)
 
 Construct color scheme that corresponds to channel-wise binary dithering.

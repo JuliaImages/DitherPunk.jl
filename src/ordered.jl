@@ -12,10 +12,6 @@ struct OrderedDither{T<:AbstractMatrix} <: AbstractDither
     mat::T
 end
 
-@inline function modindex(i::CartesianIndex, size)
-    return mod1.(Tuple(i), size)
-end
-
 function binarydither(alg::OrderedDither, img::GenericGrayImage; invert_map=false)
     # eagerly promote to the same eltype to make for-loop faster
     FT = floattype(eltype(img))
@@ -28,7 +24,7 @@ function binarydither(alg::OrderedDither, img::GenericGrayImage; invert_map=fals
 
     out = Matrix{Int}(undef, size(img)...)
     @inbounds for i in CartesianIndices(img)
-        out[i] = img[i] > mat[modindex(i, matsize)...] ? INDEX_WHITE : INDEX_BLACK
+        out[i] = img[i] > mat[mod1.(Tuple(i), matsize)...] ? INDEX_WHITE : INDEX_BLACK
     end
     return out
 end

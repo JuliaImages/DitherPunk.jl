@@ -8,7 +8,8 @@ Use white noise as a threshold map.
 struct WhiteNoiseThreshold <: AbstractThresholdDither end
 
 function binarydither(::WhiteNoiseThreshold, img::GenericGrayImage)
-    return img .> rand(eltype(img), size(img))
+    T = eltype(img)
+    return map(px -> px > rand(T) ? INDEX_WHITE : INDEX_BLACK, img)
 end
 
 """
@@ -28,5 +29,6 @@ struct ConstantThreshold{T<:Real} <: AbstractThresholdDither
 end
 
 function binarydither(alg::ConstantThreshold, img::GenericGrayImage)
-    return img .> fill(eltype(img)(alg.threshold), size(img))
+    threshold = eltype(img)(alg.threshold)
+    return map(px -> px > threshold ? INDEX_WHITE : INDEX_BLACK, img)
 end

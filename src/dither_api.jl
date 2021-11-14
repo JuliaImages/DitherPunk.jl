@@ -64,8 +64,8 @@ function _dither(
     ::Type{T}, img::GenericGrayImage, alg::AbstractDither; to_linear=false, kwargs...
 ) where {T}
     to_linear && (img = srgb2linear.(img))
-    index = binarydither(alg, img; kwargs...) .+ 1
-    return IndirectArray(index, [T(0), T(1)])
+    index = binarydither(alg, img; kwargs...)
+    return IndirectArray(index, bwcolors(T))
 end
 
 # Dispatch to per-channel dithering on color images when no color palette is provided
@@ -83,7 +83,7 @@ function _dither(
 
     for c in 1:3
         channelindex = binarydither(alg, view(channelview(img), c, :, :), kwargs...)
-        index += 2^(3 - c) * channelindex # reconstruct "decimal" indices
+        index += 2^(3 - c) * (channelindex .- 1) # reconstruct "decimal" indices
     end
 
     return IndirectArray(index, cs)

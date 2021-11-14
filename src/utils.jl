@@ -17,6 +17,15 @@ Convert pixel `u` from linear to sRGB color space.
 @inline linear2srgb(u::Bool) = u
 
 """
+    bwcolors(T)
+
+Construct black & white color scheme of type `T`.
+"""
+bwcolors(::Type{T}) where {T<:NumberLike} = [T(0), T(1)]
+const INDEX_BLACK = Int(1)
+const INDEX_WHITE = Int(2)
+
+"""
     perchannelbinarycolors(T)
 
 Construct color scheme that corresponds to channel-wise binary dithering.

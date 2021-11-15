@@ -12,7 +12,6 @@ end
 function colordither(
     ::ClosestColor, img::GenericImage, cs::AbstractVector{<:Pixel}, metric::DifferenceMetric
 )
-    cs = Lab{floattype(eltype(eltype(img)))}.(cs)
-    # return matrix of indices of closest color
-    return map(px -> argmin(colordiff.(px, cs; metric=metric)), img)
+    cs = ccolor(Lab, eltype(cs)).(cs) # convert to Lab
+    return map(px -> argmin(colordiff(px, c; metric=metric) for c in cs), img)
 end

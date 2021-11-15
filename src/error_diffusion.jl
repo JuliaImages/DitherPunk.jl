@@ -99,7 +99,7 @@ function colordither(
             px = img[r, c]
             alg.clamp_error && (px = clamp01(px))
 
-            colorindex = argmin(colordiff.(px, labcs; metric=metric)) # find closest color
+            colorindex = argmin(colordiff(px, col; metric=metric) for col in labcs) # find closest color
             out[r, c] = colorindex # apply pixel to dither, which is an IndirectArray
             err = px - cs[colorindex]  # diffuse "error" to neighborhood in filter
 

@@ -22,12 +22,17 @@ function binarydither!(
     else
         mat = FT.(alg.mat)
     end
+
     matsize = size(mat)
+    rlookup = [mod1(i, matsize[1]) for i in 1:size(img)[1]]
+    clookup = [mod1(i, matsize[2]) for i in 1:size(img)[2]]
 
     T = eltype(out)
     black, white = T(0), T(1)
-    @inbounds for i in CartesianIndices(img)
-        out[i] = img[i] > mat[mod1.(Tuple(i), matsize)...] ? white : black
+
+    @inbounds @simd for i in CartesianIndices(img)
+        r, c = Tuple(i)
+        @inbounds out[i] = ifelse(img[i] > mat[rlookup[r], clookup[c]], white, black)
     end
     return out
 end

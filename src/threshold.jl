@@ -29,5 +29,6 @@ struct ConstantThreshold{T<:Real} <: AbstractThresholdDither
 end
 
 function binarydither!(alg::ConstantThreshold, out::GenericGrayImage, img::GenericGrayImage)
-    return out .= img .> alg.threshold
+    threshold = eltype(img)(alg.threshold)
+    return out .= img .> threshold
 end

@@ -80,7 +80,7 @@ function colordither(
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
 
-    out = Matrix{Int}(undef, size(img)...) # allocate matrix of color indices
+    out = Matrix{UInt8}(undef, size(img)...) # allocate matrix of color indices
 
     # Change from normalized intensities to Float as error will get added!
     # Eagerly promote to the same type to make loop run faster.
@@ -100,7 +100,7 @@ function colordither(
             px = img[r, c]
             alg.clamp_error && (px = clamp01(px))
 
-            colorindex = _closest_color_idx(px, cs, metric)
+            colorindex = _closest_color_idx(px, labcs, metric)
             out[r, c] = colorindex # apply pixel to dither, which is an IndirectArray
             err = px - cs[colorindex]  # diffuse "error" to neighborhood in filter
 
@@ -113,7 +113,6 @@ function colordither(
             end
         end
     end
-
     return out
 end
 

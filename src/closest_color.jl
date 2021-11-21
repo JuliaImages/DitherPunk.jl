@@ -6,7 +6,8 @@ Technically this not a dithering algorithm as the quatization error is not "rand
 struct ClosestColor <: AbstractDither end
 
 function binarydither!(::ClosestColor, out::GenericGrayImage, img::GenericGrayImage)
-    return out .= img .> 0.5
+    threshold = eltype(img)(0.5)
+    return out .= img .> threshold
 end
 
 function colordither(

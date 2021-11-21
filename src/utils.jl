@@ -17,6 +17,18 @@ Convert pixel `u` from linear to sRGB color space.
 @inline linear2srgb(u::Bool) = u
 
 """
+
+"""
+
+if VERSION >= v"1.7"
+    _closest_color_idx(px, cs, metric) = argmin(colordiff(px, c; metric=metric) for c in cs)
+else
+    function _closest_color_idx(px, cs, metric)
+        return argmin([colordiff(px, c; metric=metric) for c in cs])
+    end
+end
+
+"""
     bwcolors(T)
 
 Construct black & white color scheme of type `T`.

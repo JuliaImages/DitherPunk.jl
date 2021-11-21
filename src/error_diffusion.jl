@@ -40,8 +40,6 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
     drs = axes(alg.filter, 1)
     dcs = axes(alg.filter, 2)
 
-    T = eltype(out)
-    T0, T1 = T(0), T(1)
     FT0, FT1 = FT(0), FT(1)
 
     @inbounds for r in axes(img, 1)
@@ -49,15 +47,10 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
             px = img[r, c]
             alg.clamp_error && (px = clamp01(px))
 
-            if px > 0.5
-                out[r, c] = T1
-                col = FT1 # round to closest color
-            else
-                out[r, c] = T0
-                col = FT0
-            end
-
+            px >= 0.5 ? (col = FT1) : (col = FT0) # round to closest color
+            out[r, c] = col # apply pixel to dither
             err = px - col  # diffuse "error" to neighborhood in filter
+
             for dr in drs
                 for dc in dcs
                     if (r + dr) in axes(img, 1) && (c + dc) in axes(img, 2)
@@ -80,7 +73,7 @@ function colordither(
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
 
-    out = Matrix{UInt8}(undef, size(img)...) # allocate matrix of color indices
+    index = Matrix{UInt8}(undef, size(img)...) # allocate matrix of color indices
 
     # Change from normalized intensities to Float as error will get added!
     # Eagerly promote to the same type to make loop run faster.
@@ -101,7 +94,7 @@ function colordither(
             alg.clamp_error && (px = clamp01(px))
 
             colorindex = _closest_color_idx(px, labcs, metric)
-            out[r, c] = colorindex # apply pixel to dither, which is an IndirectArray
+            index[r, c] = colorindex
             err = px - cs[colorindex]  # diffuse "error" to neighborhood in filter
 
             for dr in drs
@@ -113,7 +106,7 @@ function colordither(
             end
         end
     end
-    return out
+    return index
 end
 
 """

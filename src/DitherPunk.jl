@@ -8,9 +8,12 @@ using IndirectArrays
 using OffsetArrays
 using Requires
 
+abstract type AbstractDither end
+
 include("compat.jl")
 include("utils.jl")
-include("dither_api.jl")
+include("api/binary.jl")
+include("api/color.jl")
 include("threshold.jl")
 include("ordered.jl")
 include("ordered_imagemagick.jl")

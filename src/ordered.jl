@@ -12,7 +12,9 @@ struct OrderedDither{T<:AbstractMatrix} <: AbstractDither
     mat::T
 end
 
-function binarydither(alg::OrderedDither, img::GenericGrayImage; invert_map=false)
+function binarydither!(
+    alg::OrderedDither, out::GenericGrayImage, img::GenericGrayImage; invert_map=false
+)
     # eagerly promote to the same eltype to make for-loop faster
     FT = floattype(eltype(img))
     if invert_map
@@ -22,9 +24,10 @@ function binarydither(alg::OrderedDither, img::GenericGrayImage; invert_map=fals
     end
     matsize = size(mat)
 
-    out = Matrix{Int}(undef, size(img)...)
+    T = eltype(out)
+    black, white = T(0), T(1)
     @inbounds for i in CartesianIndices(img)
-        out[i] = img[i] > mat[mod1.(Tuple(i), matsize)...] ? INDEX_WHITE : INDEX_BLACK
+        out[i] = img[i] > mat[mod1.(Tuple(i), matsize)...] ? white : black
     end
     return out
 end

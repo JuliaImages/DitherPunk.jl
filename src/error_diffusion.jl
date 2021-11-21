@@ -27,7 +27,7 @@ struct ErrorDiffusion{T<:AbstractMatrix} <: AbstractDither
 end
 ErrorDiffusion(filter; clamp_error=true) = ErrorDiffusion(filter, clamp_error)
 
-function binarydither(alg::ErrorDiffusion, img::GenericGrayImage)
+function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericGrayImage)
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
 
@@ -39,9 +39,10 @@ function binarydither(alg::ErrorDiffusion, img::GenericGrayImage)
 
     drs = axes(alg.filter, 1)
     dcs = axes(alg.filter, 2)
-    FT0, FT1 = FT(0), FT(1)
 
-    out = Matrix{Int}(undef, size(img)...)
+    T = eltype(out)
+    T0, T1 = T(0), T(1)
+    FT0, FT1 = FT(0), FT(1)
 
     @inbounds for r in axes(img, 1)
         for c in axes(img, 2)
@@ -49,10 +50,10 @@ function binarydither(alg::ErrorDiffusion, img::GenericGrayImage)
             alg.clamp_error && (px = clamp01(px))
 
             if px > 0.5
-                out[r, c] = INDEX_WHITE
+                out[r, c] = T1
                 col = FT1 # round to closest color
             else
-                out[r, c] = INDEX_BLACK
+                out[r, c] = T0
                 col = FT0
             end
 

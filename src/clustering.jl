@@ -1,7 +1,7 @@
 # These functions are only conditionally loaded with Clustering.jl
 # Code adapted from @cormullion's [ColorSchemeTools](https://github.com/JuliaGraphics/ColorSchemeTools.jl).
 
-function _dither(
+function _colordither(
     ::Type{T},
     img,
     alg,
@@ -21,7 +21,7 @@ function _dither(
         push!(cs, Lab(R.centers[i], R.centers[i + 1], R.centers[i + 2]))
     end
 
-    return _dither(T, img, alg, cs; kwargs...)
+    return _colordither(T, img, alg, cs; kwargs...)
 end
 
 """

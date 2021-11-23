@@ -12,6 +12,7 @@ Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 
 [compat]
 ImageCore = "0.8.1, 0.9"
+IndirectArrays = "0.5, 1.0"
 OffsetArrays = "1"
 Requires = "1"
 julia = "1"

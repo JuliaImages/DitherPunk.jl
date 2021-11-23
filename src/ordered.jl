@@ -32,7 +32,7 @@ function binarydither!(
 
     @inbounds @simd for i in CartesianIndices(img)
         r, c = Tuple(i)
-        @inbounds out[i] = ifelse(img[i] > mat[rlookup[r], clookup[c]], white, black)
+        out[i] = ifelse(img[i] > mat[rlookup[r], clookup[c]], white, black)
     end
     return out
 end

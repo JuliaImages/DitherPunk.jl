@@ -52,6 +52,9 @@ algs_deterministic = Dict(
     "ShiauFan" => ShiauFan(),
     "ShiauFan2" => ShiauFan2(),
     "FalseFloydSteinberg" => DitherPunk.FalseFloydSteinberg(),
+    # Keyword arguments
+    "FloydSteinberg_clamp_error" => FloydSteinberg(; clamp_error=false),
+    "Bayer_invert_map" => Bayer(; invert_map=true),
 )
 
 for (name, alg) in algs_deterministic

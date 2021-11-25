@@ -9,7 +9,7 @@ img = testimage("fabio_color_256")
 
 # Run & test fixed pallete dithering methods
 algs = Dict(
-    "SeparateSpaceFloydSteinberg" => FloydSteinberg(), "SeparateSpaceBayer" => Bayer()
+    "FloydSteinberg" => FloydSteinberg(), "Bayer" => Bayer()
 )
 
 for C in [RGB, HSV]
@@ -17,7 +17,7 @@ for C in [RGB, HSV]
         img1 = C.(img)
         local img2 = copy(img1)
         local d = dither(img2, alg)
-        @test_reference "references/fixed_color_$(C)_$(name).txt" d
+        @test_reference "references/per-channel/$(name)_$(C).txt" d
         @test eltype(d) <: C
         @test img2 == img1 # image not modified
 

@@ -30,7 +30,7 @@ for (name, alg) in algs
     # Test custom color dithering on color images
     local img2 = copy(img)
     local d = dither(img2, alg, cs)
-    @test_reference "references/color_$(name).txt" d
+    @test_reference "references/color/$(name).txt" d
     @test eltype(d) == eltype(img2)
     @test img2 == img # image not modified
     imshow(d)
@@ -39,7 +39,7 @@ for (name, alg) in algs
     # Test custom color dithering on gray images
     local img2_gray = copy(img_gray)
     local d = dither(img2_gray, alg, cs)
-    @test_reference "references/color_from_gray_$(name).txt" d
+    @test_reference "references/color/$(name)_from_gray.txt" d
     @test eltype(d) == eltype(cs)
     @test img2_gray == img_gray # image not modified
     imshow(d)

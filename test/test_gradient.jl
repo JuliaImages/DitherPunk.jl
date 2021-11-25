@@ -61,7 +61,7 @@ algs_deterministic = Dict(
 for (name, alg) in algs_deterministic
     local img2 = copy(img)
     local d = dither(img2, alg)
-    @test_reference "references/grad_$(name).txt" Int.(d)
+    @test_reference "references/gradient/$(name).txt" Int.(d)
     @test eltype(d) == eltype(img)
     @test img2 == img # image not modified
 
@@ -89,7 +89,7 @@ end
 img2 = copy(img)
 alg = Bayer()
 d = dither(img2, alg; to_linear=true)
-@test_reference "references/grad_Bayer_linear.txt" Int.(d)
+@test_reference "references/gradient/Bayer_linear.txt" Int.(d)
 
 ## Test API
 d = dither(img2, alg)

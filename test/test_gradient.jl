@@ -83,14 +83,42 @@ algs_random = Dict(
 )
 
 for (name, alg) in algs_random
-    img2 = copy(img)
-    d = dither(Gray{Bool}, img2, alg)
-    show(brailleprint(d; title=name)) # Visualize in terminal
+    local img2 = copy(img)
+    local d = dither(Gray{Bool}, img2, alg)
     @test eltype(d) == Gray{Bool}
     @test img2 == img # image not modified
 
-    d = dither!(img2, alg; to_linear=true)
-    show(brailleprint(d; title="$(name) linear")) # Visualize in terminal
-    @test eltype(d) == eltype(img)
-    @test img2 == d # image updated in-place
+    show(brailleprint(d; title=name)) # Visualize in terminal
+    println()
 end
+
+## Test to_linear
+img2 = copy(img)
+alg = Bayer()
+d = dither(img2, alg; to_linear=true)
+@test_reference "references/grad_Bayer_linear.txt" Int.(d)
+
+## Test API
+d = dither(img2, alg)
+
+# Test setting output type
+d2 = dither(Gray{Float16}, img2, alg)
+@test eltype(d2) == Gray{Float16}
+@test d2 == d
+@test img2 == img # image not modified
+
+# Inplace modify output image
+out = zeros(Bool, size(img2)...)
+d3 = dither!(out, img2, alg)
+@test out == d # image updated in-place
+@test d3 == d
+@test eltype(out) == Bool
+@test eltype(d3) == Bool
+@test img2 == img # image not modified
+
+# Inplace modify  image
+d4 = dither!(img2, alg)
+@test d4 == d
+@test img2 == d # image updated in-place
+@test eltype(d4) == eltype(img)
+@test eltype(img2) == eltype(img)

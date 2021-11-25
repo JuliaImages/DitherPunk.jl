@@ -18,7 +18,7 @@
 
 ImageMagick's Checkerboard 2x2 dither
 """
-IM_checks() = OrderedDither(CHECKS)
+IM_checks(; kwargs...) = OrderedDither(CHECKS; kwargs...)
 const CHECKS = [
     1 2
     2 1
@@ -33,7 +33,7 @@ const CHECKS = [
 
 ImageMagick's Halftone 4x4 - Angled 45 degrees
 """
-IM_h4x4a() = OrderedDither(H4X4A)
+IM_h4x4a(; kwargs...) = OrderedDither(H4X4A; kwargs...)
 const H4X4A = [
     4 2 7 5
     3 1 8 6
@@ -46,7 +46,7 @@ const H4X4A = [
 
 ImageMagick's Halftone 6x6 - Angled 45 degrees
 """
-IM_h6x6a() = OrderedDither(H6X6A)
+IM_h6x6a(; kwargs...) = OrderedDither(H6X6A; kwargs...)
 const H6X6A =
     [
         14 13 10 8 2 3
@@ -62,7 +62,7 @@ const H6X6A =
 
 ImageMagick's Halftone 8x8 - Angled 45 degrees
 """
-IM_h8x8a() = OrderedDither(H8X8A)
+IM_h8x8a(; kwargs...) = OrderedDither(H8X8A; kwargs...)
 const H8X8A =
     [
         13 7 8 14 17 21 22 18
@@ -85,7 +85,7 @@ const H8X8A =
 
 ImageMagick's Halftone 4x4 - Orthogonally Aligned
 """
-IM_h4x4o() = OrderedDither(H4X4O)
+IM_h4x4o(; kwargs...) = OrderedDither(H4X4O; kwargs...)
 const H4X4O = [
     7 13 11 4
     12 16 14 8
@@ -98,7 +98,7 @@ const H4X4O = [
 
 ImageMagick's Halftone 6x6 - Orthogonally Aligned
 """
-IM_h6x6o() = OrderedDither(H6X6O)
+IM_h6x6o(; kwargs...) = OrderedDither(H6X6O; kwargs...)
 const H6X6O =
     [
         7 17 27 14 9 4
@@ -114,7 +114,7 @@ const H6X6O =
 
 ImageMagick's Halftone 8x8 - Orthogonally Aligned
 """
-IM_h8x8o() = OrderedDither(H8X8O)
+IM_h8x8o(; kwargs...) = OrderedDither(H8X8O; kwargs...)
 const H8X8O =
     [
         7 21 33 43 36 19 9 4
@@ -134,7 +134,7 @@ const H8X8O =
 
 ImageMagick's Halftone 5x5 - Orthogonally Expanding Circle Patterns
 """
-IM_c5x5() = OrderedDither(C5X5)
+IM_c5x5(; kwargs...) = OrderedDither(C5X5; kwargs...)
 const C5X5 = [
     1 21 16 15 4
     5 17 20 19 14
@@ -148,7 +148,7 @@ const C5X5 = [
 
 ImageMagick's Halftone 6x6 - Orthogonally Expanding Circle Patterns
 """
-IM_c6x6() = OrderedDither(C6X6)
+IM_c6x6(; kwargs...) = OrderedDither(C6X6; kwargs...)
 const C6X6 =
     [
         1 5 14 13 12 4
@@ -164,7 +164,7 @@ const C6X6 =
 
 ImageMagick's Halftone 7x7 - Orthogonally Expanding Circle Patterns
 """
-IM_c7x7() = OrderedDither(C7X7)
+IM_c7x7(; kwargs...) = OrderedDither(C7X7; kwargs...)
 const C7X7 =
     [
         3 9 18 28 17 8 2

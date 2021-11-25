@@ -10,14 +10,14 @@ Optionally, this final threshold map can be inverted by selecting `invert_map=tr
 """
 struct OrderedDither{T<:AbstractMatrix} <: AbstractDither
     mat::T
+    invert_map::Bool
 end
+OrderedDither(mat; invert_map=false) = OrderedDither(mat, invert_map)
 
-function binarydither!(
-    alg::OrderedDither, out::GenericGrayImage, img::GenericGrayImage; invert_map=false
-)
+function binarydither!(alg::OrderedDither, out::GenericGrayImage, img::GenericGrayImage)
     # eagerly promote to the same eltype to make for-loop faster
     FT = floattype(eltype(img))
-    if invert_map
+    if alg.invert_map
         mat = @. FT(1 - alg.mat)
     else
         mat = FT.(alg.mat)
@@ -48,9 +48,9 @@ which defaults to `1`.
      Tone Pictures," IEEE International Conference on Communications,
      Conference Records, 1973, pp. 26-11 to 26-15.
 """
-function Bayer(; level=1)
+function Bayer(; level=1, kwargs...)
     bayer = bayer_matrix(level) .+ 1
-    return OrderedDither(bayer//(2^(2 * level + 2) + 1))
+    return OrderedDither(bayer//(2^(2 * level + 2) + 1); kwargs...)
 end
 
 """
@@ -76,7 +76,7 @@ end
 Clustered dots ordered dithering.
 Uses ``6 \\times 6`` threshold matrix `CLUSTERED_DOTS_MAT`.
 """
-ClusteredDots() = OrderedDither(CLUSTERED_DOTS_MAT)
+ClusteredDots(; kwargs...) = OrderedDither(CLUSTERED_DOTS_MAT; kwargs...)
 const CLUSTERED_DOTS_MAT =
     [
         35 30 18 22 31 36
@@ -93,7 +93,7 @@ const CLUSTERED_DOTS_MAT =
 Central white point ordered dithering.
 Uses ``6 \\times 6`` threshold matrix `CENTRAL_WHITE_POINT_MAT`.
 """
-CentralWhitePoint() = OrderedDither(CENTRAL_WHITE_POINT_MAT)
+CentralWhitePoint(; kwargs...) = OrderedDither(CENTRAL_WHITE_POINT_MAT; kwargs...)
 const CENTRAL_WHITE_POINT_MAT =
     [
         35 26 22 18 30 34
@@ -110,7 +110,7 @@ const CENTRAL_WHITE_POINT_MAT =
 Balanced centered point ordered dithering.
 Uses ``6 \\times 6`` threshold matrix `BALANCED_CENTERED_POINT_MAT`.
 """
-BalancedCenteredPoint() = OrderedDither(BALANCED_CENTERED_POINT_MAT)
+BalancedCenteredPoint(; kwargs...) = OrderedDither(BALANCED_CENTERED_POINT_MAT; kwargs...)
 const BALANCED_CENTERED_POINT_MAT =
     [
         31 23 17 22 34 36
@@ -127,7 +127,7 @@ const BALANCED_CENTERED_POINT_MAT =
 Diagonal ordered matrix with balanced centered points.
 Uses ``8 \\times 8`` threshold matrix `RHOMBUS_MAT`.
 """
-Rhombus() = OrderedDither(RHOMBUS_MAT)
+Rhombus(; kwargs...) = OrderedDither(RHOMBUS_MAT; kwargs...)
 const RHOMBUS_MAT =
     [
         14 10 6 13 19 23 27 20

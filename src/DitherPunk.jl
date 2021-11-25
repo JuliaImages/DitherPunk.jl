@@ -19,7 +19,6 @@ include("ordered.jl")
 include("ordered_imagemagick.jl")
 include("error_diffusion.jl")
 include("closest_color.jl")
-include("show.jl")
 
 export dither, dither!
 # Threshold dithering

@@ -23,13 +23,6 @@ colordither(alg, img, cs, metric) = throw(ColorNotImplementedError(alg))
 
 # If `out` is specified, it will be changed in place...
 function dither!(out::GenericImage, img::GenericImage, alg::AbstractDither, arg; kwargs...)
-    if size(out) != size(img)
-        throw(
-            ArgumentError(
-                "out and img should have the same shape, instead they are $(size(out)) and $(size(img))",
-            ),
-        )
-    end
     return out .= _colordither(eltype(out), img, alg, arg; kwargs...)
 end
 

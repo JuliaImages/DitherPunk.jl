@@ -16,4 +16,7 @@ using Test
             include("test_fixed_color.jl")
         end
     end
+    @testset "Utilities" begin
+        include("test_utils.jl")
+    end
 end

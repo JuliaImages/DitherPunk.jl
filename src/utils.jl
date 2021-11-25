@@ -8,13 +8,11 @@ Convert pixel `u` from sRGB to linear color space.
 @inline srgb2linear(u::Bool) = u
 
 """
-    linear2srgb(u)
+    upscale(img, scale)
 
-Convert pixel `u` from linear to sRGB color space.
+Upscale image by repeating individual pixels `scale` times.
 """
-@inline linear2srgb(u::Number) = Colors.srgb_compand(u)
-@inline linear2srgb(u::Gray) = typeof(u)(linear2srgb(gray(u)))
-@inline linear2srgb(u::Bool) = u
+upscale(img, scale) = repeat(img; inner=(scale, scale))
 
 if VERSION >= v"1.7"
     _closest_color_idx(px, cs, metric) = argmin(colordiff(px, c; metric=metric) for c in cs)

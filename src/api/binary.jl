@@ -26,13 +26,6 @@ dither
 
 # If `out` is specified, it will be changed in place...
 function dither!(out::GenericImage, img::GenericImage, alg::AbstractDither; kwargs...)
-    if size(out) != size(img)
-        throw(
-            ArgumentError(
-                "out and img should have the same shape, instead they are $(size(out)) and $(size(img))",
-            ),
-        )
-    end
     return _binarydither!(out, img, alg; kwargs...)
 end
 
@@ -61,7 +54,7 @@ end
 # when no color palette is provided
 function _binarydither!(
     out::GenericGrayImage, img::GenericGrayImage, alg::AbstractDither; to_linear=false
-) where {T}
+)
     to_linear && (img = srgb2linear.(img))
     return binarydither!(alg, out, img)
 end

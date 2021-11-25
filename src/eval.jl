@@ -19,10 +19,3 @@ function test_on_gradient(alg::AbstractDither)
 
     return mosaicview([srgb, dither_srgb, linear, dither_linear]; ncol=1)
 end
-function test_on_gradient(algs::AbstractArray{<:AbstractDither})
-    srgb, linear = gradient_image(100, 800)
-    dithers_srgb = [dither(srgb, alg) for alg in algs]
-    dithers_linear = [dither(linear, alg) for alg in algs]
-
-    return mosaicview([srgb, dithers_srgb..., linear, dithers_linear...]; ncol=1)
-end

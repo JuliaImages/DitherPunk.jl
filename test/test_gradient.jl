@@ -12,6 +12,7 @@ h = 4 * 4 # multiple of 4 for unicode braille print
 img, srgb = gradient_image(h, w)
 println("Test image:")
 imshow(srgb)
+println()
 
 ## Run reference tests for deterministic algorithms
 # using Dict for Julia 1.0 compatibility
@@ -58,18 +59,14 @@ algs_deterministic = Dict(
 )
 
 for (name, alg) in algs_deterministic
-    img2 = copy(img)
-    d = dither(img2, alg)
-    @test_reference "references/grad_$(name).txt" Int.(d)
+    local img2 = copy(img)
+    local d = dither(img2, alg)
+    @test_reference "references/gradient/$(name).txt" Int.(d)
     @test eltype(d) == eltype(img)
     @test img2 == img # image not modified
 
     show(brailleprint(d; title=name)) # Visualize in terminal
-
-    d = dither!(img2, alg; to_linear=true)
-    @test_reference "references/grad_$(name)_linear.txt" Int.(d)
-    @test eltype(d) == eltype(img)
-    @test img2 == d # image updated in-place
+    println()
 end
 
 ## Algorithms with random output are currently only tested visually
@@ -79,14 +76,42 @@ algs_random = Dict(
 )
 
 for (name, alg) in algs_random
-    img2 = copy(img)
-    d = dither(Gray{Bool}, img2, alg)
-    show(brailleprint(d; title=name)) # Visualize in terminal
+    local img2 = copy(img)
+    local d = dither(Gray{Bool}, img2, alg)
     @test eltype(d) == Gray{Bool}
     @test img2 == img # image not modified
 
-    d = dither!(img2, alg; to_linear=true)
-    show(brailleprint(d; title="$(name) linear")) # Visualize in terminal
-    @test eltype(d) == eltype(img)
-    @test img2 == d # image updated in-place
+    show(brailleprint(d; title=name)) # Visualize in terminal
+    println()
 end
+
+## Test to_linear
+img2 = copy(img)
+alg = Bayer()
+d = dither(img2, alg; to_linear=true)
+@test_reference "references/gradient/Bayer_linear.txt" Int.(d)
+
+## Test API
+d = dither(img2, alg)
+
+# Test setting output type
+d2 = dither(Gray{Float16}, img2, alg)
+@test eltype(d2) == Gray{Float16}
+@test d2 == d
+@test img2 == img # image not modified
+
+# Inplace modify output image
+out = zeros(Bool, size(img2)...)
+d3 = dither!(out, img2, alg)
+@test out == d # image updated in-place
+@test d3 == d
+@test eltype(out) == Bool
+@test eltype(d3) == Bool
+@test img2 == img # image not modified
+
+# Inplace modify  image
+d4 = dither!(img2, alg)
+@test d4 == d
+@test img2 == d # image updated in-place
+@test eltype(d4) == eltype(img)
+@test eltype(img2) == eltype(img)

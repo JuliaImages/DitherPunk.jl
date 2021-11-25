@@ -66,18 +66,14 @@ algs_deterministic = Dict(
 )
 
 for (name, alg) in algs_deterministic
-    img2 = copy(img)
-    d = dither(img2, alg)
+    local img2 = copy(img)
+    local d = dither(img2, alg)
     @test_reference "references/grad_$(name).txt" Int.(d)
     @test eltype(d) == eltype(img)
     @test img2 == img # image not modified
 
     show(brailleprint(d; title=name)) # Visualize in terminal
-
-    d = dither!(img2, alg; to_linear=true)
-    @test_reference "references/grad_$(name)_linear.txt" Int.(d)
-    @test eltype(d) == eltype(img)
-    @test img2 == d # image updated in-place
+    println()
 end
 
 ## Algorithms with random output are currently only tested visually

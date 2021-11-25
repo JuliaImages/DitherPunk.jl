@@ -60,14 +60,10 @@ end
 # Dispatch to binary dithering on grayscale images
 # when no color palette is provided
 function _binarydither!(
-    out::GenericGrayImage,
-    img::GenericGrayImage,
-    alg::AbstractDither;
-    to_linear=false,
-    kwargs...,
+    out::GenericGrayImage, img::GenericGrayImage, alg::AbstractDither; to_linear=false
 ) where {T}
     to_linear && (img = srgb2linear.(img))
-    return binarydither!(alg, out, img; kwargs...)
+    return binarydither!(alg, out, img)
 end
 
 # Dispatch to per-channel dithering on color images when no color palette is provided

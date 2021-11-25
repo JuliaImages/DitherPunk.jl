@@ -10,18 +10,18 @@ Optionally, this final threshold map can be inverted by selecting `invert_map=tr
 """
 struct OrderedDither{T<:AbstractMatrix} <: AbstractDither
     mat::T
-    invert_map::Bool
 end
-OrderedDither(mat; invert_map=false) = OrderedDither(mat, invert_map)
+function OrderedDither(mat; invert_map=false)
+    if invert_map
+        return OrderedDither(1 .- mat)
+    end
+    return OrderedDither(mat)
+end
 
 function binarydither!(alg::OrderedDither, out::GenericGrayImage, img::GenericGrayImage)
     # eagerly promote to the same eltype to make for-loop faster
     FT = floattype(eltype(img))
-    if alg.invert_map
-        mat = @. FT(1 - alg.mat)
-    else
-        mat = FT.(alg.mat)
-    end
+    mat = FT.(alg.mat)
 
     matsize = size(mat)
     rlookup = [mod1(i, matsize[1]) for i in 1:size(img)[1]]

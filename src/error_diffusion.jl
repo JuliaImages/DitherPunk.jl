@@ -21,7 +21,7 @@ julia> cs = ColorSchemes.PuOr_7.colors; # using ColorSchemes.jl for color palett
 julia> dither!(img, alg, cs);
 ```
 """
-struct ErrorDiffusion{T<:AbstractMatrix} <: AbstractCustomColorDither
+struct ErrorDiffusion{T<:AbstractMatrix} <: AbstractDither
     filter::T
     clamp_error::Bool
 end
@@ -32,17 +32,14 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
     require_one_based_indexing(img)
 
     # Change from normalized intensities to Float as error will get added!
-    FT = floattype(eltype(out))
-
     # eagerly promote to the same type to make loop run faster
+    FT = floattype(eltype(img))
     img = FT.(img)
     filter = eltype(FT).(alg.filter)
 
-    h, w = size(img)
-    fill!(out, zero(eltype(out)))
-
     drs = axes(alg.filter, 1)
     dcs = axes(alg.filter, 2)
+
     FT0, FT1 = FT(0), FT(1)
 
     @inbounds for r in axes(img, 1)
@@ -67,9 +64,8 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
     return out
 end
 
-function colordither!(
+function colordither(
     alg::ErrorDiffusion,
-    out::GenericImage,
     img::GenericImage,
     cs::AbstractVector{<:Pixel},
     metric::DifferenceMetric,
@@ -77,16 +73,17 @@ function colordither!(
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
 
+    index = Matrix{UInt8}(undef, size(img)...) # allocate matrix of color indices
+
     # Change from normalized intensities to Float as error will get added!
-    FT = floattype(eltype(out))
+    # Eagerly promote to the same type to make loop run faster.
+    FT = floattype(eltype(eltype(img))) # type of Float
+    CT = floattype(eltype(img)) # type of colorant
 
-    # eagerly promote to the same type to make loop run faster
-    img = FT.(img)
-    cs = FT.(cs)
-    filter = eltype(FT).(alg.filter)
-
-    h, w = size(img)
-    fill!(out, zero(eltype(out)))
+    img = CT.(img)
+    cs = CT.(cs)
+    labcs = Lab{FT}.(cs) # otherwise each call to colordiff converts cs to Lab
+    filter = FT.(alg.filter)
 
     drs = axes(alg.filter, 1)
     dcs = axes(alg.filter, 2)
@@ -96,9 +93,9 @@ function colordither!(
             px = img[r, c]
             alg.clamp_error && (px = clamp01(px))
 
-            col = closest_color(px, cs; metric=metric) # round to closest color
-            out[r, c] = col # apply pixel to dither
-            err = px - col  # diffuse "error" to neighborhood in filter
+            colorindex = _closest_color_idx(px, labcs, metric)
+            index[r, c] = colorindex
+            err = px - cs[colorindex]  # diffuse "error" to neighborhood in filter
 
             for dr in drs
                 for dc in dcs
@@ -109,8 +106,7 @@ function colordither!(
             end
         end
     end
-
-    return out
+    return index
 end
 
 """

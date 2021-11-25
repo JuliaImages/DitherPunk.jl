@@ -1,4 +1,4 @@
-abstract type AbstractThresholdDither <: AbstractBinaryDither end
+abstract type AbstractThresholdDither <: AbstractDither end
 
 """
     WhiteNoiseThreshold()
@@ -9,8 +9,7 @@ struct WhiteNoiseThreshold <: AbstractThresholdDither end
 
 function binarydither!(::WhiteNoiseThreshold, out::GenericGrayImage, img::GenericGrayImage)
     tmap = rand(eltype(img), size(img))
-    out .= img .> tmap
-    return out
+    return out .= img .> tmap
 end
 
 """
@@ -30,7 +29,6 @@ struct ConstantThreshold{T<:Real} <: AbstractThresholdDither
 end
 
 function binarydither!(alg::ConstantThreshold, out::GenericGrayImage, img::GenericGrayImage)
-    tmap = fill(alg.threshold, size(img)) # constant matrix of value threshold
-    out .= img .> tmap
-    return out
+    threshold = eltype(img)(alg.threshold)
+    return out .= img .> threshold
 end

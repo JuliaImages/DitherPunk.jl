@@ -1,16 +1,19 @@
 module DitherPunk
 
-using TiledIteration
 using ImageCore
 using ImageCore: NumberLike, Pixel, GenericImage, GenericGrayImage, MappedArrays
 using ImageCore.Colors: DifferenceMetric
 using Random
+using IndirectArrays
 using OffsetArrays
 using Requires
 
+abstract type AbstractDither end
+
 include("compat.jl")
-include("dither_api.jl")
-include("colorspaces.jl")
+include("utils.jl")
+include("api/binary.jl")
+include("api/color.jl")
 include("threshold.jl")
 include("ordered.jl")
 include("ordered_imagemagick.jl")

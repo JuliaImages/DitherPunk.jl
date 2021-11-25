@@ -8,7 +8,7 @@ When applying the algorithm to an image, the threshold matrix is repeatedly tile
 to match the size of the image. It is then applied as a per-pixel threshold map.
 Optionally, this final threshold map can be inverted by selecting `invert_map=true`.
 """
-struct OrderedDither{T<:AbstractMatrix} <: AbstractBinaryDither
+struct OrderedDither{T<:AbstractMatrix} <: AbstractDither
     mat::T
 end
 
@@ -23,19 +23,16 @@ function binarydither!(
         mat = FT.(alg.mat)
     end
 
-    # TODO: add Threads.@threads to this for loop further improves the performances
-    #       but it has unidentified memory allocations
-    @inbounds for R in TileIterator(axes(img), size(mat))
-        mat_size = map(length, R)
-        if mat_size == size(mat)
-            # `mappedarray` creates a readonly wrapper with lazy evaluation with `srgb2linear`
-            # so that original `img` data is not modified.
-            out[R...] .= @views img[R...] .> mat
-        else # boundary condition
-            mat_inds = map(Base.OneTo, mat_size)
-            out_inds = map(getindex, R, mat_inds)
-            out[out_inds...] .= @views img[out_inds...] .> mat[mat_inds...]
-        end
+    matsize = size(mat)
+    rlookup = [mod1(i, matsize[1]) for i in 1:size(img)[1]]
+    clookup = [mod1(i, matsize[2]) for i in 1:size(img)[2]]
+
+    T = eltype(out)
+    black, white = T(0), T(1)
+
+    @inbounds @simd for i in CartesianIndices(img)
+        r, c = Tuple(i)
+        out[i] = ifelse(img[i] > mat[rlookup[r], clookup[c]], white, black)
     end
     return out
 end

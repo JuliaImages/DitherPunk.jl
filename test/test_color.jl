@@ -24,7 +24,11 @@ imshow(img)
 println()
 
 # Run & test custom color pallete dithering methods
-algs = Dict("FloydSteinberg" => FloydSteinberg(), "ClosestColor" => ClosestColor())
+algs = Dict(
+    "FloydSteinberg" => FloydSteinberg(),
+    "ClosestColor" => ClosestColor(),
+    "Bayer" => Bayer(),
+)
 
 for (name, alg) in algs
     # Test custom color dithering on color images
@@ -48,7 +52,7 @@ end
 
 ## Test API
 # Test for argument errors on algorithms that don't support custom color palletes
-for alg in [Bayer(), WhiteNoiseThreshold(), ConstantThreshold()]
+for alg in [WhiteNoiseThreshold(), ConstantThreshold()]
     @test_throws ColorNotImplementedError dither(img, alg, cs)
 end
 

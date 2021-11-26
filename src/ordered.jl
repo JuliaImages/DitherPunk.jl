@@ -8,7 +8,7 @@ When applying the algorithm to an image, the threshold matrix is repeatedly tile
 to match the size of the image. It is then applied as a per-pixel threshold map.
 Optionally, this final threshold map can be inverted by selecting `invert_map=true`.
 """
-struct OrderedDither{T<:AbstractMatrix} <: AbstractDither
+struct OrderedDither{T<:AbstractMatrix{<:Rational}} <: AbstractDither
     mat::T
 end
 function OrderedDither(mat; invert_map=false)
@@ -23,18 +23,69 @@ function binarydither!(alg::OrderedDither, out::GenericGrayImage, img::GenericGr
     FT = floattype(eltype(img))
     mat = FT.(alg.mat)
 
+    T = eltype(out)
+    black, white = T(0), T(1)
+
+    # Precompute lookup tables for modulo indexing of threshold matrix
     matsize = size(mat)
     rlookup = [mod1(i, matsize[1]) for i in 1:size(img)[1]]
     clookup = [mod1(i, matsize[2]) for i in 1:size(img)[2]]
-
-    T = eltype(out)
-    black, white = T(0), T(1)
 
     @inbounds @simd for i in CartesianIndices(img)
         r, c = Tuple(i)
         out[i] = ifelse(img[i] > mat[rlookup[r], clookup[c]], white, black)
     end
     return out
+end
+
+
+# Using Pattern Dithering by Thomas Knoll / Adobe Inc. Patent expired in 2019.
+# https://patents.google.com/patent/US6606166B1/en
+# Implemented according to Joel Yliluoma's pseudocode
+# https://bisqwit.iki.fi/story/howto/dither/jy/
+function colordither(
+    alg::OrderedDither,
+    img::GenericImage,
+    cs::AbstractVector{<:Pixel},
+    metric::DifferenceMetric,
+)
+    cs_lab = Lab.(cs)
+    cs_xyz = XYZ.(cs)
+
+    # Precompute lookup tables for modulo indexing of threshold matrix
+    mat = numerator.(alg.mat)
+    nmax = maximum(mat)
+    matsize = size(mat)
+    rlookup = [mod1(i, matsize[1]) for i in 1:size(img)[1]]
+    clookup = [mod1(i, matsize[2]) for i in 1:size(img)[2]]
+
+    # Allocate matrices
+    candidates = Array{UInt8}(undef, nmax)
+    index = Matrix{UInt8}(undef, size(img)...)
+
+    @inbounds for I in CartesianIndices(img)
+        r, c = Tuple(I)
+        err = zero(XYZ)
+        px = XYZ(img[I])
+
+        for j in 1:nmax
+            col = px + 0.5 * err
+            idx = _closest_color_idx(col, cs_lab, metric)
+            candidates[j] = idx
+            err = px - cs_xyz[idx]
+
+            # We can stop the loop if idx stayed constant:
+            if j > 2 && (candidates[j-1] == idx)
+                candidates[j+1:end] .= idx
+                break
+            end
+            # TODO: also break if a series of indices repeats, e.g. [1, 2, 1, 2, ...]
+            # This would increase the performance by a lot.
+        end
+        # Sort candidates by luminance (dark to bright)
+        index[I] = sort(candidates, by=i->cs_lab[i].l)[mat[rlookup[r], clookup[c]]]
+    end
+    return index
 end
 
 """

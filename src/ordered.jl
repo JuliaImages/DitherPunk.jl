@@ -8,7 +8,7 @@ When applying the algorithm to an image, the threshold matrix is repeatedly tile
 to match the size of the image. It is then applied as a per-pixel threshold map.
 Optionally, this final threshold map can be inverted by selecting `invert_map=true`.
 """
-struct OrderedDither{T<:AbstractMatrix{<:Rational}, R<:Real} <: AbstractDither
+struct OrderedDither{T<:AbstractMatrix{<:Rational},R<:Real} <: AbstractDither
     mat::T
     color_error_multiplier::R
 end
@@ -38,7 +38,6 @@ function binarydither!(alg::OrderedDither, out::GenericGrayImage, img::GenericGr
     end
     return out
 end
-
 
 # Using Pattern Dithering by Thomas Knoll / Adobe Inc. Patent expired in 2019.
 # https://patents.google.com/patent/US6606166B1/en
@@ -76,15 +75,15 @@ function colordither(
             err = px - cs_xyz[idx]
 
             # We can stop the loop if idx stayed constant:
-            if j > 2 && (candidates[j-1] == idx)
-                candidates[j+1:end] .= idx
+            if j > 2 && (candidates[j - 1] == idx)
+                candidates[(j + 1):end] .= idx
                 break
             end
             # TODO: also break if a series of indices repeats, e.g. [1, 2, 1, 2, ...]
             # This would increase the performance by a lot.
         end
         # Sort candidates by luminance (dark to bright)
-        index[I] = sort(candidates, by=i->cs_lab[i].l)[mat[rlookup[r], clookup[c]]]
+        index[I] = sort(candidates; by=i -> cs_lab[i].l)[mat[rlookup[r], clookup[c]]]
     end
     return index
 end

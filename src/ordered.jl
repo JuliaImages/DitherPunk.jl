@@ -8,14 +8,15 @@ When applying the algorithm to an image, the threshold matrix is repeatedly tile
 to match the size of the image. It is then applied as a per-pixel threshold map.
 Optionally, this final threshold map can be inverted by selecting `invert_map=true`.
 """
-struct OrderedDither{T<:AbstractMatrix{<:Rational}} <: AbstractDither
+struct OrderedDither{T<:AbstractMatrix{<:Rational}, R<:Real} <: AbstractDither
     mat::T
+    color_error_multiplier::R
 end
-function OrderedDither(mat; invert_map=false)
+function OrderedDither(mat; invert_map=false, color_error_multiplier=0.5)
     if invert_map
-        return OrderedDither(1 .- mat)
+        return OrderedDither(1 .- mat, color_error_multiplier)
     end
-    return OrderedDither(mat)
+    return OrderedDither(mat, color_error_multiplier)
 end
 
 function binarydither!(alg::OrderedDither, out::GenericGrayImage, img::GenericGrayImage)
@@ -69,7 +70,7 @@ function colordither(
         px = XYZ(img[I])
 
         for j in 1:nmax
-            col = px + 0.5 * err
+            col = px + alg.color_error_multiplier * err
             idx = _closest_color_idx(col, cs_lab, metric)
             candidates[j] = idx
             err = px - cs_xyz[idx]

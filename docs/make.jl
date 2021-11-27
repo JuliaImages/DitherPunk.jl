@@ -27,6 +27,7 @@ makedocs(;
             "Gradient" => "generated/gallery_gradient.md",
             "Images" => "generated/gallery_images.md",
         ],
+        "Fun examples" => Any["Palette swapping" => "generated/palette_swapping.md",],
         "API Reference" => "api.md",
     ],
 )

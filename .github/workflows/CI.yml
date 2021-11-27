@@ -43,8 +43,9 @@ jobs:
         run: |
           using Pkg
           Pkg.add([
-            PackageSpec(name="Images", version="0.24"),
-            PackageSpec(name="IndirectArrays", version="1"),
+            PackageSpec(name="ColorTypes", version="0.11")
+            PackageSpec(name="Images", version="0.23"),
+            PackageSpec(name="IndirectArrays", version="0.5"),
             PackageSpec(name="ImageCore", version="0.9"),
           ])
 

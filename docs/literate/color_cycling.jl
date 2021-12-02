@@ -1,9 +1,10 @@
+# # Color cycling
+# We will try to fake a subtle animation of the water in this public domain image:
 using Images
 using DitherPunk
 using Clustering
 using IndirectArrays
-# # Color cycling
-# We will try to fake a subtle animation of the water in this public domain image:
+
 img = load("../../assets/waterfall.jpg")
 
 # When Clustering.jl is loaded, we can import DitherPunk's internal function `get_colorscheme`

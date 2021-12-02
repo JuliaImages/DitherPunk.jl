@@ -1,12 +1,11 @@
-using Images
-using TestImages
-using DitherPunk
-using Clustering
-using IndirectArrays
-
 # # Color palette swapping
 # We can hide an image in another one by switching color palettes.
 # Let's try to hide `img_secret` in `img`:
+using Images
+using DitherPunk
+using Clustering
+using IndirectArrays
+using TestImages
 
 img = testimage("peppers")
 img_secret = testimage("airplaneF16");

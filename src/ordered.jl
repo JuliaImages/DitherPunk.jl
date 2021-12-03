@@ -72,12 +72,18 @@ function colordither(
             col = px + alg.color_error_multiplier * err
             idx = _closest_color_idx(col, cs_lab, metric)
 
-            # We can stop the loop if idx stayed constant:
-            if (j > 2) && (idx ∈ candidates[2:(j - 1)])
-                reprange = (findall(i -> i == idx, candidates[2:(j - 1)])[1] + 1):(j - 1)
-                filllength = nmax - j + 1
-                reptimes = div(filllength, length(reprange), RoundUp)
-                candidates[j:end] = repeat(candidates[reprange]; outer=reptimes)[1:filllength]
+            # We are in loop (idx ↔ err) if we already computed `idx` as the closest color
+            # after the first iteration. Breaking out of this loops lets us avoid calling
+            # the expensive closest color computation.
+            if (j > 2) && (idx in candidates[2:(j - 1)])
+                # Find the range of the loop in `candidates`:
+                looprange = (findall(i -> i == idx, candidates[2:(j - 1)])[1] + 1):(j - 1)
+                # Fill the rest of `candidates` with this loop:
+                lengthfill = nmax - j + 1
+                nrepeat = div(lengthfill, length(looprange), RoundUp)
+                candidates[j:end] = view(
+                    repeat(candidates[looprange]; outer=nrepeat), 1:lengthfill
+                )
                 break
             else
                 candidates[j] = idx

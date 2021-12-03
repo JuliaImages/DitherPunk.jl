@@ -80,7 +80,7 @@ function colordither(
                 looprange = (findall(i -> i == idx, candidates[2:(j - 1)])[1] + 1):(j - 1)
                 # Fill the rest of `candidates` with this loop:
                 lengthfill = nmax - j + 1
-                nrepeat = div(lengthfill, length(looprange), RoundUp)
+                nrepeat = cld(lengthfill, length(looprange))
                 candidates[j:end] = view(
                     repeat(candidates[looprange]; outer=nrepeat), 1:lengthfill
                 )

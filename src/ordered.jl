@@ -71,16 +71,18 @@ function colordither(
         for j in 1:nmax
             col = px + alg.color_error_multiplier * err
             idx = _closest_color_idx(col, cs_lab, metric)
-            candidates[j] = idx
-            err = px - cs_xyz[idx]
 
             # We can stop the loop if idx stayed constant:
-            if j > 2 && (candidates[j - 1] == idx)
-                candidates[(j + 1):end] .= idx
+            if (j > 2) && (idx ∈ candidates[2:(j - 1)])
+                reprange = (findall(i -> i == idx, candidates[2:(j - 1)])[1] + 1):(j - 1)
+                filllength = nmax - j + 1
+                reptimes = div(filllength, length(reprange), RoundUp)
+                candidates[j:end] = repeat(candidates[reprange]; outer=reptimes)[1:filllength]
                 break
+            else
+                candidates[j] = idx
+                err = px - cs_xyz[idx]
             end
-            # TODO: also break if a series of indices repeats, e.g. [1, 2, 1, 2, ...]
-            # This would increase the performance by a lot.
         end
         # Sort candidates by luminance (dark to bright)
         index[I] = sort(candidates; by=i -> cs_lab[i].l)[mat[rlookup[r], clookup[c]]]

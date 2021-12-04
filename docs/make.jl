@@ -26,7 +26,7 @@ makedocs(;
         "Gallery" => Any[
             "Gradient" => "generated/gallery_gradient.md",
             "Images" => "generated/gallery_images.md",
-            ],
+        ],
         "Fun applications" => Any[
             "SDF halftoning" => "generated/sdf_halftoning.md",
             "Color cycling" => "generated/color_cycling.md",

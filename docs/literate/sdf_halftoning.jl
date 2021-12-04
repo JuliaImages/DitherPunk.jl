@@ -7,7 +7,7 @@
 # from signed distance functions (SDFs). A good resource for those is Inigo Quilez'
 # blogpost ["2D distance functions"](https://www.iquilezles.org/www/articles/distfunctions2d/distfunctions2d.htm).
 #
-# Here we reimplement his `sdStar5`:
+# Here we reimplement his function `sdStar5`:
 using Images
 using DitherPunk
 using TestImages

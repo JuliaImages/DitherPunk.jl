@@ -77,12 +77,10 @@ function colordither(
             # the expensive closest color computation.
             if (j > 2) && (idx in candidates[2:(j - 1)])
                 # Find the range of the loop in `candidates`:
-                looprange = (findall(i -> i == idx, candidates[2:(j - 1)])[1] + 1):(j - 1)
+                looprange = (findfirst(i -> i == idx, candidates[2:(j - 1)]) + 1):(j - 1)
                 # Fill the rest of `candidates` with this loop:
-                lengthfill = nmax - j + 1
-                nrepeat = cld(lengthfill, length(looprange))
-                candidates[j:end] = view(
-                    repeat(candidates[looprange]; outer=nrepeat), 1:lengthfill
+                candidates[j:end] .= Iterators.take(
+                    Iterators.cycle(candidates[looprange]), nmax - j + 1
                 )
                 break
             else

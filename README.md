@@ -32,7 +32,7 @@ All algorithms can be used for binary or channel-wise dithering:
 | ![][atkinson-bw]    | ![][bayer-bw]         | ![][ordered-bw]        |
 | ![][atkinson-col]   | ![][bayer-col]        | ![][ordered-col]       |
 
-All error diffusion methods support custom color palettes. Define your own palette or use the symbols from the [ColorSchemes.jl catalogue](https://juliagraphics.github.io/ColorSchemes.jl/stable/catalogue) directly:
+All error diffusion, ordered dithering and halftoning methods support custom color palettes. Define your own palette or use the symbols from the [ColorSchemes.jl catalogue](https://juliagraphics.github.io/ColorSchemes.jl/stable/catalogue) directly:
 ```julia
 using DitherPunk
 using ColorSchemes

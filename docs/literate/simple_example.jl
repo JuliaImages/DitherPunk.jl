@@ -56,14 +56,12 @@ blue = RGB{Float32}(0, 0, 1)
 
 rubiks_colors = [white, yellow, green, orange, red, blue]
 
-# Currently, dithering in custom colors is limited to `ErrorDiffusion` algorithms such as `FloydSteinberg`.
+# All methods of type `ErrorDiffusion` and `OrderedDither` support dithering in custom colors.
 d = dither(img, FloydSteinberg(), rubiks_colors)
 
 # this looks much better than simply quantizing to the closest color!
 d = dither(img, ClosestColor(), rubiks_colors)
 
-# For an overview of all error diffusion algorithms, check out the [gallery].
-#
 # ### ColorSchemes.jl
 # Predefined color schemes from [ColorSchemes.jl](https://juliagraphics.github.io/ColorSchemes.jl/stable/basics/#Pre-defined-schemes) can also be used.
 using ColorSchemes

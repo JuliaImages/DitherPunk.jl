@@ -8,14 +8,15 @@ When applying the algorithm to an image, the threshold matrix is repeatedly tile
 to match the size of the image. It is then applied as a per-pixel threshold map.
 Optionally, this final threshold map can be inverted by selecting `invert_map=true`.
 """
-struct OrderedDither{T<:AbstractMatrix} <: AbstractDither
+struct OrderedDither{T<:AbstractMatrix{<:Rational},R<:Real} <: AbstractDither
     mat::T
+    color_error_multiplier::R
 end
-function OrderedDither(mat; invert_map=false)
+function OrderedDither(mat; invert_map=false, color_error_multiplier=0.5)
     if invert_map
-        return OrderedDither(1 .- mat)
+        return OrderedDither(1 .- mat, color_error_multiplier)
     end
-    return OrderedDither(mat)
+    return OrderedDither(mat, color_error_multiplier)
 end
 
 function binarydither!(alg::OrderedDither, out::GenericGrayImage, img::GenericGrayImage)
@@ -23,18 +24,74 @@ function binarydither!(alg::OrderedDither, out::GenericGrayImage, img::GenericGr
     FT = floattype(eltype(img))
     mat = FT.(alg.mat)
 
+    T = eltype(out)
+    black, white = T(0), T(1)
+
+    # Precompute lookup tables for modulo indexing of threshold matrix
     matsize = size(mat)
     rlookup = [mod1(i, matsize[1]) for i in 1:size(img)[1]]
     clookup = [mod1(i, matsize[2]) for i in 1:size(img)[2]]
-
-    T = eltype(out)
-    black, white = T(0), T(1)
 
     @inbounds @simd for i in CartesianIndices(img)
         r, c = Tuple(i)
         out[i] = ifelse(img[i] > mat[rlookup[r], clookup[c]], white, black)
     end
     return out
+end
+
+# Using Pattern Dithering by Thomas Knoll / Adobe Inc. Patent expired in 2019.
+# https://patents.google.com/patent/US6606166B1/en
+# Implemented according to Joel Yliluoma's pseudocode
+# https://bisqwit.iki.fi/story/howto/dither/jy/
+function colordither(
+    alg::OrderedDither,
+    img::GenericImage,
+    cs::AbstractVector{<:Pixel},
+    metric::DifferenceMetric,
+)
+    cs_lab = Lab.(cs)
+    cs_xyz = XYZ.(cs)
+
+    # Precompute lookup tables for modulo indexing of threshold matrix
+    mat = numerator.(alg.mat)
+    nmax = maximum(mat)
+    matsize = size(mat)
+    rlookup = [mod1(i, matsize[1]) for i in 1:size(img)[1]]
+    clookup = [mod1(i, matsize[2]) for i in 1:size(img)[2]]
+
+    # Allocate matrices
+    candidates = Array{UInt8}(undef, nmax)
+    index = Matrix{UInt8}(undef, size(img)...)
+
+    @inbounds for I in CartesianIndices(img)
+        r, c = Tuple(I)
+        err = zero(XYZ)
+        px = XYZ(img[I])
+
+        for j in 1:nmax
+            col = px + alg.color_error_multiplier * err
+            idx = _closest_color_idx(col, cs_lab, metric)
+
+            # We are in loop (idx ↔ err) if we already computed `idx` as the closest color
+            # after the first iteration. Breaking out of this loops lets us avoid calling
+            # the expensive closest color computation.
+            if (j > 2) && (idx in candidates[2:(j - 1)])
+                # Find the range of the loop in `candidates`:
+                looprange = (findfirst(i -> i == idx, candidates[2:(j - 1)]) + 1):(j - 1)
+                # Fill the rest of `candidates` with this loop:
+                candidates[j:end] .= Iterators.take(
+                    Iterators.cycle(candidates[looprange]), nmax - j + 1
+                )
+                break
+            else
+                candidates[j] = idx
+                err = px - cs_xyz[idx]
+            end
+        end
+        # Sort candidates by luminance (dark to bright)
+        index[I] = sort(candidates; by=i -> cs_lab[i].l)[mat[rlookup[r], clookup[c]]]
+    end
+    return index
 end
 
 """

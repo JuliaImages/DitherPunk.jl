@@ -8,9 +8,7 @@ using TestImages
 img = testimage("fabio_color_256")
 
 # Run & test fixed pallete dithering methods
-algs = Dict(
-    "FloydSteinberg" => FloydSteinberg(), "Bayer" => Bayer()
-)
+algs = Dict("FloydSteinberg" => FloydSteinberg(), "Bayer" => Bayer())
 
 for C in [RGB, HSV]
     for (name, alg) in algs

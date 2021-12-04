@@ -28,7 +28,7 @@ algs = Dict(
 # Tag what is tested on each algorithm type
 SUITE = BenchmarkGroup()
 SUITE["error diffusion"] = BenchmarkGroup(["binary", "color"])
-SUITE["ordered dithering"] = BenchmarkGroup(["binary"])
+SUITE["ordered dithering"] = BenchmarkGroup(["binary", "color"])
 SUITE["threshold dithering"] = BenchmarkGroup(["binary"])
 SUITE["closest color"] = BenchmarkGroup(["binary", "color"])
 

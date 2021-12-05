@@ -10,6 +10,7 @@
 # Here we reimplement his function `sdStar5`:
 using Images
 using DitherPunk
+using ColorSchemes
 using TestImages
 
 function star_sdf(x, y; r=0.5, rf=2.0)
@@ -25,12 +26,9 @@ function star_sdf(x, y; r=0.5, rf=2.0)
 end;
 
 # This SDF can be visualized by its contour:
-using Plots
-
-xs = range(-1, 1; length=500)
-ys = range(-1, 1; length=500)
-contour(xs, ys, star_sdf)
-
+#
+# ![](https://user-images.githubusercontent.com/20258504/144755939-19b13e29-e50b-4744-bdeb-234f33790ca8.png)
+#
 # To convert an SDF to an `OrderedDither` algorithm, use this function:
 function sdf2halftone(sdf, n)
     rg = range(-1, 1; length=n)

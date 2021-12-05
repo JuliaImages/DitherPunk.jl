@@ -1,4 +1,10 @@
 # DitherPunk
+## Version `v2.2.0`
+- ![Feature][badge-feature] Ordered dithering algorithms now support custom color palettes. ([#53][pr-53])
+- ![Enhancement][badge-enhancement] Color palette generation with Clustering.jl has been made accessible as `DitherPunk.get_colorscheme`. ([#58][pr-58])
+- ![Bugfix][badge-bugfix] Fixed docstring warnings. ([#56][pr-56])
+
+
 ## Version `v2.1.0`
 - ![Feature][badge-feature] Color dithering methods now return IndirectArrays. ([#47][pr-47])
 - ![Enhancement][badge-enhancement] Performance enhancements. Most noticeable for color methods. ([#47][pr-47])
@@ -30,6 +36,9 @@ This release introduces some breaking changes due to an API overhaul and adds ne
 [pr-45]: https://github.com/JuliaImages/DitherPunk.jl/pull/45
 [pr-47]: https://github.com/JuliaImages/DitherPunk.jl/pull/47
 [pr-50]: https://github.com/JuliaImages/DitherPunk.jl/pull/50
+[pr-53]: https://github.com/JuliaImages/DitherPunk.jl/pull/53
+[pr-56]: https://github.com/JuliaImages/DitherPunk.jl/pull/56
+[pr-58]: https://github.com/JuliaImages/DitherPunk.jl/pull/58
 
 [badge-breaking]: https://img.shields.io/badge/BREAKING-red.svg
 [badge-deprecation]: https://img.shields.io/badge/deprecation-orange.svg

@@ -89,7 +89,7 @@ function colordither(
             end
         end
         # Sort candidates by luminance (dark to bright)
-        index[I] = sort(candidates; by=i -> cs_lab[i].l)[mat[rlookup[r], clookup[c]]]
+        index[I] = partialsort!(candidates, mat[rlookup[r], clookup[c]]; by=i -> cs_lab[i].l)
     end
     return index
 end

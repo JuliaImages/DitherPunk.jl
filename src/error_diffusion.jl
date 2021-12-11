@@ -78,11 +78,10 @@ function colordither(
     # Change from normalized intensities to Float as error will get added!
     # Eagerly promote to the same type to make loop run faster.
     FT = floattype(eltype(eltype(img))) # type of Float
-    CT = floattype(eltype(img)) # type of colorant
 
-    img = CT.(img)
-    cs = CT.(cs)
-    labcs = Lab{FT}.(cs) # otherwise each call to colordiff converts cs to Lab
+    img = convert.(XYZ, img)
+    cs_lab = Lab.(cs)
+    cs_xyz = XYZ.(cs)
     filter = FT.(alg.filter)
 
     drs = axes(alg.filter, 1)
@@ -93,9 +92,9 @@ function colordither(
             px = img[r, c]
             alg.clamp_error && (px = clamp01(px))
 
-            colorindex = _closest_color_idx(px, labcs, metric)
+            colorindex = _closest_color_idx(px, cs_lab, metric)
             index[r, c] = colorindex
-            err = px - cs[colorindex]  # diffuse "error" to neighborhood in filter
+            err = px - cs_xyz[colorindex]  # diffuse "error" to neighborhood in filter
 
             for dr in drs
                 for dc in dcs

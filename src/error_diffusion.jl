@@ -124,7 +124,7 @@ Error diffusion algorithm using the filter
 1   0         (1//2)
 ```
 
-$(error_diffusion_kwargs)
+$(_error_diffusion_kwargs)
 
 # References
 [1]  Floyd, R.W. and L. Steinberg, "An Adaptive Algorithm for Spatial Gray
@@ -142,7 +142,7 @@ Error diffusion algorithm using the filter
 3   5   1     (1//16)
 ```
 
-$(error_diffusion_kwargs)
+$(_error_diffusion_kwargs)
 
 # References
 [1]  Floyd, R.W. and L. Steinberg, "An Adaptive Algorithm for Spatial Gray
@@ -164,7 +164,7 @@ Error diffusion algorithm using the filter
 ```
 Also known as the Jarvis, Judice, and Ninke filter.
 
-$(error_diffusion_kwargs)
+$(_error_diffusion_kwargs)
 
 # References
 [1]  Jarvis, J.F., C.N. Judice, and W.H. Ninke, "A Survey of Techniques for
@@ -187,7 +187,7 @@ Error diffusion algorithm using the filter
 1   2   4   2   1   (1//42)
 ```
 
-$(error_diffusion_kwargs)
+$(_error_diffusion_kwargs)
 
 # References
 [1]  Stucki, P., "MECCA - a multiple-error correcting computation algorithm
@@ -210,7 +210,7 @@ Error diffusion algorithm using the filter
 1   2   4   2   1   (1//42)
 ```
 
-$(error_diffusion_kwargs)
+$(_error_diffusion_kwargs)
 
 # References
 [1] Burkes, D., "Presentation of the Burkes error filter for use in preparing
@@ -232,7 +232,7 @@ Error diffusion algorithm using the filter
 Also known as Sierra3 or three-row Sierra due to the filter shape.
 
 
-$(error_diffusion_kwargs)
+$(_error_diffusion_kwargs)
 """
 function Sierra(; kwargs...)
     return ErrorDiffusion(
@@ -250,7 +250,7 @@ Error diffusion algorithm using the filter
 ```
 Also known as Sierra2.
 
-$(error_diffusion_kwargs)
+$(_error_diffusion_kwargs)
 """
 function TwoRowSierra(; kwargs...)
     return ErrorDiffusion(OffsetMatrix([0 0 0 4 3; 1 2 3 2 1]//16, 0:1, -2:2); kwargs...)
@@ -266,7 +266,7 @@ Error diffusion algorithm using the filter
 ```
 Also known as Sierra-2-4A filter.
 
-$(error_diffusion_kwargs)
+$(_error_diffusion_kwargs)
 """
 function SierraLite(; kwargs...)
     return ErrorDiffusion(OffsetMatrix([0 0 2; 1 1 0]//4, 0:1, -1:1); kwargs...)
@@ -282,7 +282,7 @@ Error diffusion algorithm using the filter
     1               (1//8)
 ```
 
-$(error_diffusion_kwargs)
+$(_error_diffusion_kwargs)
 """
 function Atkinson(; kwargs...)
     return ErrorDiffusion(
@@ -300,7 +300,7 @@ Error diffusion algorithm using the filter
 ```
 A modification of the weights used in the Floyd-Steinberg algorithm.
 
-$(error_diffusion_kwargs)
+$(_error_diffusion_kwargs)
 
 # References
 [1] Z. Fan, "A Simple Modification of Error Diffusion Weights",
@@ -320,7 +320,7 @@ Error diffusion algorithm using the filter
 1   1   2           (1//8)
 ```
 
-$(error_diffusion_kwargs)
+$(_error_diffusion_kwargs)
 
 # References
 [1]  J. N. Shiau and Z. Fan. "Method for quantization gray level pixel data with extended
@@ -339,7 +339,7 @@ Error diffusion algorithm using the filter
 1   1   2   4       (1//16)
 ```
 
-$(error_diffusion_kwargs)
+$(_error_diffusion_kwargs)
 
 # References
 [1]  J. N. Shiau and Z. Fan. "Method for quantization gray level pixel data with extended
@@ -362,7 +362,7 @@ Error diffusion algorithm using the filter
 ```
 Occasionally, you will see this filter erroneously called the Floyd-Steinberg filter.
 
-$(error_diffusion_kwargs)
+$(_error_diffusion_kwargs)
 
 # Note
 There is no reason to use this algorithm, which is why DitherPunk doesn't export it.

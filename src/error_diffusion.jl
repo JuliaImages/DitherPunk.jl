@@ -81,14 +81,14 @@ function colordither(
 
     index = Matrix{UInt8}(undef, size(img)...) # allocate matrix of color indices
 
-    # Change from normalized intensities to Float as error will get added!
-    # Eagerly promote to the same type to make loop run faster.
-    FT = floattype(eltype(eltype(img))) # type of Float
-
-    # C is `color_space` in which error is diffused
+    # C is the `color_space` in which the error is diffused
     img = convert.(C, img)
     cs_err = C.(cs)
     cs_lab = Lab.(cs)
+
+    # Change from normalized intensities to Float as error will get added!
+    # Eagerly promote to the same type to make loop run faster.
+    FT = floattype(eltype(eltype(img))) # type of Float
     filter = FT.(alg.filter)
 
     drs = axes(alg.filter, 1)

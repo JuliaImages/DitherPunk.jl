@@ -115,3 +115,6 @@ d4 = dither!(img2, alg)
 @test img2 == d # image updated in-place
 @test eltype(d4) == eltype(img)
 @test eltype(img2) == eltype(img)
+
+## Test error messages
+@test_throws DomainError ConstantThreshold(; threshold=-0.5)

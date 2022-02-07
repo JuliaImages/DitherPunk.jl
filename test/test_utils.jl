@@ -1,5 +1,6 @@
 using DitherPunk
 using DitherPunk: srgb2linear, clamp_limits
+using ImageCore
 
 @test srgb2linear(true) == true
 @test srgb2linear(false) == false

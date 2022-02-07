@@ -28,6 +28,7 @@ makedocs(;
             "Images" => "generated/gallery_images.md",
         ],
         "Fun applications" => Any[
+            "ASCII dithering" => "generated/ascii.md",
             "SDF halftoning" => "generated/sdf_halftoning.md",
             "Color cycling" => "generated/color_cycling.md",
             "Palette swapping" => "generated/palette_swapping.md",

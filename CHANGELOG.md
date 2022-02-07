@@ -1,9 +1,15 @@
 # DitherPunk
+## Version `v2.3.0`
+- ![Feature][badge-feature] Color space for error diffusion can now be selected. Defaults to `XYZ`, a change from previous `RGB` color space. Changes outputs and speeds up color error diffusion. ([#63][pr-63])
+- ![Enhancement][badge-enhancement] Speed up color ordered dithering. ([#62][pr-62])
+- ![Documentation][badge-docs] Better docstrings for error diffusion algorithms. ([#63][pr-63])
+- ![Documentation][badge-docs] Added ASCII dithering example to docs. ([#64][pr-64])
+
 ## Version `v2.2.0`
 - ![Feature][badge-feature] Ordered dithering algorithms now support custom color palettes. ([#53][pr-53])
 - ![Enhancement][badge-enhancement] Color palette generation with Clustering.jl has been made accessible as `DitherPunk.get_colorscheme`. ([#58][pr-58])
 - ![Bugfix][badge-bugfix] Fixed docstring warnings. ([#56][pr-56])
-
+- ![Documentation][badge-docs] Added three advanced examples to docs. ([#58][pr-58])
 
 ## Version `v2.1.0`
 - ![Feature][badge-feature] Color dithering methods now return IndirectArrays. ([#47][pr-47])
@@ -31,6 +37,7 @@ This release introduces some breaking changes due to an API overhaul and adds ne
 ![Security][badge-security]
 ![Experimental][badge-experimental]
 ![Maintenance][badge-maintenance]
+![Documentation][badge-docs]
 -->
 
 [pr-45]: https://github.com/JuliaImages/DitherPunk.jl/pull/45
@@ -39,6 +46,9 @@ This release introduces some breaking changes due to an API overhaul and adds ne
 [pr-53]: https://github.com/JuliaImages/DitherPunk.jl/pull/53
 [pr-56]: https://github.com/JuliaImages/DitherPunk.jl/pull/56
 [pr-58]: https://github.com/JuliaImages/DitherPunk.jl/pull/58
+[pr-62]: https://github.com/JuliaImages/DitherPunk.jl/pull/62
+[pr-63]: https://github.com/JuliaImages/DitherPunk.jl/pull/63
+[pr-64]: https://github.com/JuliaImages/DitherPunk.jl/pull/64
 
 [badge-breaking]: https://img.shields.io/badge/BREAKING-red.svg
 [badge-deprecation]: https://img.shields.io/badge/deprecation-orange.svg
@@ -48,3 +58,4 @@ This release introduces some breaking changes due to an API overhaul and adds ne
 [badge-security]: https://img.shields.io/badge/security-black.svg
 [badge-experimental]: https://img.shields.io/badge/experimental-lightgrey.svg
 [badge-maintenance]: https://img.shields.io/badge/maintenance-gray.svg
+[badge-docs]: https://img.shields.io/badge/docs-orange.svg

@@ -5,13 +5,14 @@ using Images
 using DitherPunk
 using TestImages
 
-# When loading an image, we need to compensate for the aspect ratio of ASCII characters.
 img = testimage("cameraman")
-img = imresize(img, ratio=(1//14, 1//6))
+
+# When loading an image, we need to compensate for the aspect ratio of ASCII characters.
+img = imresize(img; ratio=(1//14, 1//6))
 
 # We then define an ASCII ramp and a corresponding grayscale color scheme of matching length.
 ascii_ramp = split(" .:-=+*#%@", "")
-cs = Gray.(range(0, 1, length=10))
+cs = Gray.(range(0, 1; length=10))
 
 # Dithering will return an `IndirectArray`:
 d = dither(img, FloydSteinberg(), cs)

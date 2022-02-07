@@ -25,7 +25,7 @@ println()
 # Run & test custom color pallete dithering methods
 algs = Dict(
     "FloydSteinberg_XYZ" => FloydSteinberg(; color_space=XYZ),
-    "FloydSteinberg_RGB" => FloydSteinberg(; color_space=RGB{Float32}),
+    "FloydSteinberg_RGB" => FloydSteinberg(; color_space=RGB),
     "ClosestColor" => ClosestColor(),
     "Bayer" => Bayer(),
 )

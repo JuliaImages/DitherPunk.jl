@@ -20,7 +20,7 @@ _error_diffusion_kwargs = """
 # Keyword arguments
 - `color_space`: Color space in which the error is diffused.
     Only used when dithering with a color palette. Defaults to `XYZ`.
-    To replicate the output of other dithering libraries, set this to `RGB{Float32}`.
+    To replicate the output of other dithering libraries, set this to `RGB`.
 - `clamp_error::Bool`: Clamp accumulated error on each pixel within limits of colorant
     type `color_space` before looking up the closest color. Defaults to `true`.
 """
@@ -30,7 +30,7 @@ struct ErrorDiffusion{F<:AbstractMatrix,C} <: AbstractDither
     clamp_error::Bool
 end
 function ErrorDiffusion(filter; color_space=XYZ, clamp_error=true)
-    return ErrorDiffusion{typeof(filter),color_space}(filter, clamp_error)
+    return ErrorDiffusion{typeof(filter),float32(color_space)}(filter, clamp_error)
 end
 
 function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericGrayImage)

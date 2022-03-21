@@ -1,13 +1,15 @@
 using DitherPunk
 
-@test DitherPunk.bayer_matrix(1) == [
+M = @inferred DitherPunk.bayer_matrix(1)
+@test M == [
     0 8 2 10
     12 4 14 6
     3 11 1 9
     15 7 13 5
 ]
 
-@test DitherPunk.bayer_matrix(2) == [
+M = @inferred DitherPunk.bayer_matrix(2)
+@test M == [
     0 32 8 40 2 34 10 42
     48 16 56 24 50 18 58 26
     12 44 4 36 14 46 6 38

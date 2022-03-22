@@ -15,11 +15,9 @@ Upscale image by repeating individual pixels `scale` times.
 upscale(img, scale) = repeat(img; inner=(scale, scale))
 
 if VERSION >= v"1.7"
-    _closest_color_idx(px, cs, metric) = argmin(colordiff(px, c; metric=metric) for c in cs)
+    _closest_color_idx(px, cs, metr) = argmin(colordiff(px, c; metric=metr) for c in cs)
 else
-    function _closest_color_idx(px, cs, metric)
-        return argmin([colordiff(px, c; metric=metric) for c in cs])
-    end
+    _closest_color_idx(px, cs, metr) = argmin([colordiff(px, c; metric=metr) for c in cs])
 end
 
 """

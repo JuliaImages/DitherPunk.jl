@@ -2,7 +2,6 @@ using DitherPunk
 using DitherPunk: ColorNotImplementedError
 using IndirectArrays
 using ImageCore
-using ImageInTerminal
 using ReferenceTests
 using TestImages
 
@@ -19,10 +18,8 @@ cs = [white, yellow, green, orange, red, blue]
 # Load test image
 img = testimage("fabio_color_256")
 img_gray = testimage("fabio_gray_256")
-imshow(img)
-println()
 
-# Run & test custom color pallete dithering methods
+# Run & test custom color palette dithering methods
 algs = Dict(
     "FloydSteinberg_XYZ" => FloydSteinberg(; color_space=XYZ),
     "FloydSteinberg_RGB" => FloydSteinberg(; color_space=RGB),
@@ -37,8 +34,6 @@ for (name, alg) in algs
     @test_reference "references/color/$(name).txt" d
     @test eltype(d) == eltype(img2)
     @test img2 == img # image not modified
-    imshow(d)
-    println()
 
     # Test custom color dithering on gray images
     local img2_gray = copy(img_gray)
@@ -46,12 +41,10 @@ for (name, alg) in algs
     @test_reference "references/color/$(name)_from_gray.txt" d
     @test eltype(d) == eltype(cs)
     @test img2_gray == img_gray # image not modified
-    imshow(d)
-    println()
 end
 
 ## Test API
-# Test for argument errors on algorithms that don't support custom color palletes
+# Test for argument errors on algorithms that don't support custom color palettes
 for alg in [WhiteNoiseThreshold(), ConstantThreshold()]
     @test_throws ColorNotImplementedError dither(img, alg, cs)
 end
@@ -91,5 +84,3 @@ using ColorSchemes
 # Dry-run conditional dependency on Clustering.jl
 using Clustering
 d = dither(img, alg, 4)
-imshow(d)
-println()

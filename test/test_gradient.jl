@@ -4,15 +4,11 @@ using ReferenceTests
 
 using ImageCore
 using ImageCore: GenericGrayImage
-using ImageInTerminal
 using UnicodePlots
 
 w = 200
 h = 4 * 4 # multiple of 4 for unicode braille print
 img, srgb = gradient_image(h, w)
-println("Test image:")
-imshow(srgb)
-println()
 
 ## Run reference tests for deterministic algorithms
 # using Dict for Julia 1.0 compatibility
@@ -64,9 +60,6 @@ for (name, alg) in algs_deterministic
     @test_reference "references/gradient/$(name).txt" Int.(d)
     @test eltype(d) == eltype(img)
     @test img2 == img # image not modified
-
-    show(brailleprint(d; title=name)) # Visualize in terminal
-    println()
 end
 
 ## Algorithms with random output are currently only tested visually
@@ -80,9 +73,6 @@ for (name, alg) in algs_random
     local d = dither(Gray{Bool}, img2, alg)
     @test eltype(d) == Gray{Bool}
     @test img2 == img # image not modified
-
-    show(brailleprint(d; title=name)) # Visualize in terminal
-    println()
 end
 
 ## Test to_linear

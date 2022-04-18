@@ -19,9 +19,6 @@ for C in [RGB, HSV]
         @test eltype(d) <: C
         @test img2 == img1 # image not modified
 
-        imshow(d)
-        println()
-
         local d = dither!(img2, alg)
         @test eltype(d) <: C
         @test img2 == d # image updated in-place

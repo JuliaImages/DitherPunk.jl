@@ -19,8 +19,6 @@ cs = [white, yellow, green, orange, red, blue]
 # Load test image
 img = testimage("fabio_color_256")
 img_gray = testimage("fabio_gray_256")
-imshow(img)
-println()
 
 # Run & test custom color pallete dithering methods
 algs = Dict(
@@ -37,8 +35,6 @@ for (name, alg) in algs
     @test_reference "references/color/$(name).txt" d
     @test eltype(d) == eltype(img2)
     @test img2 == img # image not modified
-    imshow(d)
-    println()
 
     # Test custom color dithering on gray images
     local img2_gray = copy(img_gray)
@@ -46,8 +42,6 @@ for (name, alg) in algs
     @test_reference "references/color/$(name)_from_gray.txt" d
     @test eltype(d) == eltype(cs)
     @test img2_gray == img_gray # image not modified
-    imshow(d)
-    println()
 end
 
 ## Test API
@@ -91,5 +85,3 @@ using ColorSchemes
 # Dry-run conditional dependency on Clustering.jl
 using Clustering
 d = dither(img, alg, 4)
-imshow(d)
-println()

@@ -62,7 +62,8 @@ function _colordither(
         throw(DomainError(steps, "Color scheme for dither needs >= 2 colors."))
 
     index = colordither(alg, img, cs, metric)
-    return IndirectArray(index, T.(cs))
+    cs::Vector{T} = T.(cs)
+    return IndirectArray(index, cs)
 end
 
 # A special case occurs when a grayscale output image is to be dithered in colors.

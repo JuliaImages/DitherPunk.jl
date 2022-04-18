@@ -61,7 +61,7 @@ function _colordither(
     length(cs) >= 2 ||
         throw(DomainError(steps, "Color scheme for dither needs >= 2 colors."))
 
-    index = colordither(alg, img, cs, metric)
+    index::Matrix{Int} = colordither(alg, img, cs, metric)
     cs::Vector{T} = T.(cs)
     return IndirectArray(index, cs)
 end

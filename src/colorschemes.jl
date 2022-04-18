@@ -9,6 +9,6 @@ function _colordither(T, img, alg, csname::Symbol; kwargs...)
 end
 
 # help with type inference
-function _get_colorscheme(csname::Symbol)::Vector{RGB}
-    return ColorSchemes.colorschemes[csname].colors
+function _get_colorscheme(csname::Symbol)::ColorSchemes.ColorScheme
+    return ColorSchemes.colorschemes[csname]
 end

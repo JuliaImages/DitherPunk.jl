@@ -4,7 +4,6 @@ using ReferenceTests
 
 using ImageCore
 using ImageCore: GenericGrayImage
-using ImageInTerminal
 using UnicodePlots
 
 w = 200

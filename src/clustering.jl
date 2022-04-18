@@ -1,6 +1,11 @@
 # These functions are only conditionally loaded with Clustering.jl
 # Code adapted from @cormullion's [ColorSchemeTools](https://github.com/JuliaGraphics/ColorSchemeTools.jl).
-function _cluster_colorscheme(img, ncolors, maxiter, tol)::Vector{Lab}
+function get_colorscheme(
+    img,
+    ncolors;
+    maxiter=Clustering._kmeans_default_maxiter,
+    tol=Clustering._kmeans_default_tol,
+)::Vector{Lab}
     # Cluster in Lab color space
     data = reshape(channelview(Lab.(img)), 3, :)
     R = Clustering.kmeans(data, ncolors; maxiter=maxiter, tol=tol)
@@ -18,7 +23,7 @@ function _colordither(
     tol=Clustering._kmeans_default_tol,
     kwargs...,
 ) where {T}
-    cs = _cluster_colorscheme(img, ncolors, maxiter, tol)
+    cs = get_colorscheme(img, ncolors; maxiter=maxiter, tol=tol)
     return _colordither(T, img, alg, cs; kwargs...)
 end
 

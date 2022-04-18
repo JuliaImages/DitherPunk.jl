@@ -11,10 +11,13 @@ Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 
 [compat]
+Clustering = "0.14"
+ColorSchemes = "3"
 ImageCore = "0.8.1, 0.9"
 IndirectArrays = "0.5, 1.0"
 OffsetArrays = "1"
 Requires = "1"
+UnicodePlots = "2"
 julia = "1"
 
 [extras]

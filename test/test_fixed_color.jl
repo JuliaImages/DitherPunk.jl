@@ -6,7 +6,7 @@ using TestImages
 # Load test image
 img = testimage("fabio_color_256")
 
-# Run & test fixed pallete dithering methods
+# Run & test fixed palette dithering methods
 algs = Dict("FloydSteinberg" => FloydSteinberg(), "Bayer" => Bayer())
 
 for C in [RGB, HSV]

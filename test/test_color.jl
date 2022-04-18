@@ -19,7 +19,7 @@ cs = [white, yellow, green, orange, red, blue]
 img = testimage("fabio_color_256")
 img_gray = testimage("fabio_gray_256")
 
-# Run & test custom color pallete dithering methods
+# Run & test custom color palette dithering methods
 algs = Dict(
     "FloydSteinberg_XYZ" => FloydSteinberg(; color_space=XYZ),
     "FloydSteinberg_RGB" => FloydSteinberg(; color_space=RGB),
@@ -44,7 +44,7 @@ for (name, alg) in algs
 end
 
 ## Test API
-# Test for argument errors on algorithms that don't support custom color palletes
+# Test for argument errors on algorithms that don't support custom color palettes
 for alg in [WhiteNoiseThreshold(), ConstantThreshold()]
     @test_throws ColorNotImplementedError dither(img, alg, cs)
 end

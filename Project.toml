@@ -20,7 +20,6 @@ julia = "1"
 [extras]
 Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
-ImageInTerminal = "d8c32880-2388-543b-8c61-d9f865259254"
 ImageIO = "82e4d734-157c-48bb-816b-45c225c6df19"
 ImageMagick = "6218d12a-5da1-5696-b52f-db25d2ecc6d1"
 ReferenceTests = "324d217c-45ce-50fc-942e-d289b448e8cf"
@@ -29,4 +28,4 @@ TestImages = "5e47fb64-e119-507b-a336-dd2b206d9990"
 UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
 
 [targets]
-test = ["Clustering", "ColorSchemes", "ImageInTerminal", "ImageIO", "ImageMagick", "ReferenceTests", "Test", "TestImages", "UnicodePlots"]
+test = ["Clustering", "ColorSchemes", "ImageIO", "ImageMagick", "ReferenceTests", "Test", "TestImages", "UnicodePlots"]

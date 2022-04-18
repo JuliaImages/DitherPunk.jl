@@ -89,7 +89,9 @@ function colordither(
             end
         end
         # Sort candidates by luminance (dark to bright)
-        index[I] = partialsort!(candidates, mat[rlookup[r], clookup[c]]; by=i -> cs_lab[i].l)
+        index[I] = partialsort!(
+            candidates, mat[rlookup[r], clookup[c]]; by=i -> cs_lab[i].l
+        )
     end
     return index
 end
@@ -111,11 +113,11 @@ function Bayer(; level=1, kwargs...)
 end
 
 """
-    bayer_matrix(n::Int)::AbstractMatrix{Int}
+    bayer_matrix(n::Integer)::AbstractMatrix{Int}
 
 Contruct (un-normalized) Bayer matrices of level `n` through recursive definition.
 """
-function bayer_matrix(n::Int)::AbstractMatrix{Int}
+function bayer_matrix(n::Integer)
     n < 0 && throw(DomainError(n, "Bayer matrix only defined for n ≥ 0."))
 
     if n == 0

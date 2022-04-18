@@ -29,7 +29,7 @@ Dither image `img` using algorithm `alg`.
 A color palette with `ncolors` is computed by Clustering.jl's K-means clustering.
 The amount of `maxiter` and tolerance `tol` default to those exported by Clustering.jl.
 """
-dither!(img, alg::AbstractDither, ncolors::Int; kwargs...)
+dither!(img, alg::AbstractDither, ncolors::Integer; kwargs...)
 
 """
     dither([T::Type,] img, alg::AbstractDither, ncolors; maxiter, tol, kwargs...)
@@ -38,4 +38,4 @@ Dither image `img` using algorithm `alg`.
 A color palette with `ncolors` is computed by Clustering.jl's K-means clustering.
 The amount of `maxiter` and tolerance `tol` default to those exported by Clustering.jl.
 """
-dither(::Type, img, alg::AbstractDither, ncolors::Int; kwargs...)
+dither(::Type, img, alg::AbstractDither, ncolors::Integer; kwargs...)

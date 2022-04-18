@@ -79,8 +79,24 @@ d4 = dither!(img2, alg, cs)
 ## Conditional dependencies
 # Test conditional dependency on ColorSchemes.jl
 using ColorSchemes
-@test dither(img, alg, ColorSchemes.jet) == dither(img, alg, :jet)
+d1 = dither(img, alg, ColorSchemes.jet)
+d2 = dither(img, alg, :jet)
+@test d1 == d2
 
 # Dry-run conditional dependency on Clustering.jl
 using Clustering
 d = dither(img, alg, 4)
+
+# Run type inference tests on Julia > 1.0
+if VERSION >= v"1.6.0"
+    @testset "Color type inference" begin
+        for (name, alg) in algs
+            @testset "$name" begin
+                @inferred dither(img, alg, cs)
+                @inferred dither(img, alg, ColorSchemes.jet)
+                @inferred dither(img, alg, :jet)
+                @inferred dither(img, alg, 4)
+            end
+        end
+    end
+end

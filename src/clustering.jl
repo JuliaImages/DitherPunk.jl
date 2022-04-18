@@ -5,24 +5,20 @@ function get_colorscheme(
     ncolors;
     maxiter=Clustering._kmeans_default_maxiter,
     tol=Clustering._kmeans_default_tol,
-)
+)::Vector{Lab}
     # Cluster in Lab color space
     data = reshape(channelview(Lab.(img)), 3, :)
     R = Clustering.kmeans(data, ncolors; maxiter=maxiter, tol=tol)
 
     # Make color scheme out of cluster centers
-    cs = Lab{Float64}[]
-    for i in 1:3:length(R.centers)
-        push!(cs, Lab(R.centers[i], R.centers[i + 1], R.centers[i + 2]))
-    end
-    return cs
+    return [Lab(c...) for c in eachcol(R.centers)]
 end
 
 function _colordither(
     ::Type{T},
     img,
     alg,
-    ncolors::Int;
+    ncolors::Integer;
     maxiter=Clustering._kmeans_default_maxiter,
     tol=Clustering._kmeans_default_tol,
     kwargs...,
@@ -38,7 +34,7 @@ Dither image `img` using algorithm `alg`.
 A color palette with `ncolors` is computed by Clustering.jl's K-means clustering.
 The amount of `maxiter` and tolerance `tol` default to those exported by Clustering.jl.
 """
-dither!(img, alg::AbstractDither, ncolors::Int; kwargs...)
+dither!(img, alg::AbstractDither, ncolors::Integer; kwargs...)
 
 """
     dither([T::Type,] img, alg::AbstractDither, ncolors; maxiter, tol, kwargs...)
@@ -47,4 +43,4 @@ Dither image `img` using algorithm `alg`.
 A color palette with `ncolors` is computed by Clustering.jl's K-means clustering.
 The amount of `maxiter` and tolerance `tol` default to those exported by Clustering.jl.
 """
-dither(::Type, img, alg::AbstractDither, ncolors::Int; kwargs...)
+dither(::Type, img, alg::AbstractDither, ncolors::Integer; kwargs...)

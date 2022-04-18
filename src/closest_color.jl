@@ -12,7 +12,7 @@ end
 
 function colordither(
     ::ClosestColor, img::GenericImage, cs::AbstractVector{<:Pixel}, metric::DifferenceMetric
-)
-    cs = Lab.(cs)
-    return map(px -> _closest_color_idx(px, cs, metric), img)
+)::Matrix{Int}
+    cs_lab = Lab.(cs)
+    return map(px -> _closest_color_idx(px, cs_lab, metric), img)
 end

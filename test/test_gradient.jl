@@ -56,7 +56,7 @@ algs_deterministic = Dict(
 
 for (name, alg) in algs_deterministic
     local img2 = copy(img)
-    local d = dither(img2, alg)
+    local d = @inferred dither(img2, alg)
     @test_reference "references/gradient/$(name).txt" Int.(d)
     @test eltype(d) == eltype(img)
     @test img2 == img # image not modified
@@ -70,7 +70,7 @@ algs_random = Dict(
 
 for (name, alg) in algs_random
     local img2 = copy(img)
-    local d = dither(Gray{Bool}, img2, alg)
+    local d = @inferred dither(Gray{Bool}, img2, alg)
     @test eltype(d) == Gray{Bool}
     @test img2 == img # image not modified
 end
@@ -78,21 +78,21 @@ end
 ## Test to_linear
 img2 = copy(img)
 alg = Bayer()
-d = dither(img2, alg; to_linear=true)
+d = @inferred dither(img2, alg; to_linear=true)
 @test_reference "references/gradient/Bayer_linear.txt" Int.(d)
 
 ## Test API
-d = dither(img2, alg)
+d = @inferred dither(img2, alg)
 
 # Test setting output type
-d2 = dither(Gray{Float16}, img2, alg)
+d2 = @inferred dither(Gray{Float16}, img2, alg)
 @test eltype(d2) == Gray{Float16}
 @test d2 == d
 @test img2 == img # image not modified
 
 # Inplace modify output image
 out = zeros(Bool, size(img2)...)
-d3 = dither!(out, img2, alg)
+d3 = @inferred dither!(out, img2, alg)
 @test out == d # image updated in-place
 @test d3 == d
 @test eltype(out) == Bool
@@ -100,7 +100,7 @@ d3 = dither!(out, img2, alg)
 @test img2 == img # image not modified
 
 # Inplace modify  image
-d4 = dither!(img2, alg)
+d4 = @inferred dither!(img2, alg)
 @test d4 == d
 @test img2 == d # image updated in-place
 @test eltype(d4) == eltype(img)

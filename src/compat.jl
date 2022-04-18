@@ -17,3 +17,8 @@ if VERSION < v"1.1"
 else
     using Base: require_one_based_indexing
 end
+
+# https://github.com/JuliaLang/julia/pull/29749
+if VERSION < v"1.1.0-DEV.792"
+    eachcol(A::AbstractVecOrMat) = (view(A, :, i) for i in axes(A, 2))
+end

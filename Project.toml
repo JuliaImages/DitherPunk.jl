@@ -5,6 +5,7 @@ version = "2.3.0"
 
 [deps]
 ImageCore = "a09fc81d-aa75-5fe9-8630-4744c3626534"
+ImageMagick = "6218d12a-5da1-5696-b52f-db25d2ecc6d1"
 IndirectArrays = "9b13fd28-a010-5f03-acff-a1bbcff69959"
 OffsetArrays = "6fe1bfb0-de20-5000-8ca7-80f57d26f881"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
@@ -27,4 +28,4 @@ TestImages = "5e47fb64-e119-507b-a336-dd2b206d9990"
 UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
 
 [targets]
-test = ["Clustering", "ColorSchemes", "ImageIO", "ReferenceTests", "Test", "TestImages", "UnicodePlots"]
+test = ["Clustering", "ColorSchemes", "ImageIO", "ImageMagick", "ReferenceTests", "Test", "TestImages", "UnicodePlots"]

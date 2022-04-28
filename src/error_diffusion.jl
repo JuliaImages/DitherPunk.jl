@@ -1,5 +1,5 @@
 """
-    ErrorDiffusion(filter::AbstractMatrix; clamp_error=true)
+    ErrorDiffusion{CT}(filter::AbstractMatrix; clamp_error=true)
 
 Generalized error diffusion algorithm. When calling `dither` using a color palette `cs`,
 this will iterate over pixels and round them to the closest color in `cs`.
@@ -14,24 +14,26 @@ julia> cs = ColorSchemes.PuOr_7.colors; # using ColorSchemes.jl for color palett
 
 julia> dither(img, alg, cs);
 ```
+
+!!! note "Color Image"
+    For color image, two color spaces are used when applying the algorithm: 1) the luminance
+    channel in the Lab space is used to find the closest color in `cs`, and 2) the `CT`
+    diffusion color space is used to propagate the error. `CT` is typically a linear
+    colorspace, and the default value is `XYZ`. Another common choice is `RGB`, but strictly
+    speaking, RGB is not a linear space.
 """
 
-_error_diffusion_kwargs = """
+const _error_diffusion_kwargs = """
 # Keyword arguments
-- `color_space`: Color space in which the error is diffused.
-    Only used when dithering with a color palette. Defaults to `XYZ`.
-    To replicate the output of other dithering libraries, set this to `RGB`.
 - `clamp_error::Bool`: Clamp accumulated error on each pixel within limits of colorant
     type `color_space` before looking up the closest color. Defaults to `true`.
 """
 
-struct ErrorDiffusion{F<:AbstractMatrix,C} <: AbstractDither
+struct ErrorDiffusion{C,F<:AbstractMatrix} <: AbstractDither
     filter::F
     clamp_error::Bool
 end
-function ErrorDiffusion(filter; color_space=XYZ, clamp_error=true)
-    return ErrorDiffusion{typeof(filter),float32(color_space)}(filter, clamp_error)
-end
+ErrorDiffusion{C}(filter; clamp_error=true) where C = ErrorDiffusion{float32(C), typeof(filter)}(filter, clamp_error)
 
 function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericGrayImage)
     # this function does not yet support OffsetArray
@@ -71,11 +73,11 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
 end
 
 function colordither(
-    alg::ErrorDiffusion{F,C},
+    alg::ErrorDiffusion{C},
     img::GenericImage,
     cs::AbstractVector{<:Pixel},
     metric::DifferenceMetric,
-) where {F,C}
+) where {C}
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
 
@@ -116,7 +118,7 @@ function colordither(
 end
 
 """
-    SimpleErrorDiffusion()
+    SimpleErrorDiffusion(color_space=XYZ)
 
 Error diffusion algorithm using the filter
 ```
@@ -131,10 +133,11 @@ $(_error_diffusion_kwargs)
      Scale."  SID 1975, International Symposium Digest of Technical Papers,
      vol 1975m, pp. 36-37.
 """
-SimpleErrorDiffusion() = ErrorDiffusion(OffsetMatrix([0 1; 1 0]//2, 0:1, 0:1))
+SimpleErrorDiffusion(CT=XYZ) = ErrorDiffusion{CT}(_simple_filter)
+const _simple_filter = OffsetMatrix([0 1; 1 0]//2, 0:1, 0:1)
 
 """
-    FloydSteinberg()
+    FloydSteinberg(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -149,12 +152,11 @@ $(_error_diffusion_kwargs)
      Scale."  SID 1975, International Symposium Digest of Technical Papers,
      vol 1975m, pp. 36-37.
 """
-function FloydSteinberg(; kwargs...)
-    return ErrorDiffusion(OffsetMatrix([0 0 7; 3 5 1]//16, 0:1, -1:1); kwargs...)
-end
+FloydSteinberg(CT=XYZ; kwargs...) = ErrorDiffusion{CT}(_floydsteinberg_filter; kwargs...)
+const _floydsteinberg_filter = OffsetMatrix([0 0 7; 3 5 1]//16,0:1,-1:1)
 
 """
-    JarvisJudice()
+    JarvisJudice(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -171,14 +173,11 @@ $(_error_diffusion_kwargs)
      the Display of Continuous Tone Pictures on Bi-Level Displays," Computer
      Graphics and Image Processing, vol. 5, pp. 13-40, 1976.
 """
-function JarvisJudice(; kwargs...)
-    return ErrorDiffusion(
-        OffsetMatrix([0 0 0 7 5; 3 5 7 5 3; 1 3 5 3 1]//48, 0:2, -2:2); kwargs...
-    )
-end
+JarvisJudice(CT=XYZ; kwargs...) = ErrorDiffusion{CT}(_jarvisjudice_filter; kwargs...)
+const _jarvisjudice_filter = OffsetMatrix([0 0 0 7 5; 3 5 7 5 3; 1 3 5 3 1]//48, 0:2, -2:2)
 
 """
-    Stucki()
+    Stucki(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -194,14 +193,11 @@ $(_error_diffusion_kwargs)
      for bilevel image hardcopy reproduction."  Research Report RZ1060, IBM
      Research Laboratory, Zurich, Switzerland, 1981.
 """
-function Stucki(; kwargs...)
-    return ErrorDiffusion(
-        OffsetMatrix([0 0 0 8 4; 2 4 8 4 2; 1 2 4 2 1]//42, 0:2, -2:2); kwargs...
-    )
-end
+Stucki(CT=XYZ; kwargs...) = ErrorDiffusion{CT}(_stucki_filter; kwargs...)
+const _stucki_filter = OffsetMatrix([0 0 0 8 4; 2 4 8 4 2; 1 2 4 2 1]//42, 0:2, -2:2)
 
 """
-    Burkes()
+    Burkes(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -216,12 +212,11 @@ $(_error_diffusion_kwargs)
 [1] Burkes, D., "Presentation of the Burkes error filter for use in preparing
     continuous-tone images for presentation on bi-level devices." Unpublished, 1988.
 """
-function Burkes(; kwargs...)
-    return ErrorDiffusion(OffsetMatrix([0 0 0 8 4; 2 4 8 4 2]//32, 0:1, -2:2); kwargs...)
-end
+Burkes(CT=XYZ; kwargs...) = ErrorDiffusion{CT}(_burkes_filter; kwargs...)
+const _burkes_filter = OffsetMatrix([0 0 0 8 4; 2 4 8 4 2]//32, 0:1, -2:2)
 
 """
-    Sierra()
+    Sierra(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -234,14 +229,11 @@ Also known as Sierra3 or three-row Sierra due to the filter shape.
 
 $(_error_diffusion_kwargs)
 """
-function Sierra(; kwargs...)
-    return ErrorDiffusion(
-        OffsetMatrix([0 0 0 5 3; 2 4 5 4 2; 0 2 3 2 0]//32, 0:2, -2:2); kwargs...
-    )
-end
+Sierra(CT=XYZ; kwargs...) = ErrorDiffusion{CT}(_sierra_filter; kwargs...)
+const _sierra_filter = OffsetMatrix([0 0 0 5 3; 2 4 5 4 2; 0 2 3 2 0]//32, 0:2, -2:2)
 
 """
-    TwoRowSierra()
+    TwoRowSierra(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -252,12 +244,11 @@ Also known as Sierra2.
 
 $(_error_diffusion_kwargs)
 """
-function TwoRowSierra(; kwargs...)
-    return ErrorDiffusion(OffsetMatrix([0 0 0 4 3; 1 2 3 2 1]//16, 0:1, -2:2); kwargs...)
-end
+TwoRowSierra(CT=XYZ; kwargs...) = ErrorDiffusion{CT}(_tworowsierra_filter; kwargs...)
+const _tworowsierra_filter = OffsetMatrix([0 0 0 4 3; 1 2 3 2 1]//16, 0:1, -2:2)
 
 """
-    SierraLite()
+    SierraLite(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -268,12 +259,11 @@ Also known as Sierra-2-4A filter.
 
 $(_error_diffusion_kwargs)
 """
-function SierraLite(; kwargs...)
-    return ErrorDiffusion(OffsetMatrix([0 0 2; 1 1 0]//4, 0:1, -1:1); kwargs...)
-end
+SierraLite(CT=XYZ; kwargs...) = ErrorDiffusion{CT}(_sierralite_filter; kwargs...)
+const _sierralite_filter = OffsetMatrix([0 0 2; 1 1 0]//4, 0:1, -1:1)
 
 """
-    Atkinson()
+    Atkinson(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -284,14 +274,11 @@ Error diffusion algorithm using the filter
 
 $(_error_diffusion_kwargs)
 """
-function Atkinson(; kwargs...)
-    return ErrorDiffusion(
-        OffsetMatrix([0 0 1 1; 1 1 1 0; 0 1 0 0]//8, 0:2, -1:2); kwargs...
-    )
-end
+Atkinson(CT=XYZ; kwargs...) = ErrorDiffusion{CT}(_atkinson_filter; kwargs...)
+const _atkinson_filter = OffsetMatrix([0 0 1 1; 1 1 1 0; 0 1 0 0]//8, 0:2, -1:2)
 
 """
-    Fan93()
+    Fan93(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -307,12 +294,11 @@ $(_error_diffusion_kwargs)
     IS&T's 46th Annual Conference, May 9-14, 1993, Final Program and Advanced Printing of
     Paper Summaries, pp 113-115 (1993).
 """
-function Fan93(; kwargs...)
-    return ErrorDiffusion(OffsetMatrix([0 0 0 7; 1 3 5 0]//16, 0:1, -2:1); kwargs...)
-end
+Fan93(CT=XYZ; kwargs...) = ErrorDiffusion{CT}(_fan93_filter; kwargs...)
+const _fan93_filter = OffsetMatrix([0 0 0 7; 1 3 5 0]//16, 0:1, -2:1)
 
 """
-    ShiauFan()
+    ShiauFan(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -326,12 +312,11 @@ $(_error_diffusion_kwargs)
 [1]  J. N. Shiau and Z. Fan. "Method for quantization gray level pixel data with extended
      distribution set", US 5353127A, United States Patent and Trademark Office, Oct. 4, 1993
 """
-function ShiauFan(; kwargs...)
-    return ErrorDiffusion(OffsetMatrix([0 0 0 4; 1 1 2 0]//8, 0:1, -2:1); kwargs...)
-end
+ShiauFan(CT=XYZ; kwargs...) = ErrorDiffusion{CT}(_shiaufan_filter; kwargs...)
+const _shiaufan_filter = OffsetMatrix([0 0 0 4; 1 1 2 0]//8, 0:1, -2:1)
 
 """
-    ShiauFan2()
+    ShiauFan2(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -348,12 +333,11 @@ $(_error_diffusion_kwargs)
      with reduced worm artifacts" Color Imaging: Device-Independent Color, Color Hard Copy,
      and Graphics Arts, volume 2658, pages 222–225. SPIE, March 1996.
 """
-function ShiauFan2(; kwargs...)
-    return ErrorDiffusion(OffsetMatrix([0 0 0 0 8; 1 1 2 4 0]//16, 0:1, -3:1); kwargs...)
-end
+ShiauFan2(CT=XYZ; kwargs...) = ErrorDiffusion{CT}(_shiaufan2_filter; kwargs...)
+const _shiaufan2_filter = OffsetMatrix([0 0 0 0 8; 1 1 2 4 0]//16, 0:1, -3:1)
 
 """
-    FalseFloydSteinberg()
+    FalseFloydSteinberg(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -370,6 +354,5 @@ There is no reason to use this algorithm, which is why DitherPunk doesn't export
 # References
 [1] http://www.efg2.com/Lab/Library/ImageProcessing/DHALF.TXT
 """
-function FalseFloydSteinberg(; kwargs...)
-    return ErrorDiffusion(OffsetMatrix([0 3; 3 2]//8, 0:1, 0:1); kwargs...)
-end
+FalseFloydSteinberg(CT=XYZ; kwargs...) = ErrorDiffusion{CT}(_falsefloydsteinberg_filter; kwargs...)
+const _falsefloydsteinberg_filter = OffsetMatrix([0 3; 3 2]//8, 0:1, 0:1)

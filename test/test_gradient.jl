@@ -2,8 +2,8 @@ using DitherPunk
 using DitherPunk: gradient_image
 using ReferenceTests
 
-using ImageCore
-using ImageCore: GenericGrayImage
+using ImageBase
+using ImageBase.ImageCore: GenericGrayImage
 using UnicodePlots
 
 w = 200

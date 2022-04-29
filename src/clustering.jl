@@ -7,11 +7,24 @@ function get_colorscheme(
     tol=Clustering._kmeans_default_tol,
 )::Vector{Lab}
     # Cluster in Lab color space
+
+    # Clustering on the downsampled image already generates good enough colormap estimation
+    # This significantly reduces the algorithmic complexity.
+    img = _restrict_to(img, ncolors*100)
     data = reshape(channelview(Lab.(img)), 3, :)
     R = Clustering.kmeans(data, ncolors; maxiter=maxiter, tol=tol)
 
     # Make color scheme out of cluster centers
     return [Lab(c...) for c in eachcol(R.centers)]
+end
+
+function _restrict_to(img, n)
+    length(img) <= n && return img
+    out = restrict(img)
+    while length(out) > n
+        out = restrict(out)
+    end
+    return out
 end
 
 function _colordither(

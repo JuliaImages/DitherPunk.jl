@@ -1,5 +1,5 @@
 using DitherPunk
-using ImageCore
+using ImageBase
 using ReferenceTests
 using TestImages
 

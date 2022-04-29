@@ -1,7 +1,7 @@
 using DitherPunk
 using DitherPunk: ColorNotImplementedError
 using IndirectArrays
-using ImageCore
+using ImageBase
 using ReferenceTests
 using TestImages
 

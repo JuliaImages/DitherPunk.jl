@@ -1,8 +1,8 @@
 module DitherPunk
 
-using ImageCore
-using ImageCore: NumberLike, Pixel, GenericImage, GenericGrayImage, MappedArrays
-using ImageCore.Colors: DifferenceMetric
+using ImageBase
+using ImageBase.ImageCore: NumberLike, Pixel, GenericImage, GenericGrayImage, MappedArrays
+using ImageBase.ImageCore.Colors: DifferenceMetric
 using Random
 using IndirectArrays
 using OffsetArrays

@@ -28,28 +28,32 @@ _error_diffusion_kwargs = """
 
 struct ErrorDiffusion{F,C} <: AbstractDither
     filter::F
+    offset::Int
     clamp_error::Bool
 end
-function ErrorDiffusion(
-    mat::AbstractMatrix, offset::Integer; color_space=XYZ, clamp_error=true
-)
-    CI = CartesianIndices(mat) .- CartesianIndex(1, offset)
-    filter = [I => val for (I, val) in zip(CI, mat) if !iszero(val)]
-    return ErrorDiffusion{typeof(filter),float32(color_space)}(filter, clamp_error)
+function ErrorDiffusion(filter::AbstractMatrix, offset; color_space=XYZ, clamp_error=true)
+    return ErrorDiffusion{typeof(filter),float32(color_space)}(filter, offset, clamp_error)
+end
+
+function construct_filter(
+    ::Type{T}, alg::ErrorDiffusion
+)::Vector{Tuple{CartesianIndex{2},T}} where {T<:Real}
+    CI = CartesianIndices(alg.filter) .- CartesianIndex(1, alg.offset)
+    return [(I, T(val)) for (I, val) in zip(CI, alg.filter) if !iszero(val)]
 end
 
 function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericGrayImage)
-    # this function does not yet support OffsetArray
+    # This function does not yet support OffsetArray
     require_one_based_indexing(img)
 
     # Change from normalized intensities to Float as error will get added!
-    # eagerly promote to the same type to make loop run faster
-    FT = floattype(eltype(img))
-    img = FT.(img)
-    filter= (I => FT(val) for (I, val) in alg.filter)
-    R = CartesianIndices(img)
+    # Eagerly promote to the same type to make loop run faster.
+    T = floattype(eltype(img))
+    T0, T1 = T(0), T(1)
+    img = T.(img)
 
-    FT0, FT1 = FT(0), FT(1)
+    filter = construct_filter(eltype(T), alg)
+    R = CartesianIndices(img)
 
     @inbounds for r in axes(img, 1)
         for c in axes(img, 2)
@@ -57,7 +61,7 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
             px = img[I]
             alg.clamp_error && (px = clamp01(px))
 
-            px >= 0.5 ? (col = FT1) : (col = FT0) # round to closest color
+            px >= 0.5 ? (col = T1) : (col = T0) # round to closest color
             out[I] = col # apply pixel to dither
             err = px - col  # diffuse "error" to neighborhood in filter
             diffuse_error!(img, err, R, I, filter)
@@ -94,7 +98,7 @@ function colordither(
     # Change from normalized intensities to Float as error will get added!
     # Eagerly promote to the same type to make loop run faster.
     FT = floattype(eltype(eltype(img))) # type of Float
-    filter = (I => FT(val) for (I, val) in alg.filter)
+    filter = construct_filter(FT, alg)
     R = CartesianIndices(img)
 
     @inbounds for r in axes(img, 1)

@@ -1,6 +1,7 @@
 using DitherPunk
 using DitherPunk: gradient_image
 using ReferenceTests
+using OffsetArrays
 
 using ImageBase
 using ImageBase.ImageCore: GenericGrayImage
@@ -109,5 +110,5 @@ d4 = @inferred dither!(img2, alg)
 ## Test error messages
 @test_throws DomainError ConstantThreshold(; threshold=-0.5)
 
-img_zero_based = DitherPunk.OffsetMatrix(rand(Float32, 10, 10), 0:9, 0:9)
+img_zero_based = OffsetMatrix(rand(Float32, 10, 10), 0:9, 0:9)
 @test_throws ArgumentError dither(img_zero_based, FloydSteinberg())

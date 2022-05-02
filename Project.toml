@@ -6,16 +6,14 @@ version = "2.3.1"
 [deps]
 ImageBase = "c817782e-172a-44cc-b673-b171935fbb9e"
 IndirectArrays = "9b13fd28-a010-5f03-acff-a1bbcff69959"
-OffsetArrays = "6fe1bfb0-de20-5000-8ca7-80f57d26f881"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 
 [compat]
-ImageBase = "0.1.3"
 Clustering = "0.14"
 ColorSchemes = "3"
+ImageBase = "0.1.3"
 IndirectArrays = "0.5, 1.0"
-OffsetArrays = "1"
 Requires = "1"
 UnicodePlots = "2"
 julia = "1"
@@ -25,10 +23,11 @@ Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
 ImageIO = "82e4d734-157c-48bb-816b-45c225c6df19"
 ImageMagick = "6218d12a-5da1-5696-b52f-db25d2ecc6d1"
+OffsetArrays = "6fe1bfb0-de20-5000-8ca7-80f57d26f881"
 ReferenceTests = "324d217c-45ce-50fc-942e-d289b448e8cf"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 TestImages = "5e47fb64-e119-507b-a336-dd2b206d9990"
 UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
 
 [targets]
-test = ["Clustering", "ColorSchemes", "ImageIO", "ImageMagick", "ReferenceTests", "Test", "TestImages", "UnicodePlots"]
+test = ["Clustering", "ColorSchemes", "ImageIO", "ImageMagick", "OffsetArrays", "ReferenceTests", "Test", "TestImages", "UnicodePlots"]

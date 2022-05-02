@@ -5,7 +5,6 @@ using ImageBase.ImageCore: NumberLike, Pixel, GenericImage, GenericGrayImage, Ma
 using ImageBase.ImageCore.Colors: DifferenceMetric
 using Random
 using IndirectArrays
-using OffsetArrays
 using Requires
 
 abstract type AbstractDither end

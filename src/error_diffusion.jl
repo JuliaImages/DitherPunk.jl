@@ -46,7 +46,7 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
     # eagerly promote to the same type to make loop run faster
     FT = floattype(eltype(img))
     img = FT.(img)
-    filter = [I => eltype(FT)(val) for (I, val) in alg.filter]
+    filter= (I => FT(val) for (I, val) in alg.filter)
     R = CartesianIndices(img)
 
     FT0, FT1 = FT(0), FT(1)
@@ -60,17 +60,20 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
             px >= 0.5 ? (col = FT1) : (col = FT0) # round to closest color
             out[I] = col # apply pixel to dither
             err = px - col  # diffuse "error" to neighborhood in filter
-
-            for (DI, val) in filter
-                N = I + DI # index of neighbor
-                if N in R
-                    img[N] += err * val
-                end
-            end
+            diffuse_error!(img, err, R, I, filter)
         end
     end
-
     return out
+end
+
+# Diffuse error `err` in `img` around neighborhood of coordinate `I` defined by `filter`.
+function diffuse_error!(img, err, R, I, filter)
+    for (DI, val) in filter
+        N = I + DI # index of neighbor
+        if N in R
+            img[N] += err * val
+        end
+    end
 end
 
 function colordither(
@@ -91,7 +94,7 @@ function colordither(
     # Change from normalized intensities to Float as error will get added!
     # Eagerly promote to the same type to make loop run faster.
     FT = floattype(eltype(eltype(img))) # type of Float
-    filter = [I => FT(val) for (I, val) in alg.filter]
+    filter = (I => FT(val) for (I, val) in alg.filter)
     R = CartesianIndices(img)
 
     @inbounds for r in axes(img, 1)
@@ -103,13 +106,7 @@ function colordither(
             colorindex = _closest_color_idx(px, cs_lab, metric)
             index[I] = colorindex
             err = px - cs_err[colorindex]  # diffuse "error" to neighborhood in filter
-
-            for (DI, val) in filter
-                N = I + DI # index of neighbor
-                if N in R
-                    img[N] += err * val
-                end
-            end
+            diffuse_error!(img, err, R, I, filter)
         end
     end
     return index

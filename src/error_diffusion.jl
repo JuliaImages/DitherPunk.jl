@@ -35,9 +35,7 @@ function ErrorDiffusion(filter::AbstractMatrix, offset; color_space=XYZ, clamp_e
     return ErrorDiffusion{typeof(filter),float32(color_space)}(filter, offset, clamp_error)
 end
 
-function construct_filter(
-    ::Type{T}, alg::ErrorDiffusion
-)::Vector{Tuple{CartesianIndex{2},T}} where {T<:Real}
+function construct_filter(::Type{T}, alg::ErrorDiffusion) where {T<:Real}
     CI = CartesianIndices(alg.filter) .- CartesianIndex(1, alg.offset)
     return [(I, T(val)) for (I, val) in zip(CI, alg.filter) if !iszero(val)]
 end
@@ -53,7 +51,6 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
     img = T.(img)
 
     filter = construct_filter(eltype(T), alg)
-    R = CartesianIndices(img)
 
     @inbounds for r in axes(img, 1)
         for c in axes(img, 2)
@@ -64,20 +61,21 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
             px >= 0.5 ? (col = T1) : (col = T0) # round to closest color
             out[I] = col # apply pixel to dither
             err = px - col  # diffuse "error" to neighborhood in filter
-            diffuse_error!(img, err, R, I, filter)
+            diffuse_error!(img, err, I, filter)
         end
     end
     return out
 end
 
 # Diffuse error `err` in `img` around neighborhood of coordinate `I` defined by `filter`.
-function diffuse_error!(img, err, R, I, filter)
+function diffuse_error!(img, err, I, filter)
     for (DI, val) in filter
         N = I + DI # index of neighbor
-        if N in R
+        @boundscheck if checkbounds(Bool, img, N)
             img[N] += err * val
         end
     end
+    return nothing
 end
 
 function colordither(
@@ -99,7 +97,6 @@ function colordither(
     # Eagerly promote to the same type to make loop run faster.
     FT = floattype(eltype(eltype(img))) # type of Float
     filter = construct_filter(FT, alg)
-    R = CartesianIndices(img)
 
     @inbounds for r in axes(img, 1)
         for c in axes(img, 2)
@@ -110,7 +107,7 @@ function colordither(
             colorindex = _closest_color_idx(px, cs_lab, metric)
             index[I] = colorindex
             err = px - cs_err[colorindex]  # diffuse "error" to neighborhood in filter
-            diffuse_error!(img, err, R, I, filter)
+            diffuse_error!(img, err, I, filter)
         end
     end
     return index

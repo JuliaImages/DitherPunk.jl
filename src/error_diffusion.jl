@@ -46,11 +46,13 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
 
     # Change from normalized intensities to Float as error will get added!
     # Eagerly promote to the same type to make loop run faster.
-    T = floattype(eltype(img))
-    T0, T1 = T(0), T(1)
-    img = T.(img)
+    FT = floattype(eltype(img))
+    img = convert.(FT, img)
 
-    filter = construct_filter(eltype(T), alg)
+    T = eltype(out)
+    T0, T1 = zero(T), oneunit(T)
+
+    filter = construct_filter(eltype(FT), alg)
 
     @inbounds for r in axes(img, 1)
         for c in axes(img, 2)

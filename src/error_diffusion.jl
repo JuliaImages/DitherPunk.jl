@@ -30,13 +30,13 @@ const _error_diffusion_kwargs = """
     type `color_space` before looking up the closest color. Defaults to `true`.
 """
 
-struct ErrorDiffusion{F,C} <: AbstractDither
+struct ErrorDiffusion{C,F} <: AbstractDither
     filter::F
     offset::Int
     clamp_error::Bool
 end
-function ErrorDiffusion(filter::AbstractMatrix, offset; color_space=XYZ, clamp_error=true)
-    return ErrorDiffusion{typeof(filter),float32(color_space)}(filter, offset, clamp_error)
+function ErrorDiffusion(filter::AbstractMatrix, offset, colorspace=XYZ; clamp_error=true)
+    return ErrorDiffusion{float32(colorspace),typeof(filter)}(filter, offset, clamp_error)
 end
 
 function construct_filter(::Type{T}, alg::ErrorDiffusion) where {T<:Real}
@@ -85,16 +85,16 @@ function diffuse_error!(img, err, I, filter)
 end
 
 function colordither(
-    alg::ErrorDiffusion{C},
+    alg::ErrorDiffusion{C,F},
     img::GenericImage,
     cs::AbstractVector{<:Pixel},
     metric::DifferenceMetric,
-) where {C}
+) where {C,F}
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
     index = Matrix{UInt8}(undef, size(img)...) # allocate matrix of color indices
 
-    # C is the `color_space` in which the error is diffused
+    # C is the `colorspace` in which the error is diffused
     img = convert.(C, img)
     cs_err = C.(cs)
     cs_lab = Lab.(cs)
@@ -135,7 +135,9 @@ $(_error_diffusion_kwargs)
      Scale."  SID 1975, International Symposium Digest of Technical Papers,
      vol 1975m, pp. 36-37.
 """
-SimpleErrorDiffusion(; kwargs...) = ErrorDiffusion(SIMPLE_ERROR_DIFFUSION, 1; kwargs...)
+function SimpleErrorDiffusion(args...; kwargs...)
+    return ErrorDiffusion(SIMPLE_ERROR_DIFFUSION, 1, args...; kwargs...)
+end
 const SIMPLE_ERROR_DIFFUSION = [0 1; 1 0]//2
 
 """
@@ -154,7 +156,7 @@ $(_error_diffusion_kwargs)
      Scale."  SID 1975, International Symposium Digest of Technical Papers,
      vol 1975m, pp. 36-37.
 """
-FloydSteinberg(; kwargs...) = ErrorDiffusion(FLOYD_STEINBERG, 2; kwargs...)
+FloydSteinberg(args...; kwargs...) = ErrorDiffusion(FLOYD_STEINBERG, 2, args...; kwargs...)
 const FLOYD_STEINBERG = [0 0 7; 3 5 1]//16
 
 """
@@ -175,7 +177,7 @@ $(_error_diffusion_kwargs)
      the Display of Continuous Tone Pictures on Bi-Level Displays," Computer
      Graphics and Image Processing, vol. 5, pp. 13-40, 1976.
 """
-JarvisJudice(; kwargs...) = ErrorDiffusion(JARVIS_JUDICE, 3; kwargs...)
+JarvisJudice(args...; kwargs...) = ErrorDiffusion(JARVIS_JUDICE, 3, args...; kwargs...)
 const JARVIS_JUDICE = [0 0 0 7 5; 3 5 7 5 3; 1 3 5 3 1]//48
 
 """
@@ -195,7 +197,7 @@ $(_error_diffusion_kwargs)
      for bilevel image hardcopy reproduction."  Research Report RZ1060, IBM
      Research Laboratory, Zurich, Switzerland, 1981.
 """
-Stucki(; kwargs...) = ErrorDiffusion(STUCKI, 3; kwargs...)
+Stucki(args...; kwargs...) = ErrorDiffusion(STUCKI, 3, args...; kwargs...)
 const STUCKI = [0 0 0 8 4; 2 4 8 4 2; 1 2 4 2 1]//42
 
 """
@@ -214,7 +216,7 @@ $(_error_diffusion_kwargs)
 [1] Burkes, D., "Presentation of the Burkes error filter for use in preparing
     continuous-tone images for presentation on bi-level devices." Unpublished, 1988.
 """
-Burkes(; kwargs...) = ErrorDiffusion(BURKES, 3; kwargs...)
+Burkes(args...; kwargs...) = ErrorDiffusion(BURKES, 3, args...; kwargs...)
 const BURKES = [0 0 0 8 4; 2 4 8 4 2]//32
 
 """
@@ -231,7 +233,7 @@ Also known as Sierra3 or three-row Sierra due to the filter shape.
 
 $(_error_diffusion_kwargs)
 """
-Sierra(; kwargs...) = ErrorDiffusion(SIERRA, 3; kwargs...)
+Sierra(args...; kwargs...) = ErrorDiffusion(SIERRA, 3, args...; kwargs...)
 const SIERRA = [0 0 0 5 3; 2 4 5 4 2; 0 2 3 2 0]//32
 
 """
@@ -246,7 +248,7 @@ Also known as Sierra2.
 
 $(_error_diffusion_kwargs)
 """
-TwoRowSierra(; kwargs...) = ErrorDiffusion(TWO_ROW_SIERRA, 3; kwargs...)
+TwoRowSierra(args...; kwargs...) = ErrorDiffusion(TWO_ROW_SIERRA, 3, args...; kwargs...)
 const TWO_ROW_SIERRA = [0 0 0 4 3; 1 2 3 2 1]//16
 
 """
@@ -261,7 +263,7 @@ Also known as Sierra-2-4A filter.
 
 $(_error_diffusion_kwargs)
 """
-SierraLite(; kwargs...) = ErrorDiffusion(SIERRA_LITE, 2; kwargs...)
+SierraLite(args...; kwargs...) = ErrorDiffusion(SIERRA_LITE, 2, args...; kwargs...)
 const SIERRA_LITE = [0 0 2; 1 1 0]//4
 
 """
@@ -276,7 +278,7 @@ Error diffusion algorithm using the filter
 
 $(_error_diffusion_kwargs)
 """
-Atkinson(; kwargs...) = ErrorDiffusion(ATKINSON, 2; kwargs...)
+Atkinson(args...; kwargs...) = ErrorDiffusion(ATKINSON, 2, args...; kwargs...)
 const ATKINSON = [0 0 1 1; 1 1 1 0; 0 1 0 0]//8
 
 """
@@ -296,7 +298,7 @@ $(_error_diffusion_kwargs)
     IS&T's 46th Annual Conference, May 9-14, 1993, Final Program and Advanced Printing of
     Paper Summaries, pp 113-115 (1993).
 """
-Fan93(; kwargs...) = ErrorDiffusion(FAN_93, 3; kwargs...)
+Fan93(args...; kwargs...) = ErrorDiffusion(FAN_93, 3, args...; kwargs...)
 const FAN_93 = [0 0 0 7; 1 3 5 0]//16
 
 """
@@ -314,7 +316,7 @@ $(_error_diffusion_kwargs)
 [1]  J. N. Shiau and Z. Fan. "Method for quantization gray level pixel data with extended
      distribution set", US 5353127A, United States Patent and Trademark Office, Oct. 4, 1993
 """
-ShiauFan(; kwargs...) = ErrorDiffusion(SHIAU_FAN, 3; kwargs...)
+ShiauFan(args...; kwargs...) = ErrorDiffusion(SHIAU_FAN, 3, args...; kwargs...)
 const SHIAU_FAN = [0 0 0 4; 1 1 2 0]//8
 
 """
@@ -335,7 +337,7 @@ $(_error_diffusion_kwargs)
      with reduced worm artifacts" Color Imaging: Device-Independent Color, Color Hard Copy,
      and Graphics Arts, volume 2658, pages 222–225. SPIE, March 1996.
 """
-ShiauFan2(; kwargs...) = ErrorDiffusion(SHIAU_FAN_2, 4; kwargs...)
+ShiauFan2(args...; kwargs...) = ErrorDiffusion(SHIAU_FAN_2, 4, args...; kwargs...)
 const SHIAU_FAN_2 = [0 0 0 0 8; 1 1 2 4 0]//16
 
 """
@@ -356,5 +358,7 @@ There is no reason to use this algorithm, which is why DitherPunk doesn't export
 # References
 [1] http://www.efg2.com/Lab/Library/ImageProcessing/DHALF.TXT
 """
-FalseFloydSteinberg(; kwargs...) = ErrorDiffusion(FALSE_FLOYD_STEINBERG, 1; kwargs...)
+function FalseFloydSteinberg(args...; kwargs...)
+    return ErrorDiffusion(FALSE_FLOYD_STEINBERG, 1, args...; kwargs...)
+end
 const FALSE_FLOYD_STEINBERG = [0 3; 3 2]//8

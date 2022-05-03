@@ -15,13 +15,17 @@ julia> cs = ColorSchemes.PuOr_7.colors; # using ColorSchemes.jl for color palett
 
 julia> dither(img, alg, cs);
 ```
+
+!!! note "Color Image"
+    For color image, two color spaces are used when applying the algorithm: 1) the luminance
+    channel in the Lab space is used to find the closest color in `cs`, and 2) the `CT`
+    diffusion color space is used to propagate the error. `CT` is typically a linear
+    colorspace, and the default value is `XYZ`. Another common choice is `RGB`, but strictly
+    speaking, RGB is not a linear space.
 """
 
-_error_diffusion_kwargs = """
+const _error_diffusion_kwargs = """
 # Keyword arguments
-- `color_space`: Color space in which the error is diffused.
-    Only used when dithering with a color palette. Defaults to `XYZ`.
-    To replicate the output of other dithering libraries, set this to `RGB`.
 - `clamp_error::Bool`: Clamp accumulated error on each pixel within limits of colorant
     type `color_space` before looking up the closest color. Defaults to `true`.
 """
@@ -81,11 +85,11 @@ function diffuse_error!(img, err, I, filter)
 end
 
 function colordither(
-    alg::ErrorDiffusion{F,C},
+    alg::ErrorDiffusion{C},
     img::GenericImage,
     cs::AbstractVector{<:Pixel},
     metric::DifferenceMetric,
-) where {F,C}
+) where {C}
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
     index = Matrix{UInt8}(undef, size(img)...) # allocate matrix of color indices
@@ -116,7 +120,7 @@ function colordither(
 end
 
 """
-    SimpleErrorDiffusion()
+    SimpleErrorDiffusion(color_space=XYZ)
 
 Error diffusion algorithm using the filter
 ```
@@ -135,7 +139,7 @@ SimpleErrorDiffusion(; kwargs...) = ErrorDiffusion(SIMPLE_ERROR_DIFFUSION, 1; kw
 const SIMPLE_ERROR_DIFFUSION = [0 1; 1 0]//2
 
 """
-    FloydSteinberg()
+    FloydSteinberg(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -154,7 +158,7 @@ FloydSteinberg(; kwargs...) = ErrorDiffusion(FLOYD_STEINBERG, 2; kwargs...)
 const FLOYD_STEINBERG = [0 0 7; 3 5 1]//16
 
 """
-    JarvisJudice()
+    JarvisJudice(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -175,7 +179,7 @@ JarvisJudice(; kwargs...) = ErrorDiffusion(JARVIS_JUDICE, 3; kwargs...)
 const JARVIS_JUDICE = [0 0 0 7 5; 3 5 7 5 3; 1 3 5 3 1]//48
 
 """
-    Stucki()
+    Stucki(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -195,7 +199,7 @@ Stucki(; kwargs...) = ErrorDiffusion(STUCKI, 3; kwargs...)
 const STUCKI = [0 0 0 8 4; 2 4 8 4 2; 1 2 4 2 1]//42
 
 """
-    Burkes()
+    Burkes(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -214,7 +218,7 @@ Burkes(; kwargs...) = ErrorDiffusion(BURKES, 3; kwargs...)
 const BURKES = [0 0 0 8 4; 2 4 8 4 2]//32
 
 """
-    Sierra()
+    Sierra(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -231,7 +235,7 @@ Sierra(; kwargs...) = ErrorDiffusion(SIERRA, 3; kwargs...)
 const SIERRA = [0 0 0 5 3; 2 4 5 4 2; 0 2 3 2 0]//32
 
 """
-    TwoRowSierra()
+    TwoRowSierra(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -246,7 +250,7 @@ TwoRowSierra(; kwargs...) = ErrorDiffusion(TWO_ROW_SIERRA, 3; kwargs...)
 const TWO_ROW_SIERRA = [0 0 0 4 3; 1 2 3 2 1]//16
 
 """
-    SierraLite()
+    SierraLite(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -261,7 +265,7 @@ SierraLite(; kwargs...) = ErrorDiffusion(SIERRA_LITE, 2; kwargs...)
 const SIERRA_LITE = [0 0 2; 1 1 0]//4
 
 """
-    Atkinson()
+    Atkinson(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -276,7 +280,7 @@ Atkinson(; kwargs...) = ErrorDiffusion(ATKINSON, 2; kwargs...)
 const ATKINSON = [0 0 1 1; 1 1 1 0; 0 1 0 0]//8
 
 """
-    Fan93()
+    Fan93(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -296,7 +300,7 @@ Fan93(; kwargs...) = ErrorDiffusion(FAN_93, 3; kwargs...)
 const FAN_93 = [0 0 0 7; 1 3 5 0]//16
 
 """
-    ShiauFan()
+    ShiauFan(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -314,7 +318,7 @@ ShiauFan(; kwargs...) = ErrorDiffusion(SHIAU_FAN, 3; kwargs...)
 const SHIAU_FAN = [0 0 0 4; 1 1 2 0]//8
 
 """
-    ShiauFan2()
+    ShiauFan2(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```
@@ -335,7 +339,7 @@ ShiauFan2(; kwargs...) = ErrorDiffusion(SHIAU_FAN_2, 4; kwargs...)
 const SHIAU_FAN_2 = [0 0 0 0 8; 1 1 2 4 0]//16
 
 """
-    FalseFloydSteinberg()
+    FalseFloydSteinberg(color_space=XYZ; kwargs...)
 
 Error diffusion algorithm using the filter
 ```

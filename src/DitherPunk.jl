@@ -19,6 +19,7 @@ include("ordered_imagemagick.jl")
 include("error_diffusion.jl")
 include("closest_color.jl")
 include("eval.jl")
+include("deprecations.jl")
 
 export dither, dither!
 # Threshold dithering

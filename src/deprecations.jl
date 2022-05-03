@@ -1,2 +1,2 @@
 # v2
-@deprecate ErrorDiffusion(filter; color_space=XYZ, kwargs...) ErrorDiffusion{color_space}(filter; kwargs...)
+# @deprecate ErrorDiffusion(filter, offset; color_space=XYZ, kwargs...) ErrorDiffusion(filter, offset, color_space; kwargs...)

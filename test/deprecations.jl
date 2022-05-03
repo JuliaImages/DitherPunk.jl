@@ -1,4 +1,4 @@
-@testset "test deprecated usage" begin
-    alg = FloydSteinberg()
-    @test alg == ErrorDiffusion(DitherPunk._floydsteinberg_filter; color_space=XYZ)
-end
+# @testset "test deprecated usage" begin
+#     alg = FloydSteinberg(RGB)
+#     @test alg == ErrorDiffusion(DitherPunk.FLOYD_STEINBERG, 2; color_space=RGB)
+# end

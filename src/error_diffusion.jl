@@ -1,10 +1,11 @@
 """
-    ErrorDiffusion(filter, offset; clamp_error=true)
+    ErrorDiffusion(filter, offset, [colorspace=XYZ]; clamp_error=true)
 
 Generalized error diffusion algorithm. When calling `dither` using a color palette `cs`,
 this will iterate over pixels and round them to the closest color in `cs`.
 The rounding error is then "diffused" over the neighborhood defined by the matrix `filter`
 centered around an integer `offset`.
+The error is computed in the provided `colorspace`, which defaults to `XYZ`.
 
 # Example
 ```julia-repl
@@ -16,18 +17,25 @@ julia> cs = ColorSchemes.PuOr_7.colors; # using ColorSchemes.jl for color palett
 julia> dither(img, alg, cs);
 ```
 
-!!! note "Color Image"
-    For color image, two color spaces are used when applying the algorithm: 1) the luminance
-    channel in the Lab space is used to find the closest color in `cs`, and 2) the `CT`
-    diffusion color space is used to propagate the error. `CT` is typically a linear
-    colorspace, and the default value is `XYZ`. Another common choice is `RGB`, but strictly
-    speaking, RGB is not a linear space.
+!!! note "Color images"
+    For color images, two colorspaces are used when applying the algorithm:
+    1) The `Lab` colorspace is used to find the closest color in the color scheme
+        according to the provided color distance metric.
+    2) The colorspace in the optional argument `colorspace=XYZ` is used to propagate the error.
+        Typically a linear colorspace should be used, such as the default value of `XYZ`.
+        Another common choice is `RGB`, which is most commonly used for dithering
+        but strictly speaking is not a linear colorspace.
 """
 
-const _error_diffusion_kwargs = """
+# Automate method docstrings
+const _error_diffusion_args = "[colorspace=XYZ]; clamp_error=true"
+const _error_diffusion_details = """
+# Arguments
+- `colorspace`: Color space in which the error is diffused. Defaults to `XYZ`.
+
 # Keyword arguments
 - `clamp_error::Bool`: Clamp accumulated error on each pixel within limits of colorant
-    type `color_space` before looking up the closest color. Defaults to `true`.
+    of type `colorspace` before looking up the closest color. Defaults to `true`.
 """
 
 struct ErrorDiffusion{C,F} <: AbstractDither
@@ -120,7 +128,7 @@ function colordither(
 end
 
 """
-    SimpleErrorDiffusion(color_space=XYZ)
+    SimpleErrorDiffusion($_error_diffusion_args)
 
 Error diffusion algorithm using the filter
 ```
@@ -128,7 +136,7 @@ Error diffusion algorithm using the filter
 1   0         (1//2)
 ```
 
-$(_error_diffusion_kwargs)
+$(_error_diffusion_details)
 
 # References
 [1]  Floyd, R.W. and L. Steinberg, "An Adaptive Algorithm for Spatial Gray
@@ -141,7 +149,7 @@ end
 const SIMPLE_ERROR_DIFFUSION = [0 1; 1 0]//2
 
 """
-    FloydSteinberg(color_space=XYZ; kwargs...)
+    FloydSteinberg($_error_diffusion_args)
 
 Error diffusion algorithm using the filter
 ```
@@ -149,7 +157,7 @@ Error diffusion algorithm using the filter
 3   5   1     (1//16)
 ```
 
-$(_error_diffusion_kwargs)
+$(_error_diffusion_details)
 
 # References
 [1]  Floyd, R.W. and L. Steinberg, "An Adaptive Algorithm for Spatial Gray
@@ -160,7 +168,7 @@ FloydSteinberg(args...; kwargs...) = ErrorDiffusion(FLOYD_STEINBERG, 2, args...;
 const FLOYD_STEINBERG = [0 0 7; 3 5 1]//16
 
 """
-    JarvisJudice(color_space=XYZ; kwargs...)
+    JarvisJudice($_error_diffusion_args)
 
 Error diffusion algorithm using the filter
 ```
@@ -170,7 +178,7 @@ Error diffusion algorithm using the filter
 ```
 Also known as the Jarvis, Judice, and Ninke filter.
 
-$(_error_diffusion_kwargs)
+$(_error_diffusion_details)
 
 # References
 [1]  Jarvis, J.F., C.N. Judice, and W.H. Ninke, "A Survey of Techniques for
@@ -181,7 +189,7 @@ JarvisJudice(args...; kwargs...) = ErrorDiffusion(JARVIS_JUDICE, 3, args...; kwa
 const JARVIS_JUDICE = [0 0 0 7 5; 3 5 7 5 3; 1 3 5 3 1]//48
 
 """
-    Stucki(color_space=XYZ; kwargs...)
+    Stucki($_error_diffusion_args)
 
 Error diffusion algorithm using the filter
 ```
@@ -190,7 +198,7 @@ Error diffusion algorithm using the filter
 1   2   4   2   1   (1//42)
 ```
 
-$(_error_diffusion_kwargs)
+$(_error_diffusion_details)
 
 # References
 [1]  Stucki, P., "MECCA - a multiple-error correcting computation algorithm
@@ -201,7 +209,7 @@ Stucki(args...; kwargs...) = ErrorDiffusion(STUCKI, 3, args...; kwargs...)
 const STUCKI = [0 0 0 8 4; 2 4 8 4 2; 1 2 4 2 1]//42
 
 """
-    Burkes(color_space=XYZ; kwargs...)
+    Burkes($_error_diffusion_args)
 
 Error diffusion algorithm using the filter
 ```
@@ -210,7 +218,7 @@ Error diffusion algorithm using the filter
 1   2   4   2   1   (1//42)
 ```
 
-$(_error_diffusion_kwargs)
+$(_error_diffusion_details)
 
 # References
 [1] Burkes, D., "Presentation of the Burkes error filter for use in preparing
@@ -220,7 +228,7 @@ Burkes(args...; kwargs...) = ErrorDiffusion(BURKES, 3, args...; kwargs...)
 const BURKES = [0 0 0 8 4; 2 4 8 4 2]//32
 
 """
-    Sierra(color_space=XYZ; kwargs...)
+    Sierra($_error_diffusion_args)
 
 Error diffusion algorithm using the filter
 ```
@@ -231,13 +239,13 @@ Error diffusion algorithm using the filter
 Also known as Sierra3 or three-row Sierra due to the filter shape.
 
 
-$(_error_diffusion_kwargs)
+$(_error_diffusion_details)
 """
 Sierra(args...; kwargs...) = ErrorDiffusion(SIERRA, 3, args...; kwargs...)
 const SIERRA = [0 0 0 5 3; 2 4 5 4 2; 0 2 3 2 0]//32
 
 """
-    TwoRowSierra(color_space=XYZ; kwargs...)
+    TwoRowSierra($_error_diffusion_args)
 
 Error diffusion algorithm using the filter
 ```
@@ -246,13 +254,13 @@ Error diffusion algorithm using the filter
 ```
 Also known as Sierra2.
 
-$(_error_diffusion_kwargs)
+$(_error_diffusion_details)
 """
 TwoRowSierra(args...; kwargs...) = ErrorDiffusion(TWO_ROW_SIERRA, 3, args...; kwargs...)
 const TWO_ROW_SIERRA = [0 0 0 4 3; 1 2 3 2 1]//16
 
 """
-    SierraLite(color_space=XYZ; kwargs...)
+    SierraLite($_error_diffusion_args)
 
 Error diffusion algorithm using the filter
 ```
@@ -261,13 +269,13 @@ Error diffusion algorithm using the filter
 ```
 Also known as Sierra-2-4A filter.
 
-$(_error_diffusion_kwargs)
+$(_error_diffusion_details)
 """
 SierraLite(args...; kwargs...) = ErrorDiffusion(SIERRA_LITE, 2, args...; kwargs...)
 const SIERRA_LITE = [0 0 2; 1 1 0]//4
 
 """
-    Atkinson(color_space=XYZ; kwargs...)
+    Atkinson($_error_diffusion_args)
 
 Error diffusion algorithm using the filter
 ```
@@ -276,13 +284,13 @@ Error diffusion algorithm using the filter
     1               (1//8)
 ```
 
-$(_error_diffusion_kwargs)
+$(_error_diffusion_details)
 """
 Atkinson(args...; kwargs...) = ErrorDiffusion(ATKINSON, 2, args...; kwargs...)
 const ATKINSON = [0 0 1 1; 1 1 1 0; 0 1 0 0]//8
 
 """
-    Fan93(color_space=XYZ; kwargs...)
+    Fan93($_error_diffusion_args)
 
 Error diffusion algorithm using the filter
 ```
@@ -291,7 +299,7 @@ Error diffusion algorithm using the filter
 ```
 A modification of the weights used in the Floyd-Steinberg algorithm.
 
-$(_error_diffusion_kwargs)
+$(_error_diffusion_details)
 
 # References
 [1] Z. Fan, "A Simple Modification of Error Diffusion Weights",
@@ -302,7 +310,7 @@ Fan93(args...; kwargs...) = ErrorDiffusion(FAN_93, 3, args...; kwargs...)
 const FAN_93 = [0 0 0 7; 1 3 5 0]//16
 
 """
-    ShiauFan(color_space=XYZ; kwargs...)
+    ShiauFan($_error_diffusion_args)
 
 Error diffusion algorithm using the filter
 ```
@@ -310,7 +318,7 @@ Error diffusion algorithm using the filter
 1   1   2           (1//8)
 ```
 
-$(_error_diffusion_kwargs)
+$(_error_diffusion_details)
 
 # References
 [1]  J. N. Shiau and Z. Fan. "Method for quantization gray level pixel data with extended
@@ -320,7 +328,7 @@ ShiauFan(args...; kwargs...) = ErrorDiffusion(SHIAU_FAN, 3, args...; kwargs...)
 const SHIAU_FAN = [0 0 0 4; 1 1 2 0]//8
 
 """
-    ShiauFan2(color_space=XYZ; kwargs...)
+    ShiauFan2($_error_diffusion_args)
 
 Error diffusion algorithm using the filter
 ```
@@ -328,7 +336,7 @@ Error diffusion algorithm using the filter
 1   1   2   4       (1//16)
 ```
 
-$(_error_diffusion_kwargs)
+$(_error_diffusion_details)
 
 # References
 [1]  J. N. Shiau and Z. Fan. "Method for quantization gray level pixel data with extended
@@ -341,7 +349,7 @@ ShiauFan2(args...; kwargs...) = ErrorDiffusion(SHIAU_FAN_2, 4, args...; kwargs..
 const SHIAU_FAN_2 = [0 0 0 0 8; 1 1 2 4 0]//16
 
 """
-    FalseFloydSteinberg(color_space=XYZ; kwargs...)
+    FalseFloydSteinberg($_error_diffusion_args)
 
 Error diffusion algorithm using the filter
 ```
@@ -350,7 +358,7 @@ Error diffusion algorithm using the filter
 ```
 Occasionally, you will see this filter erroneously called the Floyd-Steinberg filter.
 
-$(_error_diffusion_kwargs)
+$(_error_diffusion_details)
 
 # Note
 There is no reason to use this algorithm, which is why DitherPunk doesn't export it.

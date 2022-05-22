@@ -4,7 +4,6 @@ using ReferenceTests
 
 using ImageBase
 using ImageBase.ImageCore: GenericGrayImage
-using UnicodePlots
 
 w = 200
 h = 4 * 4 # multiple of 4 for unicode braille print

@@ -38,18 +38,25 @@ const _error_diffusion_details = """
     of type `colorspace` before looking up the closest color. Defaults to `true`.
 """
 
-struct ErrorDiffusion{C,F} <: AbstractDither
-    filter::F
-    offset::Int
+struct ErrorDiffusion{C,I,V} <: AbstractDither
+    inds::I # indices of filter
+    vals::V # values of filter
     clamp_error::Bool
 end
-function ErrorDiffusion(filter::AbstractMatrix, offset, colorspace=XYZ; clamp_error=true)
-    return ErrorDiffusion{float32(colorspace),typeof(filter)}(filter, offset, clamp_error)
+function ErrorDiffusion(colorspace, inds, vals, clamp_error)
+    length(inds) != length(vals) &&
+        throw(ArgumentError("Lengths of filter indices and values don't match."))
+    return ErrorDiffusion{float32(colorspace),typeof(inds),typeof(vals)}(
+        inds, vals, clamp_error
+    )
 end
-
-function construct_filter(::Type{T}, alg::ErrorDiffusion) where {T<:Real}
-    CI = CartesianIndices(alg.filter) .- CartesianIndex(1, alg.offset)
-    return [(I, T(val)) for (I, val) in zip(CI, alg.filter) if !iszero(val)]
+function ErrorDiffusion(
+    filter::AbstractMatrix, offset::Integer, colorspace=XYZ; clamp_error=true
+)
+    require_one_based_indexing(filter)
+    CI = CartesianIndices(filter) .- CartesianIndex(1, offset)
+    mask = .!iszero.(filter) # only keep non-zero values
+    return ErrorDiffusion(colorspace, CI[mask], filter[mask], clamp_error)
 end
 
 function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericGrayImage)
@@ -64,7 +71,7 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
     T = eltype(out)
     T0, T1 = zero(T), oneunit(T)
 
-    filter = construct_filter(eltype(FT), alg)
+    vals = convert.(eltype(FT), alg.vals)
 
     @inbounds for r in axes(img, 1)
         for c in axes(img, 2)
@@ -75,18 +82,18 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
             px >= 0.5 ? (col = T1) : (col = T0) # round to closest color
             out[I] = col # apply pixel to dither
             err = px - col  # diffuse "error" to neighborhood in filter
-            diffuse_error!(img, err, I, filter)
+            diffuse_error!(img, err, I, alg.inds, vals)
         end
     end
     return out
 end
 
 # Diffuse error `err` in `img` around neighborhood of coordinate `I` defined by `filter`.
-function diffuse_error!(img, err, I, filter)
-    for (DI, val) in filter
-        N = I + DI # index of neighbor
+function diffuse_error!(img, err, I, inds, vals)
+    for i in 1:length(inds)
+        N = I + inds[i] # index of neighbor
         @boundscheck if checkbounds(Bool, img, N)
-            img[N] += err * val
+            img[N] += err * vals[i]
         end
     end
     return nothing
@@ -110,7 +117,7 @@ function colordither(
     # Change from normalized intensities to Float as error will get added!
     # Eagerly promote to the same type to make loop run faster.
     FT = floattype(eltype(eltype(img))) # type of Float
-    filter = construct_filter(FT, alg)
+    vals = convert.(FT, alg.vals)
 
     @inbounds for r in axes(img, 1)
         for c in axes(img, 2)
@@ -121,7 +128,7 @@ function colordither(
             colorindex = _closest_color_idx(px, cs_lab, metric)
             index[I] = colorindex
             err = px - cs_err[colorindex]  # diffuse "error" to neighborhood in filter
-            diffuse_error!(img, err, I, filter)
+            diffuse_error!(img, err, I, alg.inds, vals)
         end
     end
     return index

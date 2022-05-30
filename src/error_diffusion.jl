@@ -79,7 +79,7 @@ function colordither(
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
 
-    index = Matrix{UInt8}(undef, size(img)...) # allocate matrix of color indices
+    index = Matrix{Int}(undef, size(img)...) # allocate matrix of color indices
 
     # C is the `color_space` in which the error is diffused
     img = convert.(C, img)

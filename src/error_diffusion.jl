@@ -79,9 +79,8 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
             px = img[I]
             alg.clamp_error && (px = clamp01(px))
 
-            px >= 0.5 ? (col = T1) : (col = T0) # round to closest color
-            out[I] = col # apply pixel to dither
-            err = px - col  # diffuse "error" to neighborhood in filter
+            out[I] = ifelse(px >= 0.5, T1, T0) # round to closest color
+            err = px - out[I]  # diffuse "error" to neighborhood in filter
             diffuse_error!(img, err, I, alg.inds, vals)
         end
     end
@@ -125,9 +124,8 @@ function colordither(
             px = img[I]
             alg.clamp_error && (px = clamp_limits(px))
 
-            colorindex = _closest_color_idx(px, cs_lab, metric)
-            index[I] = colorindex
-            err = px - cs_err[colorindex]  # diffuse "error" to neighborhood in filter
+            index[I] = _closest_color_idx(px, cs_lab, metric)
+            err = px - cs_err[index[I]]  # diffuse "error" to neighborhood in filter
             diffuse_error!(img, err, I, alg.inds, vals)
         end
     end

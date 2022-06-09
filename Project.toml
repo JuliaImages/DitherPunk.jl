@@ -1,7 +1,7 @@
 name = "DitherPunk"
 uuid = "b8f752a5-abd5-43b6-a55b-e75efda20de0"
 authors = ["Adrian Hill"]
-version = "2.4.0"
+version = "2.4.1"
 
 [deps]
 ImageBase = "c817782e-172a-44cc-b673-b171935fbb9e"

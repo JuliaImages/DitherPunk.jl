@@ -24,9 +24,4 @@ using Test
             include("test_color.jl")
         end
     end
-    # test deprecations at the end
-    @testset "deprecations" begin
-        @info "Testing deprecated usage, depwarns are expected..."
-        include("deprecations.jl")
-    end
 end

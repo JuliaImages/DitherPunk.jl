@@ -91,7 +91,7 @@ end
 function diffuse_error!(img, err, I, inds, vals)
     for i in 1:length(inds)
         N = I + inds[i] # index of neighbor
-        @boundscheck if checkbounds(Bool, img, N)
+        if checkbounds(Bool, img, N)
             img[N] += err * vals[i]
         end
     end

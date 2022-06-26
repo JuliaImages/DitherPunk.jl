@@ -80,7 +80,7 @@ d4 = dither!(img2, alg, cs)
 # Test conditional dependency on ColorSchemes.jl
 using ColorSchemes
 d1 = dither(img, alg, ColorSchemes.jet)
-d2 = dither(img, alg, :jet)
+d2 = dither(img, alg, ColorSchemes.jet.colors)
 @test d1 == d2
 
 # Dry-run conditional dependency on Clustering.jl
@@ -94,7 +94,6 @@ if VERSION >= v"1.6.0"
             @testset "$name" begin
                 @inferred dither(img, alg, cs)
                 @inferred dither(img, alg, ColorSchemes.jet)
-                @inferred dither(img, alg, :jet)
                 @inferred dither(img, alg, 4)
             end
         end

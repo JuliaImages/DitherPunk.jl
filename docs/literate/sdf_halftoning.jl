@@ -10,7 +10,6 @@
 # Here we reimplement his function `sdStar5`:
 using Images
 using DitherPunk
-using ColorSchemes
 using TestImages
 
 function star_sdf(x, y; r=0.5, rf=2.0)

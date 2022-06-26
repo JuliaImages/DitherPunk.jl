@@ -68,10 +68,6 @@ using ColorSchemes
 
 dither(img, FloydSteinberg(), ColorSchemes.PuOr_7)
 
-# You can also directly use the corresponding symbol from the
-# [ColorSchemes catalogue](https://juliagraphics.github.io/ColorSchemes.jl/stable/catalogue/):
-dither(img, FloydSteinberg(), :PuOr_7)
-
 # ### Clustering.jl
 # Using [Clustering.jl](https://github.com/JuliaStats/Clustering.jl) allows you to generate
 # optimized color schemes. Simply pass the size of the desired color palette:

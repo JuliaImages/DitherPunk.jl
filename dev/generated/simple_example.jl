@@ -30,8 +30,6 @@ using ColorSchemes
 
 dither(img, FloydSteinberg(), ColorSchemes.PuOr_7)
 
-dither(img, FloydSteinberg(), :PuOr_7)
-
 using Clustering
 
 dither(img, FloydSteinberg(), 8)

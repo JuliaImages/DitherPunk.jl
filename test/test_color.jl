@@ -21,10 +21,10 @@ img_gray = testimage("fabio_gray_256")
 
 # Run & test custom color palette dithering methods
 algs = Dict(
-    "FloydSteinberg_XYZ" => FloydSteinberg(; color_space=XYZ),
-    "FloydSteinberg_RGB" => FloydSteinberg(; color_space=RGB),
-    "ClosestColor" => ClosestColor(),
-    "Bayer" => Bayer(),
+    "FloydSteinberg_XYZ" => @inferred(FloydSteinberg(XYZ)),
+    "FloydSteinberg_RGB" => @inferred(FloydSteinberg(RGB)),
+    "ClosestColor" => @inferred(ClosestColor()),
+    "Bayer" => @inferred(Bayer()),
 )
 
 for (name, alg) in algs
@@ -80,7 +80,7 @@ d4 = dither!(img2, alg, cs)
 # Test conditional dependency on ColorSchemes.jl
 using ColorSchemes
 d1 = dither(img, alg, ColorSchemes.jet)
-d2 = dither(img, alg, :jet)
+d2 = dither(img, alg, ColorSchemes.jet.colors)
 @test d1 == d2
 
 # calls Clustering
@@ -93,7 +93,6 @@ if VERSION >= v"1.6.0"
             @testset "$name" begin
                 @inferred dither(img, alg, cs)
                 @inferred dither(img, alg, ColorSchemes.jet)
-                @inferred dither(img, alg, :jet)
                 @inferred dither(img, alg, 4)
             end
         end

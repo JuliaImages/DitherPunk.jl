@@ -60,8 +60,8 @@ function colordither(
     clookup = [mod1(i, matsize[2]) for i in 1:size(img)[2]]
 
     # Allocate matrices
-    candidates = Array{UInt8}(undef, nmax)
-    index = Matrix{UInt8}(undef, size(img)...)
+    candidates = Array{Int}(undef, nmax)
+    index = Matrix{Int}(undef, size(img)...)
 
     @inbounds for I in CartesianIndices(img)
         r, c = Tuple(I)

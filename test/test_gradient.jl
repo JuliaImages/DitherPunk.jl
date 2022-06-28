@@ -1,6 +1,7 @@
 using DitherPunk
 using DitherPunk: gradient_image
 using ReferenceTests
+using OffsetArrays
 
 using ImageBase
 using ImageBase.ImageCore: GenericGrayImage
@@ -35,21 +36,21 @@ algs_deterministic = Dict(
     "IM_c6x6" => IM_c6x6(),
     "IM_c7x7" => IM_c7x7(),
     # error error_diffusion
-    "SimpleErrorDiffusion" => SimpleErrorDiffusion(),
-    "FloydSteinberg" => FloydSteinberg(),
-    "JarvisJudice" => JarvisJudice(),
-    "Stucki" => Stucki(),
-    "Burkes" => Burkes(),
-    "Atkinson" => Atkinson(),
-    "Sierra" => Sierra(),
-    "TwoRowSierra" => TwoRowSierra(),
-    "SierraLite" => SierraLite(),
-    "Fan" => Fan93(),
-    "ShiauFan" => ShiauFan(),
-    "ShiauFan2" => ShiauFan2(),
-    "FalseFloydSteinberg" => DitherPunk.FalseFloydSteinberg(),
+    "SimpleErrorDiffusion" => @inferred(SimpleErrorDiffusion()),
+    "FloydSteinberg" => @inferred(FloydSteinberg()),
+    "JarvisJudice" => @inferred(JarvisJudice()),
+    "Stucki" => @inferred(Stucki()),
+    "Burkes" => @inferred(Burkes()),
+    "Atkinson" => @inferred(Atkinson()),
+    "Sierra" => @inferred(Sierra()),
+    "TwoRowSierra" => @inferred(TwoRowSierra()),
+    "SierraLite" => @inferred(SierraLite()),
+    "Fan" => @inferred(Fan93()),
+    "ShiauFan" => @inferred(ShiauFan()),
+    "ShiauFan2" => @inferred(ShiauFan2()),
+    "FalseFloydSteinberg" => @inferred(DitherPunk.FalseFloydSteinberg()),
     # Keyword arguments
-    "FloydSteinberg_clamp_error" => FloydSteinberg(; clamp_error=false),
+    "FloydSteinberg_clamp_error" => @inferred(FloydSteinberg(; clamp_error=false)),
     "Bayer_invert_map" => Bayer(; invert_map=true),
 )
 
@@ -108,5 +109,5 @@ d4 = @inferred dither!(img2, alg)
 ## Test error messages
 @test_throws DomainError ConstantThreshold(; threshold=-0.5)
 
-img_zero_based = DitherPunk.OffsetMatrix(rand(Float32, 10, 10), 0:9, 0:9)
+img_zero_based = OffsetMatrix(rand(Float32, 10, 10), 0:9, 0:9)
 @test_throws ArgumentError dither(img_zero_based, FloydSteinberg())

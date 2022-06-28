@@ -5,8 +5,6 @@ using ImageBase.ImageCore: NumberLike, Pixel, GenericImage, GenericGrayImage, Ma
 using ImageBase.ImageCore.Colors: DifferenceMetric
 using Random
 using IndirectArrays
-using OffsetArrays
-
 using ColorSchemes
 using LazyModules
 @lazy import Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"

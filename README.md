@@ -43,10 +43,9 @@ dither(img, FloydSteinberg(), ColorSchemes.flag_us)
 |:---------------:|:--------------:|:------------:|
 | ![][cs_flag_us] | ![][cs_PuOr_6] | ![][websafe] |
 
-DitherPunk also works with [Clustering.jl](https://github.com/JuliaStats/Clustering.jl) to let you generate optimized color palettes for each input image:
+DitherPunk also lets you generate optimized color palettes for each input image:
 ```julia
 using DitherPunk
-using Clustering
 
 ncolors = 8
 dither(img, FloydSteinberg(), ncolors)

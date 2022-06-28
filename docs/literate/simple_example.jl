@@ -68,18 +68,19 @@ using ColorSchemes
 
 dither(img, FloydSteinberg(), ColorSchemes.PuOr_7)
 
-# ### Clustering.jl
-# Using [Clustering.jl](https://github.com/JuliaStats/Clustering.jl) allows you to generate
-# optimized color schemes. Simply pass the size of the desired color palette:
-using Clustering
+# ### Automatic color schemes
+# DitherPunk can generate optimized color schemes for each input image.
+# Simply pass the size of the desired color palette as an additional argument:
 
 dither(img, FloydSteinberg(), 8)
 
-# ## UnicodePlots.jl
-# Using [UnicodePlots.jl](https://github.com/JuliaPlots/UnicodePlots.jl), it is also possible
-# to dither images directly to Braille-characters using `braille`. The interface is the same
-# as for binary dithering with `dither`:
-using UnicodePlots
+# This uses [Clustering.jl](https://github.com/JuliaStats/Clustering.jl) in the background.
+
+# ## Dithering to braille characters
+# It is also possible to dither images directly to Braille-characters using `braille`.
+# The interface is the same as for binary dithering with `dither`:
 img = imresize(img; ratio=1//3)
 
 braille(img, FloydSteinberg())
+
+# This functionality makes use of [UnicodePlots.jl](https://github.com/JuliaPlots/UnicodePlots.jl).

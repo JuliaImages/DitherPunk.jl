@@ -3,7 +3,6 @@
 # Let's try to hide `img_secret` in `img`:
 using Images
 using DitherPunk
-using Clustering
 using IndirectArrays
 using TestImages
 

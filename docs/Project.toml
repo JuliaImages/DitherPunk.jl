@@ -1,5 +1,4 @@
 [deps]
-Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
 DitherPunk = "b8f752a5-abd5-43b6-a55b-e75efda20de0"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
@@ -9,4 +8,3 @@ Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
 IndirectArrays = "9b13fd28-a010-5f03-acff-a1bbcff69959"
 Literate = "98b081ad-f1c9-55d3-8b20-4c87d4299306"
 TestImages = "5e47fb64-e119-507b-a336-dd2b206d9990"
-UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"

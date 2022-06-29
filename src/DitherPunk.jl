@@ -3,6 +3,7 @@ module DitherPunk
 using ImageBase
 using ImageBase.ImageCore: NumberLike, Pixel, GenericImage, GenericGrayImage, MappedArrays
 using ImageBase.ImageCore.Colors: DifferenceMetric
+using Base: require_one_based_indexing
 using Random
 using IndirectArrays
 using ColorSchemes
@@ -12,7 +13,6 @@ using LazyModules
 
 abstract type AbstractDither end
 
-include("compat.jl")
 include("colorschemes.jl")
 include("utils.jl")
 include("api/binary.jl")

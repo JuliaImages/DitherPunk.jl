@@ -20,7 +20,7 @@ IndirectArrays = "0.5, 1.0"
 LazyModules = "0.3"
 OffsetArrays = "1"
 UnicodePlots = "2, 3"
-julia = "1"
+julia = "1.6"
 
 [extras]
 ImageIO = "82e4d734-157c-48bb-816b-45c225c6df19"

@@ -5,11 +5,15 @@ using ImageBase.ImageCore: NumberLike, Pixel, GenericImage, GenericGrayImage, Ma
 using ImageBase.ImageCore.Colors: DifferenceMetric
 using Random
 using IndirectArrays
-using Requires
+using ColorSchemes
+using LazyModules
+@lazy import Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
+@lazy import UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
 
 abstract type AbstractDither end
 
 include("compat.jl")
+include("colorschemes.jl")
 include("utils.jl")
 include("api/binary.jl")
 include("api/color.jl")
@@ -19,6 +23,10 @@ include("ordered_imagemagick.jl")
 include("error_diffusion.jl")
 include("closest_color.jl")
 include("eval.jl")
+
+# lazily loaded features
+include("clustering.jl")
+include("braille.jl")
 
 export dither, dither!
 # Threshold dithering
@@ -36,19 +44,6 @@ export Sierra, TwoRowSierra, SierraLite, Atkinson, Fan93, ShiauFan, ShiauFan2
 export ClosestColor
 # Other utilities
 export upscale
-
-# Conditional dependencies using Requires.jl
-function __init__()
-    @require ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4" begin
-        include("colorschemes.jl")
-    end
-    @require Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5" begin
-        include("clustering.jl")
-    end
-    @require UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228" begin
-        include("braille.jl")
-        export braille, brailleprint
-    end
-end
+export braille, brailleprint
 
 end # module

@@ -2,7 +2,7 @@
 # which is either
 #   - a color scheme (array of colors)
 #   - a ColorSchemes.jl symbol
-#   - the number of colors specified for clustering
+#   - the number of colors specified for color quantization
 #
 # All functions in this file end up calling `colordither` and return IndirectArrays.
 

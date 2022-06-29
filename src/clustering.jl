@@ -1,4 +1,4 @@
-# These functions are only conditionally loaded with Clustering.jl
+# These functions are lazily loaded from Clustering.jl using LazyModules.jl
 # Code adapted from @cormullion's [ColorSchemeTools](https://github.com/JuliaGraphics/ColorSchemeTools.jl).
 function get_colorscheme(
     img,

@@ -83,8 +83,7 @@ d1 = dither(img, alg, ColorSchemes.jet)
 d2 = dither(img, alg, ColorSchemes.jet.colors)
 @test d1 == d2
 
-# Dry-run conditional dependency on Clustering.jl
-using Clustering
+# calls Clustering
 d = dither(img, alg, 4)
 
 # Run type inference tests on Julia > 1.0

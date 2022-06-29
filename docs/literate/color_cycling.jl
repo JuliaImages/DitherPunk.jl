@@ -2,14 +2,13 @@
 # We will try to fake a subtle animation of the water in this public domain image:
 using Images
 using DitherPunk
-using Clustering
 using IndirectArrays
 
 img = load("../../assets/waterfall.png")
 
-# When Clustering.jl is loaded, we can import DitherPunk's internal function `get_colorscheme`
-# to obtain a color scheme of size 16.
-cs = DitherPunk.get_colorscheme(img, 16)
+# We import DitherPunk's internal function `get_colorscheme` to obtain a color scheme:
+ncolors = 16
+cs = DitherPunk.get_colorscheme(img, ncolors)
 cs = sort(cs; by=c -> -c.l)
 # The first three colors are white-ish and correspond to the water.
 

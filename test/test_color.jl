@@ -86,15 +86,13 @@ d2 = dither(img, alg, ColorSchemes.jet.colors)
 # calls Clustering
 d = dither(img, alg, 4)
 
-# Run type inference tests on Julia > 1.0
-if VERSION >= v"1.6.0"
-    @testset "Color type inference" begin
-        for (name, alg) in algs
-            @testset "$name" begin
-                @inferred dither(img, alg, cs)
-                @inferred dither(img, alg, ColorSchemes.jet)
-                @inferred dither(img, alg, 4)
-            end
+# Run type inference tests
+@testset "Color type inference" begin
+    for (name, alg) in algs
+        @testset "$name" begin
+            @inferred dither(img, alg, cs)
+            @inferred dither(img, alg, ColorSchemes.jet)
+            @inferred dither(img, alg, 4)
         end
     end
 end

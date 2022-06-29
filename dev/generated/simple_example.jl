@@ -30,11 +30,8 @@ using ColorSchemes
 
 dither(img, FloydSteinberg(), ColorSchemes.PuOr_7)
 
-using Clustering
-
 dither(img, FloydSteinberg(), 8)
 
-using UnicodePlots
 img = imresize(img; ratio=1//3)
 
 braille(img, FloydSteinberg())

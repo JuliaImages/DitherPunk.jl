@@ -1,11 +1,11 @@
 using Images
 using DitherPunk
-using Clustering
 using IndirectArrays
 
 img = load("../../assets/waterfall.png")
 
-cs = DitherPunk.get_colorscheme(img, 16)
+ncolors = 16
+cs = DitherPunk.get_colorscheme(img, ncolors)
 cs = sort(cs; by=c -> -c.l)
 
 d1 = dither(img, Bayer(;color_error_multiplier=1.0), cs)

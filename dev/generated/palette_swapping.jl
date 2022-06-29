@@ -1,6 +1,5 @@
 using Images
 using DitherPunk
-using Clustering
 using IndirectArrays
 using TestImages
 

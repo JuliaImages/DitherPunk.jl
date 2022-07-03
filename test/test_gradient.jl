@@ -77,18 +77,25 @@ end
 
 ## Test to_linear
 img2 = copy(img)
-alg = Bayer()
-d = @inferred dither(img2, alg; to_linear=true)
+d = @inferred dither(img2, Bayer(); to_linear=true)
 @test_reference "references/gradient/Bayer_linear.txt" Int.(d)
+alg = FloydSteinberg()
+dl1 = @inferred dither(img2, alg; to_linear=true)
+dl2 = @inferred dither(img2; to_linear=true)
+@test dl1 == dl2
 
 ## Test API
 d = @inferred dither(img2, alg)
+ddef = @inferred dither(img2)
+@test d == ddef
 
 # Test setting output type
 d2 = @inferred dither(Gray{Float16}, img2, alg)
 @test eltype(d2) == Gray{Float16}
 @test d2 == d
 @test img2 == img # image not modified
+d2def = @inferred dither(Gray{Float16}, img2)
+@test d2 == d2def
 
 # Inplace modify output image
 out = zeros(Bool, size(img2)...)
@@ -98,16 +105,25 @@ d3 = @inferred dither!(out, img2, alg)
 @test eltype(out) == Bool
 @test eltype(d3) == Bool
 @test img2 == img # image not modified
+outdef = zeros(Bool, size(img2)...)
+d3def = @inferred dither!(outdef, img2)
+@test out == outdef
+@test d3 == d3def
 
 # Inplace modify  image
+img2def = deepcopy(img2)
 d4 = @inferred dither!(img2, alg)
 @test d4 == d
 @test img2 == d # image updated in-place
 @test eltype(d4) == eltype(img)
 @test eltype(img2) == eltype(img)
+d4def = @inferred dither!(img2def)
+@test d4 == d4def
+@test img2 == img2def
 
 ## Test error messages
 @test_throws DomainError ConstantThreshold(; threshold=-0.5)
 
 img_zero_based = OffsetMatrix(rand(Float32, 10, 10), 0:9, 0:9)
 @test_throws ArgumentError dither(img_zero_based, FloydSteinberg())
+@test_throws ArgumentError dither(img_zero_based)

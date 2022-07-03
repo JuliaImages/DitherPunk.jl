@@ -23,3 +23,15 @@ for C in [RGB, HSV]
         @test img2 == d # image updated in-place
     end
 end
+
+# Test default algorithm
+d1 = @inferred dither(img, FloydSteinberg())
+d2 = @inferred dither(img)
+@test d1 == d2
+img3 = deepcopy(img)
+img4 = deepcopy(img)
+d3 = @inferred dither!(img3, FloydSteinberg())
+d4 = @inferred dither!(img4)
+@test d3 == d4
+@test img3 == img4
+@test d4 == img4

@@ -55,6 +55,44 @@ dither(img, FloydSteinberg(), ncolors)
 | ![][clustering_2] | ![][clustering_8] | ![][clustering_32] |
 
 For a more in-depth introduction, [take a look at the docs](https://juliaimages.org/DitherPunk.jl/stable/generated/simple_example/).
+
+## List of implemented algorithms
+* Error diffusion:
+  * `FloydSteinberg` (default algorithm)
+  * `JarvisJudice`
+  * `Atkinson`
+  * `Stucki`
+  * `Burkes`
+  * `Sierra`
+  * `TwoRowSierra`
+  * `SierraLite`
+  * `Fan93`
+  * `ShiauFan`
+  * `ShiauFan2`
+  * `SimpleErrorDiffusion`
+* Ordered dithering:
+  * `Bayer` (default level = 1)
+* Halftoning:
+  * `ClusteredDots` 
+  * `CentralWhitePoint` 
+  * `BalancedCenteredPoint` 
+  * `Rhombus`
+  * Threshold maps from ImageMagick:
+    * `IM_checks`
+    * `IM_h4x4a`
+    * `IM_h6x6a`
+    * `IM_h8x8a`
+    * `IM_h4x4o`
+    * `IM_h6x6o`
+    * `IM_h8x8o`
+    * `IM_c5x5`
+    * `IM_c6x6`
+    * `IM_c7x7`
+* Other:
+  * `ClosestColor`
+  * `ConstantThreshold`
+  * `WhiteNoiseThreshold`
+
 ___
 
 **Share your creations in the [discussions tab](https://github.com/JuliaImages/DitherPunk.jl/discussions/categories/show-and-tell) and leave a GitHub Issue if you know of any cool  algorithms you'd like to see implemented! 🔬🔧**

@@ -21,8 +21,7 @@ img_gray = testimage("fabio_gray_256")
 
 # Run & test custom color palette dithering methods
 algs = Dict(
-    "FloydSteinberg_XYZ" => @inferred(FloydSteinberg(XYZ)),
-    "FloydSteinberg_RGB" => @inferred(FloydSteinberg(RGB)),
+    "FloydSteinberg" => @inferred(FloydSteinberg()),
     "ClosestColor" => @inferred(ClosestColor()),
     "Bayer" => @inferred(Bayer()),
 )

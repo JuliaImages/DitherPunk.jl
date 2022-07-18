@@ -57,13 +57,8 @@ algs_deterministic = Dict(
 
 for (name, alg) in algs_deterministic
     local img2 = copy(img)
-    if alg isa ErrorDiffusion
-        local d = @inferred dither(transpose(img2), alg)
-        @test_reference "references/gradient/$(name).txt" transpose(Int.(d))
-    else
-        local d = @inferred dither(img2, alg)
-        @test_reference "references/gradient/$(name).txt" Int.(d)
-    end
+    local d = @inferred dither(img2, alg)
+    @test_reference "references/gradient/$(name).txt" Int.(d)
     @test eltype(d) == eltype(img)
     @test img2 == img # image not modified
 end

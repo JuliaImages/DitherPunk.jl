@@ -30,27 +30,16 @@ algs = Dict(
 for (name, alg) in algs
     # Test custom color dithering on color images
     local img2 = copy(img)
-    if alg isa ErrorDiffusion
-        local d = @inferred dither(transpose(img2), alg)
-        @test_reference "references/color/$(name).txt" transpose(d)
-    else
-        local d = @inferred dither(img2, alg)
-        @test_reference "references/color/$(name).txt" d
-    end
+    local d = @inferred dither(img2, alg)
+    @test_reference "references/color/$(name).txt" d
 
     @test eltype(d) == eltype(img2)
     @test img2 == img # image not modified
 
     # Test custom color dithering on gray images
     local img2_gray = copy(img_gray)
-
-    if alg isa ErrorDiffusion
-        local d = dither(transpose(img2_gray), alg, cs)
-        @test_reference "references/color/$(name)_from_gray.txt" transpose(d)
-    else
-        local d = dither(img2_gray, alg, cs)
-        @test_reference "references/color/$(name)_from_gray.txt" d
-    end
+    local d = dither(img2_gray, alg, cs)
+    @test_reference "references/color/$(name)_from_gray.txt" d
 
     @test eltype(d) == eltype(cs)
     @test img2_gray == img_gray # image not modified

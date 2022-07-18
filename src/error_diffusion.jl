@@ -38,25 +38,39 @@ const _error_diffusion_details = """
     of type `colorspace` before looking up the closest color. Defaults to `true`.
 """
 
-struct ErrorDiffusion{C,I,V} <: AbstractDither
+struct ErrorDiffusion{C,I,V,R} <: AbstractDither
     inds::I # indices of filter
     vals::V # values of filter
+    ranges::Tuple{R,R} # range of filter: (column_range, row_range)
     clamp_error::Bool
 end
-function ErrorDiffusion(colorspace, inds, vals, clamp_error)
+function ErrorDiffusion(colorspace, inds, vals, ranges, clamp_error)
     length(inds) != length(vals) &&
         throw(ArgumentError("Lengths of filter indices and values don't match."))
-    return ErrorDiffusion{float32(colorspace),typeof(inds),typeof(vals)}(
-        inds, vals, clamp_error
+    return ErrorDiffusion{
+        float32(colorspace),typeof(inds),typeof(vals),typeof(first(ranges))
+    }(
+        inds, vals, ranges, clamp_error
     )
 end
 function ErrorDiffusion(
     filter::AbstractMatrix, offset::Integer, colorspace=XYZ; clamp_error=true
 )
     require_one_based_indexing(filter)
-    CI = CartesianIndices(filter) .- CartesianIndex(1, offset)
+    filter = transpose(filter)
+    CI = CartesianIndices(filter) .- CartesianIndex(offset, 1)
     mask = .!iszero.(filter) # only keep non-zero values
-    return ErrorDiffusion(colorspace, CI[mask], filter[mask], clamp_error)
+    return ErrorDiffusion(colorspace, CI[mask], filter[mask], CI.indices, clamp_error)
+end
+
+# Returns inner range in which ED can be applied without boundschecks
+function inner_range(img, alg::ErrorDiffusion)
+    require_one_based_indexing(img)
+    hi, wi = CartesianIndices(img).indices
+    hr, wr = alg.ranges
+    return CartesianIndices(
+        tuple((1 - hr.start):(hi.stop - hr.stop), (1 - wr.start):(wi.stop - wr.stop))
+    )
 end
 
 function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericGrayImage)
@@ -72,30 +86,28 @@ function binarydither!(alg::ErrorDiffusion, out::GenericGrayImage, img::GenericG
     T0, T1 = zero(T), oneunit(T)
 
     vals = convert.(eltype(FT), alg.vals)
+    Inner = inner_range(img, alg)
 
-    @inbounds for r in axes(img, 1)
-        for c in axes(img, 2)
-            I = CartesianIndex(r, c)
-            px = img[I]
-            alg.clamp_error && (px = clamp01(px))
+    @inbounds for I in CartesianIndices(img)
+        px = img[I]
+        alg.clamp_error && (px = clamp01(px))
+        out[I] = ifelse(px >= 0.5, T1, T0)
 
-            out[I] = ifelse(px >= 0.5, T1, T0) # round to closest color
-            err = px - out[I]  # diffuse "error" to neighborhood in filter
-            diffuse_error!(img, err, I, alg.inds, vals)
+        # Diffuse "error" to neighborhood in filter
+        err = px - out[I]
+        if I in Inner
+            for i in 1:length(alg.inds)
+                img[I + alg.inds[i]] += err * vals[i]
+            end
+        else
+            for i in 1:length(alg.inds)
+                N = I + alg.inds[i] # index of neighbor
+                checkbounds(Bool, img, N) || continue
+                img[N] += err * vals[i]
+            end
         end
     end
     return out
-end
-
-# Diffuse error `err` in `img` around neighborhood of coordinate `I` defined by `filter`.
-function diffuse_error!(img, err, I, inds, vals)
-    for i in 1:length(inds)
-        N = I + inds[i] # index of neighbor
-        if checkbounds(Bool, img, N)
-            img[N] += err * vals[i]
-        end
-    end
-    return nothing
 end
 
 function colordither(
@@ -117,16 +129,25 @@ function colordither(
     # Eagerly promote to the same type to make loop run faster.
     FT = floattype(eltype(eltype(img))) # type of Float
     vals = convert.(FT, alg.vals)
+    Inner = inner_range(img, alg)
 
-    @inbounds for r in axes(img, 1)
-        for c in axes(img, 2)
-            I = CartesianIndex(r, c)
-            px = img[I]
-            alg.clamp_error && (px = clamp_limits(px))
+    @inbounds for I in CartesianIndices(img)
+        px = img[I]
+        alg.clamp_error && (px = clamp_limits(px))
+        index[I] = _closest_color_idx(px, cs_lab, metric)
 
-            index[I] = _closest_color_idx(px, cs_lab, metric)
-            err = px - cs_err[index[I]]  # diffuse "error" to neighborhood in filter
-            diffuse_error!(img, err, I, alg.inds, vals)
+        # Diffuse "error" to neighborhood in filter
+        err = px - cs_err[index[I]]  # diffuse "error" to neighborhood in filter
+        if I in Inner
+            for i in 1:length(alg.inds)
+                img[I + alg.inds[i]] += err * vals[i]
+            end
+        else
+            for i in 1:length(alg.inds)
+                N = I + alg.inds[i] # index of neighbor
+                checkbounds(Bool, img, N) || continue
+                img[N] += err * vals[i]
+            end
         end
     end
     return index

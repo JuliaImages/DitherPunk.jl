@@ -30,7 +30,7 @@ algs = Dict(
 for (name, alg) in algs
     # Test custom color dithering on color images
     local img2 = copy(img)
-    local d = @inferred dither(img2, alg)
+    local d = @inferred dither(img2, alg, cs)
     @test_reference "references/color/$(name).txt" d
 
     @test eltype(d) == eltype(img2)

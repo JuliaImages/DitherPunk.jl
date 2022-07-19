@@ -5,8 +5,10 @@
 
 Binary dither with algorithm `alg`, then print image in braille.
 """
-function braille(img::GenericImage, alg::AbstractDither, args...; kwargs...)
-    return brailleprint(dither(Gray{Bool}, Gray.(img), alg, args...; kwargs...))
+function braille(img::GenericImage, alg::AbstractDither; invert=false, kwargs...)
+    d = dither(Bool, Gray.(img), alg; kwargs...)
+    invert && return brailleprint(.!d)
+    return brailleprint(d)
 end
 
 """

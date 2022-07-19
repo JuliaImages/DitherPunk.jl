@@ -127,3 +127,9 @@ d4def = @inferred dither!(img2def)
 img_zero_based = OffsetMatrix(rand(Float32, 10, 10), 0:9, 0:9)
 @test_throws ArgumentError dither(img_zero_based, FloydSteinberg())
 @test_throws ArgumentError dither(img_zero_based)
+
+## Braille dithering
+braille(img, Bayer())
+braille(img)
+braille(img, Bayer(); invert=true)
+braille(img; invert=true)

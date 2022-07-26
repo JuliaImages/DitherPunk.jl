@@ -44,6 +44,11 @@ for (name, alg) in algs
     @test img2_gray == img_gray # image not modified
 end
 
+# Test error diffusion kwarg `clamp_error`:
+d = @inferred dither(img, FloydSteinberg(), cs; clamp_error=false)
+@test_reference "references/color/FloydSteinberg_clamp_error.txt" d
+@test eltype(d) == eltype(img)
+
 ## Test API
 # Test for argument errors on algorithms that don't support custom color palettes
 for alg in [WhiteNoiseThreshold(), ConstantThreshold()]

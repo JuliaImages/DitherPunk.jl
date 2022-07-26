@@ -53,10 +53,14 @@ end
 # Dispatch to binary dithering on grayscale images
 # when no color palette is provided
 function _binarydither!(
-    out::GenericGrayImage, img::GenericGrayImage, alg::AbstractDither; to_linear=false
+    out::GenericGrayImage,
+    img::GenericGrayImage,
+    alg::AbstractDither;
+    to_linear=false,
+    kwargs...,
 )
     to_linear && (img = srgb2linear.(img))
-    return binarydither!(alg, out, img)
+    return binarydither!(alg, out, img; kwargs...)
 end
 
 # Dispatch to per-channel dithering on color images when no color palette is provided
@@ -74,7 +78,7 @@ function _binarydither!(
     for c in axes(cvout, 1)
         # Note: the input `out` will be modified
         # since binarydither! modifies the view of the channelview of `out`.
-        binarydither!(alg, view(cvout, c, :, :), view(cvimg, c, :, :))
+        binarydither!(alg, view(cvout, c, :, :), view(cvimg, c, :, :); kwargs...)
     end
     return out
 end

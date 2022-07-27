@@ -54,7 +54,7 @@ function _colordither(
     img::GenericImage,
     alg::AbstractDither,
     cs::AbstractVector{<:Pixel};
-    metric::DifferenceMetric=DE_2000(),
+    metric::DifferenceMetric=DE_AB(),
     to_linear=false,
     kwargs...,
 ) where {T}
@@ -74,7 +74,7 @@ function _colordither(
     img::GenericImage,
     alg::AbstractDither,
     cs::AbstractVector{<:Color{<:Any,3}};
-    metric::DifferenceMetric=DE_2000(),
+    metric::DifferenceMetric=DE_AB(),
     to_linear=false,
     kwargs...,
 ) where {T<:NumberLike}

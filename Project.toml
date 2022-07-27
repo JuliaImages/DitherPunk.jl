@@ -1,7 +1,7 @@
 name = "DitherPunk"
 uuid = "b8f752a5-abd5-43b6-a55b-e75efda20de0"
 authors = ["Adrian Hill"]
-version = "2.4.1"
+version = "3.0.0"
 
 [deps]
 Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"

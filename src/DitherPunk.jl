@@ -8,8 +8,10 @@ using Random
 using IndirectArrays
 using ColorSchemes
 using LazyModules
+#! format: off
 @lazy import Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 @lazy import UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
+#! format: on
 
 abstract type AbstractDither end
 

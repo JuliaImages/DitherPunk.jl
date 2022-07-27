@@ -14,7 +14,7 @@ cs = sort(cs; by=c -> -c.l)
 
 # Let's look at the dithered result using `color_error_multiplier=1.0`
 # for a more visible dithering pattern:
-d1 = dither(img, Bayer(;color_error_multiplier=1.0), cs)
+d1 = dither(img, Bayer(; color_error_multiplier=1.0), cs)
 
 # We create two more frames by cycling the first three colors
 d2 = IndirectArray(d1.index, cs[[3, 1, 2, 4:end...]])

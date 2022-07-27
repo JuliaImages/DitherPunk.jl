@@ -10,7 +10,7 @@ function get_colorscheme(
 
     # Clustering on the downsampled image already generates good enough colormap estimation
     # This significantly reduces the algorithmic complexity.
-    img = _restrict_to(img, ncolors*100)
+    img = _restrict_to(img, ncolors * 100)
     data = reshape(channelview(Lab.(img)), 3, :)
     R = Clustering.kmeans(data, ncolors; maxiter=maxiter, tol=tol)
 

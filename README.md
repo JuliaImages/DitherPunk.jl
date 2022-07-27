@@ -21,23 +21,35 @@ using Images
 using TestImages
 
 img = testimage("fabio_gray_256") # load an image
-d = dither(img, FloydSteinberg()) # apply algorithm of your choice
+d = dither(img)                   # apply default algorithm: FloydSteinberg()
 
-dither!(img, FloydSteinberg())    # or in-place modify image
+dither!(img)                      # or in-place modify image
 ```
 
-All algorithms can be used for binary or channel-wise dithering:
+If no color palette is provided, DitherPunk will apply binary dithering to each color channel of the input:
 | **Error diffusion** | **Ordered dithering** | **Digital halftoning** |
 |:-------------------:|:---------------------:|:----------------------:|
 | ![][atkinson-bw]    | ![][bayer-bw]         | ![][ordered-bw]        |
 | ![][atkinson-col]   | ![][bayer-col]        | ![][ordered-col]       |
 
+Any of the [29 implemented algorithms][alg-list-url] can be used:
+```julia
+dither(img, Atkinson())
+dither(img, Bayer())
+dither(img, ClusteredDots())
+
+dither!(img, Atkinson())
+dither!(img, Bayer())
+dither!(img, ClusteredDots())
+```
+
+### Color dithering
 All error diffusion, ordered dithering and halftoning methods support custom color palettes. Define your own palette or use those from [ColorSchemes.jl](https://juliagraphics.github.io/ColorSchemes.jl/stable/catalogue):
 ```julia
-using DitherPunk
 using ColorSchemes
 
-dither(img, FloydSteinberg(), ColorSchemes.flag_us)
+cs = ColorSchemes.flag_us
+dither(img, cs) 
 ```
 | `flag_us`       | `PuOr_6`       | `websafe`    |
 |:---------------:|:--------------:|:------------:|
@@ -45,20 +57,24 @@ dither(img, FloydSteinberg(), ColorSchemes.flag_us)
 
 DitherPunk also lets you generate optimized color palettes for each input image:
 ```julia
-using DitherPunk
-
 ncolors = 8
-dither(img, FloydSteinberg(), ncolors)
+dither(img, ncolors)
 ```
 | 2 colors          | 8 colors          | 32 colors          |
 |:-----------------:|:-----------------:|:------------------:|
 | ![][clustering_2] | ![][clustering_8] | ![][clustering_32] |
 
+Dithering in custom colors is supported by all error diffusion, ordered dithering and halftoning methods:
+```julia
+dither(img, Atkinson(), cs)
+dither(img, Atkinson(), ncolors)
+```
+
 For a more in-depth introduction, [take a look at the docs](https://juliaimages.org/DitherPunk.jl/stable/generated/simple_example/).
 
 ## List of implemented algorithms
 * Error diffusion:
-  * `FloydSteinberg` (default algorithm)
+  * `FloydSteinberg` (default)
   * `JarvisJudice`
   * `Atkinson`
   * `Stucki`
@@ -108,6 +124,8 @@ ___
 
 [codecov-img]: https://codecov.io/gh/JuliaImages/DitherPunk.jl/branch/master/graph/badge.svg
 [codecov-url]: https://codecov.io/gh/JuliaImages/DitherPunk.jl
+
+[alg-list-url]: https://github.com/JuliaImages/DitherPunk.jl#list-of-implemented-algorithms
 
 [atkinson-bw]: https://raw.githubusercontent.com/JuliaImages/DitherPunk.jl/gh-pages/assets/Atkinson.png
 [atkinson-col]: https://raw.githubusercontent.com/JuliaImages/DitherPunk.jl/gh-pages/assets/AtkinsonColor.png

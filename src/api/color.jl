@@ -56,12 +56,13 @@ function _colordither(
     cs::AbstractVector{<:Pixel};
     metric::DifferenceMetric=DE_2000(),
     to_linear=false,
+    kwargs...,
 ) where {T}
     to_linear && (@warn "Skipping transformation `to_linear` when dithering in color.")
     length(cs) >= 2 ||
         throw(DomainError(steps, "Color scheme for dither needs >= 2 colors."))
 
-    index = colordither(alg, img, cs, metric)
+    index = colordither(alg, img, cs, metric; kwargs...)
     _cs::Vector{T} = T.(cs)
     return IndirectArray(index, _cs)
 end
@@ -75,6 +76,9 @@ function _colordither(
     cs::AbstractVector{<:Color{<:Any,3}};
     metric::DifferenceMetric=DE_2000(),
     to_linear=false,
+    kwargs...,
 ) where {T<:NumberLike}
-    return _colordither(eltype(cs), img, alg, cs; metric=metric, to_linear=to_linear)
+    return _colordither(
+        eltype(cs), img, alg, cs; metric=metric, to_linear=to_linear, kwargs...
+    )
 end

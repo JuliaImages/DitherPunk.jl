@@ -50,7 +50,6 @@ algs_deterministic = Dict(
     "ShiauFan2" => @inferred(ShiauFan2()),
     "FalseFloydSteinberg" => @inferred(DitherPunk.FalseFloydSteinberg()),
     # Keyword arguments
-    "FloydSteinberg_clamp_error" => @inferred(FloydSteinberg(; clamp_error=false)),
     "Bayer_invert_map" => Bayer(; invert_map=true),
 )
 
@@ -61,6 +60,11 @@ for (name, alg) in algs_deterministic
     @test eltype(d) == eltype(img)
     @test img2 == img # image not modified
 end
+
+# Test error diffusion kwarg `clamp_error`:
+d = @inferred dither(img, FloydSteinberg(); clamp_error=false)
+@test_reference "references/gradient/FloydSteinberg_clamp_error.txt" Int.(d)
+@test eltype(d) == eltype(img)
 
 ## Algorithms with random output are currently only tested visually
 algs_random = Dict(

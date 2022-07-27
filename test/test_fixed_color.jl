@@ -24,6 +24,11 @@ for C in [RGB, HSV]
     end
 end
 
+# Test error diffusion kwarg `clamp_error`:
+d = @inferred dither(img, FloydSteinberg(); clamp_error=false)
+@test_reference "references/per-channel/FloydSteinberg_clamp_error.txt" d
+@test eltype(d) == eltype(img)
+
 # Test default algorithm
 d1 = @inferred dither(img, FloydSteinberg())
 d2 = @inferred dither(img)

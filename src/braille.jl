@@ -1,9 +1,15 @@
 # These functions are only conditionally loaded with UnicodePlots.jl
 
 """
-    braille(img, alg)
+    braille(img; kwargs...)
+    braille(img, alg; kwargs...)
 
 Binary dither with algorithm `alg`, then print image in braille.
+
+## Keyword arguments
+  - `invert`: invert Unicode output, defaults to `false`
+
+All keyword arguments for binary dithering methods can be used.
 """
 function braille(img::GenericImage, alg::AbstractDither; invert=false, kwargs...)
     d = dither(Bool, Gray.(img), alg; kwargs...)

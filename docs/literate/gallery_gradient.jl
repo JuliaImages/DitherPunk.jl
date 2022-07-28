@@ -35,11 +35,11 @@ test_on_gradient(Bayer())
 # The order of the Bayer-matrix can be specified through the parameter `level`,
 # which defaults to `1`.
 # **Level 2**
-test_on_gradient(Bayer(; level=2))
+test_on_gradient(Bayer(2))
 # **Level 3**
-test_on_gradient(Bayer(; level=3))
+test_on_gradient(Bayer(3))
 # **Level 4**
-test_on_gradient(Bayer(; level=4))
+test_on_gradient(Bayer(4))
 
 # ### Clustered / halftone dithering
 # The following methods have large characteristic patterns and are therefore

@@ -1,5 +1,4 @@
 using DitherPunk
-using DitherPunk: gradient_image
 using ReferenceTests
 using OffsetArrays
 
@@ -25,9 +24,9 @@ algs_deterministic = Dict(
     "ClosestColor" => ClosestColor(),
     # ordered dithering
     "Bayer" => Bayer(),
-    "Bayer_l2" => Bayer(; level=2),
-    "Bayer_l3" => Bayer(; level=3),
-    "Bayer_l4" => Bayer(; level=4),
+    "Bayer_l2" => Bayer(2),
+    "Bayer_l3" => Bayer(3),
+    "Bayer_l4" => Bayer(4),
     "ClusteredDots" => ClusteredDots(),
     "CentralWhitePoint" => CentralWhitePoint(),
     "BalancedCenteredPoint" => BalancedCenteredPoint(),

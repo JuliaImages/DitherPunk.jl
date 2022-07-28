@@ -97,7 +97,7 @@ function colordither(
 end
 
 """
-    Bayer(; level)
+    Bayer(level)
 
 Ordered dithering using the Bayer matrix as a threshold matrix.
 The Bayer matrix is of dimension ``2^{n+1} \\times 2^{n+1}``, where ``n`` is the `level`,
@@ -107,10 +107,11 @@ which defaults to `1`.
      Tone Pictures," IEEE International Conference on Communications,
      Conference Records, 1973, pp. 26-11 to 26-15.
 """
-function Bayer(; level=1, kwargs...)
+function Bayer(level::Integer, kwargs...)
     bayer = bayer_matrix(level) .+ 1
     return OrderedDither(bayer//(2^(2 * level + 2) + 1); kwargs...)
 end
+@deprecate Bayer(; level=1, kwargs...) Bayer(level, kwargs...)
 
 """
     bayer_matrix(n::Integer)::AbstractMatrix{Int}

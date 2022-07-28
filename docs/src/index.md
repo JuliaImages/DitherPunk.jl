@@ -119,7 +119,7 @@ dither(img, rubiks_colors; metric=DE_2000())
 
 This looks much better than simply quantizing to the closest color:
 ````@example simple_example
-dither(img, ClosestColor(), rubiks_colors)
+dither(img, ClosestColor(), rubiks_colors; metric=DE_2000())
 ````
 
 An interesting effect can also be achieved by color dithering gray-scale images:

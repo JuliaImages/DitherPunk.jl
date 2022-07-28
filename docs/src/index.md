@@ -43,7 +43,8 @@ dither(img_gray, FloydSteinberg())
 ````
 
 !!! note
-    DitherPunk currently implements 30 algorithms. Take a look at the [Image Gallery](@ref) and [Gradient Gallery](@ref) for examples of each method!
+    DitherPunk currently implements around 30 algorithms. Take a look at the [Image Gallery](@ref) 
+    and [Gradient Gallery](@ref) for examples of each method!
 
 One of the implemented methods is [`Bayer`](@ref), an [ordered dithering](https://en.wikipedia.org/wiki/Ordered_dithering) algorithm that leads to characteristic cross-hatch patterns.
 ````@example simple_example
@@ -53,6 +54,15 @@ dither(img_gray, Bayer())
 [`Bayer`](@ref) specifically can also be used with several "levels" of Bayer-matrices:
 ````@example simple_example
 dither(img_gray, Bayer(3))
+````
+
+You can also specify the return type of the image:
+````@example simple_example
+dither(Gray{Float16}, img_gray, Bayer(3))
+````
+
+````@example simple_example
+dither(Bool, img_gray, Bayer(3))
 ````
 
 ### Color spaces
@@ -97,19 +107,19 @@ rubiks_colors = [white, yellow, green, orange, red, blue]
 
 Currently, dithering in custom colors is limited to [`ErrorDiffusion`](@ref) and [`OrderedDither`](@ref) algorithms:
 ````@example simple_example
-d = dither(img, rubiks_colors)
+dither(img, rubiks_colors)
 ````
 
 This result doesn't look too good since the default metric `DE_AB()` just uses Euclidean distances in `Lab` color space. 
 Playing around with [perceptual color difference metrics from Colors.jl](https://juliagraphics.github.io/Colors.jl/stable/colordifferences/) can help:
 ````@example simple_example
 using Colors
-d = dither(img, rubiks_colors; metric=DE_2000())
+dither(img, rubiks_colors; metric=DE_2000())
 ````
 
 This looks much better than simply quantizing to the closest color:
 ````@example simple_example
-d = dither(img, ClosestColor(), rubiks_colors)
+dither(img, ClosestColor(), rubiks_colors)
 ````
 
 An interesting effect can also be achieved by color dithering gray-scale images:
@@ -117,8 +127,18 @@ An interesting effect can also be achieved by color dithering gray-scale images:
 d = dither(img_gray, rubiks_colors; metric=DE_2000())
 ````
 
+The output from a color dithering algorithm is an [`IndirectArray`](https://github.com/JuliaArrays/IndirectArrays.jl), which contains a color palette
+````@example simple_example
+d.values
+````
+and indices onto this palette
+````@example simple_example
+d.index
+````
+This `index` Matrix can be used in creative ways. Take a look at [ASCII dithering](@ref) for an example!
+
 ### ColorSchemes.jl
-Predefined color schemes from [ColorSchemes.jl](https://juliagraphics.github.io/ColorSchemes.jl/stable/basics/#Pre-defined-schemes) can also be used.
+Predefined color schemes from [ColorSchemes.jl](https://juliagraphics.github.io/ColorSchemes.jl/stable/catalogue/) can also be used.
 ````@example simple_example
 using ColorSchemes
 dither(img, ColorSchemes.PuOr_7)
@@ -141,6 +161,17 @@ dither(img, 8)
 dither(img, Bayer(), 8)
 ````
 
+## Extra glitchiness
+If you want glitchy artefacts in your art, use an [`ErrorDiffusion`](@ref) method and set the keyword argument `clamp_error=false`.
+````@example simple_example
+dither(img, FloydSteinberg(), [blue, white, red]; clamp_error=false)
+````
+
+Have fun playing around with different combinations of algorithms, color schemes and color difference metrics!
+````@example simple_example
+dither(img, Atkinson(), ColorSchemes.julia; metric=DE_CMC(), clamp_error=false)
+```` 
+
 ## Braille
 It is also possible to dither images directly to Braille-characters using [`braille()`](@ref). The interface is the same
 as for binary dithering with `dither`:
@@ -155,8 +186,3 @@ Depending on the color of the Unicode characters and the background, you might a
 ````@example simple_example
 braille(img, Bayer(); invert=true)
 ````
-
----
-
-*This page was generated using [Literate.jl](https://github.com/fredrikekre/Literate.jl).*
-

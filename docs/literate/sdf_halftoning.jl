@@ -47,3 +47,7 @@ dither(img, alg)
 # Large halftoning matrices look great on high resolution images.
 alg = sdf2halftone(star_sdf, 15)
 dither(img, alg)
+
+#
+alg = sdf2halftone(star_sdf, 30)
+dither(img, alg)

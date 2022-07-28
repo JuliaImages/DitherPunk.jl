@@ -11,9 +11,9 @@ img_secret = testimage("airplaneF16");
 
 # First we dither to eight colors:
 ncolors = 8
-d = dither(img, FloydSteinberg(), ncolors)
+d = dither(img, ncolors)
 #
-d_secret = dither(img_secret, FloydSteinberg(), ncolors)
+d_secret = dither(img_secret, ncolors)
 
 # Both of these images are IndirectArrays, which means they contain a color scheme
 d.values

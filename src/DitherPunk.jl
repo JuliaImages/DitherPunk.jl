@@ -24,7 +24,6 @@ include("ordered.jl")
 include("ordered_imagemagick.jl")
 include("error_diffusion.jl")
 include("closest_color.jl")
-include("eval.jl")
 include("api/default_method.jl")
 
 # lazily loaded features

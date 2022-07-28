@@ -15,7 +15,7 @@ ascii_ramp = split(" .:-=+*#%@", "")
 cs = Gray.(range(0, 1; length=10))
 
 # Dithering will return an `IndirectArray`:
-d = dither(img, FloydSteinberg(), cs)
+d = dither(img, cs)
 
 # Instead of showing `d` as an image, we can use its indices
 # to select the corresponding ASCII characters from the ramp.

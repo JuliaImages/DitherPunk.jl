@@ -1,10 +1,16 @@
 using DitherPunk
-using DitherPunk: gradient_image
 using ReferenceTests
 using OffsetArrays
 
 using ImageBase
 using ImageBase.ImageCore: GenericGrayImage
+
+function gradient_image(height, width)
+    row = reshape(range(0; stop=1, length=width), 1, width)
+    grad = Gray.(vcat(repeat(row, height))) # Linear gradient
+    img = srgb2linear.(grad) # For printing, compensate for SRGB colorspace
+    return grad, img
+end
 
 w = 200
 h = 4 * 4 # multiple of 4 for unicode braille print
@@ -18,9 +24,9 @@ algs_deterministic = Dict(
     "ClosestColor" => ClosestColor(),
     # ordered dithering
     "Bayer" => Bayer(),
-    "Bayer_l2" => Bayer(; level=2),
-    "Bayer_l3" => Bayer(; level=3),
-    "Bayer_l4" => Bayer(; level=4),
+    "Bayer_l2" => Bayer(2),
+    "Bayer_l3" => Bayer(3),
+    "Bayer_l4" => Bayer(4),
     "ClusteredDots" => ClusteredDots(),
     "CentralWhitePoint" => CentralWhitePoint(),
     "BalancedCenteredPoint" => BalancedCenteredPoint(),

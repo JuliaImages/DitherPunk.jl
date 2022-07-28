@@ -3,6 +3,7 @@
 ```@docs
 dither
 dither!
+braille
 ```
 
 # Algorithm types

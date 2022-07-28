@@ -10,77 +10,71 @@ end
 file_names = [
     "cameraman", "lake_gray", "house", "fabio_gray_512", "mandril_gray", "peppers_gray"
 ]
-imgs = [preprocess(testimage(file)) for file in file_names]
-mosaic(imgs; ncol=3)
+img = mosaic([preprocess(testimage(file)) for file in file_names]; ncol=3)
 
-function test_on_images(alg; to_linear=false)
-    dithers = [dither(img, alg; to_linear) for img in imgs]
-    return mosaic(dithers; ncol=3)
-end
+dither(img, ConstantThreshold())
 
-test_on_images(ConstantThreshold())
+dither(img, WhiteNoiseThreshold())
 
-test_on_images(WhiteNoiseThreshold())
+dither(img, Bayer())
 
-test_on_images(Bayer())
+dither(img, Bayer(2))
 
-test_on_images(Bayer(; level=2))
+dither(img, Bayer(3))
 
-test_on_images(Bayer(; level=3))
+dither(img, Bayer(4))
 
-test_on_images(Bayer(; level=4))
+dither(img, ClusteredDots())
 
-test_on_images(ClusteredDots())
+dither(img, CentralWhitePoint())
 
-test_on_images(CentralWhitePoint())
+dither(img, BalancedCenteredPoint())
 
-test_on_images(BalancedCenteredPoint())
+dither(img, Rhombus())
 
-test_on_images(Rhombus())
+dither(img, IM_checks())
 
-test_on_images(IM_checks())
+dither(img, IM_h4x4a())
 
-test_on_images(IM_h4x4a())
+dither(img, IM_h6x6a())
 
-test_on_images(IM_h6x6a())
+dither(img, IM_h8x8a())
 
-test_on_images(IM_h8x8a())
+dither(img, IM_h4x4o())
 
-test_on_images(IM_h4x4o())
+dither(img, IM_h6x6o())
 
-test_on_images(IM_h6x6o())
+dither(img, IM_h8x8o())
 
-test_on_images(IM_h8x8o())
+dither(img, IM_c5x5())
 
-test_on_images(IM_c5x5())
+dither(img, IM_c6x6())
 
-test_on_images(IM_c6x6())
+dither(img, IM_c7x7())
 
-test_on_images(IM_c7x7())
+dither(img, SimpleErrorDiffusion())
 
-test_on_images(SimpleErrorDiffusion())
+dither(img, FloydSteinberg())
 
-test_on_images(FloydSteinberg())
+dither(img, JarvisJudice())
 
-test_on_images(JarvisJudice())
+dither(img, Stucki())
 
-test_on_images(Stucki())
+dither(img, Burkes())
 
-test_on_images(Burkes())
+dither(img, Sierra())
 
-test_on_images(Sierra())
+dither(img, TwoRowSierra())
 
-test_on_images(TwoRowSierra())
+dither(img, SierraLite())
 
-test_on_images(SierraLite())
+dither(img, Fan93())
 
-test_on_images(Fan93())
+dither(img, ShiauFan())
 
-test_on_images(ShiauFan())
+dither(img, ShiauFan2())
 
-test_on_images(ShiauFan2())
-
-test_on_images(Atkinson())
+dither(img, Atkinson())
 
 # This file was generated using Literate.jl, https://github.com/fredrikekre/Literate.jl
 

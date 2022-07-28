@@ -7,9 +7,9 @@ img = testimage("peppers")
 img_secret = testimage("airplaneF16");
 
 ncolors = 8
-d = dither(img, FloydSteinberg(), ncolors)
+d = dither(img, ncolors)
 
-d_secret = dither(img_secret, FloydSteinberg(), ncolors)
+d_secret = dither(img_secret, ncolors)
 
 d.values
 

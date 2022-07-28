@@ -1,9 +1,24 @@
 using DitherPunk
-using DitherPunk: gradient_image, test_on_gradient
+using DitherPunk: srgb2linear
 using Images
+
+function gradient_image(height, width) #hide
+    row = reshape(range(0; stop=1, length=width), 1, width) #hide
+    grad_srbg = Gray.(vcat(repeat(row, height))) #hide
+    grad_linear = srgb2linear.(grad_srbg) #hide
+    return grad_srbg, grad_linear #hide
+end; #hide
 
 srbg, linear = gradient_image(100, 800);
 mosaicview(srbg, linear)
+
+function test_on_gradient(alg)
+    srgb, linear = gradient_image(100, 800)
+    dither_srgb = dither(srgb, alg)
+    dither_linear = dither(linear, alg)
+
+    return mosaicview([srgb, dither_srgb, linear, dither_linear]; ncol=1)
+end;
 
 test_on_gradient(ConstantThreshold())
 
@@ -11,11 +26,11 @@ test_on_gradient(WhiteNoiseThreshold())
 
 test_on_gradient(Bayer())
 
-test_on_gradient(Bayer(; level=2))
+test_on_gradient(Bayer(2))
 
-test_on_gradient(Bayer(; level=3))
+test_on_gradient(Bayer(3))
 
-test_on_gradient(Bayer(; level=4))
+test_on_gradient(Bayer(4))
 
 test_on_gradient(ClusteredDots())
 

@@ -3,7 +3,7 @@ CurrentModule = DitherPunk
 ```
 
 # DitherPunk.jl
-A [dithering / digital halftoning](https://en.wikipedia.org/wiki/Dither) package inspired by [Lucas Pope's Obra Dinn](https://obradinn.com) and [Surma's blogpost](https://surma.dev/things/ditherpunk/) of the same name.
+A [dithering & digital halftoning](https://en.wikipedia.org/wiki/Dither) package inspired by [Lucas Pope's Obra Dinn](https://obradinn.com) and [Surma's blogpost](https://surma.dev/things/ditherpunk/) of the same name.
 
 !!! note
     This package is part of a wider [Julia-based image processing ecosystem](https://github.com/JuliaImages). If you are starting out, then you may benefit from reading about some [fundamental conventions](https://juliaimages.org/latest/quickstart/) that the ecosystem utilizes that are markedly different from how images are typically represented in OpenCV, MATLAB, ImageJ or Python.
@@ -43,7 +43,7 @@ dither(img_gray, FloydSteinberg())
 ````
 
 !!! note
-    DitherPunk currently implements 30 algorithms. Take a look at the [Gallery](@ref) for examples of each method!
+    DitherPunk currently implements 30 algorithms. Take a look at the [Image Gallery](@ref) and [Gradient Gallery](@ref) for examples of each method!
 
 One of the implemented methods is [`Bayer`](@ref), an [ordered dithering](https://en.wikipedia.org/wiki/Ordered_dithering) algorithm that leads to characteristic cross-hatch patterns.
 ````@example simple_example
@@ -95,7 +95,7 @@ blue = RGB{Float32}(0, 0, 1)
 rubiks_colors = [white, yellow, green, orange, red, blue]
 ````
 
-Currently, dithering in custom colors is limited to [`ErrorDiffusion()`](@ref) and [`OrderedDither()`](@ref) algorithms:
+Currently, dithering in custom colors is limited to [`ErrorDiffusion`](@ref) and [`OrderedDither`](@ref) algorithms:
 ````@example simple_example
 d = dither(img, rubiks_colors)
 ````

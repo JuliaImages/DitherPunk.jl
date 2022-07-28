@@ -2,7 +2,7 @@ using DitherPunk
 using Images
 using TestImages
 
-# # Test image gallery
+# # Image Gallery
 # This gallery uses images from [*TestImages.jl*](https://testimages.juliaimages.org).
 function preprocess(img)
     img = Gray.(img)
@@ -12,100 +12,92 @@ end
 file_names = [
     "cameraman", "lake_gray", "house", "fabio_gray_512", "mandril_gray", "peppers_gray"
 ]
-imgs = [preprocess(testimage(file)) for file in file_names]
-mosaic(imgs; ncol=3)
-
-# Our test function `test_on_images` just runs a dithering algorithm on all six images
-# in linear color space (`to_liner=true`).
-function test_on_images(alg; to_linear=false)
-    dithers = [dither(img, alg; to_linear) for img in imgs]
-    return mosaic(dithers; ncol=3)
-end
+img = mosaic([preprocess(testimage(file)) for file in file_names]; ncol=3)
 
 # ## Threshold dithering
 # #### `ConstantThreshold`
-test_on_images(ConstantThreshold())
+dither(img, ConstantThreshold())
 
 # #### `WhiteNoiseThreshold`
-test_on_images(WhiteNoiseThreshold())
+dither(img, WhiteNoiseThreshold())
 
 # ## Ordered dithering
 # #### Bayer matrices
 # **Level 1**
-test_on_images(Bayer())
+dither(img, Bayer())
 # **Level 2**
-test_on_images(Bayer(2))
+dither(img, Bayer(2))
 # **Level 3**
-test_on_images(Bayer(3))
+dither(img, Bayer(3))
 # **Level 4**
-test_on_images(Bayer(4))
+dither(img, Bayer(4))
 
 # #### `ClusteredDots`
-test_on_images(ClusteredDots())
+dither(img, ClusteredDots())
 
 # #### `CentralWhitePoint`
-test_on_images(CentralWhitePoint())
+dither(img, CentralWhitePoint())
 
 # #### `BalancedCenteredPoint`
-test_on_images(BalancedCenteredPoint())
+dither(img, BalancedCenteredPoint())
 
 # #### `Rhombus`
-test_on_images(Rhombus())
+dither(img, Rhombus())
 
 # #### ImageMagick methods
-test_on_images(IM_checks())
+dither(img, IM_checks())
 #
-test_on_images(IM_h4x4a())
+dither(img, IM_h4x4a())
 #
-test_on_images(IM_h6x6a())
+dither(img, IM_h6x6a())
 #
-test_on_images(IM_h8x8a())
+dither(img, IM_h8x8a())
 #
-test_on_images(IM_h4x4o())
+dither(img, IM_h4x4o())
 #
-test_on_images(IM_h6x6o())
+dither(img, IM_h6x6o())
 #
-test_on_images(IM_h8x8o())
+dither(img, IM_h8x8o())
 #
-test_on_images(IM_c5x5())
+dither(img, IM_c5x5())
 #
-test_on_images(IM_c6x6())
+dither(img, IM_c6x6())
 #
-test_on_images(IM_c7x7())
+dither(img, IM_c7x7())
 
 # ## Error diffusion
 # #### `SimpleErrorDiffusion`
-test_on_images(SimpleErrorDiffusion())
+dither(img, SimpleErrorDiffusion())
 
 # #### `FloydSteinberg`
-test_on_images(FloydSteinberg())
+dither(img, FloydSteinberg())
 
 # #### `JarvisJudice`
-test_on_images(JarvisJudice())
+dither(img, JarvisJudice())
 
 # #### `Stucki`
-test_on_images(Stucki())
+dither(img, Stucki())
 
 # #### `Burkes`
-test_on_images(Burkes())
+dither(img, Burkes())
 
 # #### `Sierra`
-test_on_images(Sierra())
+dither(img, Sierra())
 
 # #### `TwoRowSierra`
-test_on_images(TwoRowSierra())
+dither(img, TwoRowSierra())
 
 # #### `SierraLite`
-test_on_images(SierraLite())
+dither(img, SierraLite())
 
 # #### `Fan93()`
-test_on_images(Fan93())
+dither(img, Fan93())
 
 # #### `ShiauFan()`
-test_on_images(ShiauFan())
+dither(img, ShiauFan())
 
 # #### `ShiauFan2()`
-test_on_images(ShiauFan2())
+dither(img, ShiauFan2())
 
 # #### `Atkinson()`
-test_on_images(Atkinson())
+dither(img, Atkinson())

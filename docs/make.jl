@@ -24,8 +24,8 @@ makedocs(;
     pages=[
         "Getting started" => "index.md",
         "Gallery" => Any[
-            "Gradient" => "generated/gallery_gradient.md",
             "Images" => "generated/gallery_images.md",
+            "Gradient" => "generated/gallery_gradient.md",
         ],
         "Fun applications" => Any[
             "ASCII dithering" => "generated/ascii.md",

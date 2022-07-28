@@ -1,8 +1,15 @@
 using DitherPunk
-using DitherPunk: gradient_image, test_on_gradient
+using DitherPunk: srgb2linear
 using Images
 
-# # Gallery
+function gradient_image(height, width) #hide
+    row = reshape(range(0; stop=1, length=width), 1, width) #hide
+    grad_srbg = Gray.(vcat(repeat(row, height))) #hide
+    grad_linear = srgb2linear.(grad_srbg) #hide
+    return grad_srbg, grad_linear #hide
+end; #hide
+
+# # Gradient Gallery
 # ## On color spaces
 # A simple linear gradient works well to reveal the characteristic patterns of
 # different dithering algorithms.
@@ -14,8 +21,14 @@ mosaicview(srbg, linear)
 #
 # The helper function `test_on_gradient` takes a dithering algorithm and runs it on
 # both the `srgb` and the `linear` image.
-# It then shows a comparison of both inputs and outputs.
-#
+# It then shows a comparison of both inputs and outputs:
+function test_on_gradient(alg)
+    srgb, linear = gradient_image(100, 800)
+    dither_srgb = dither(srgb, alg)
+    dither_linear = dither(linear, alg)
+
+    return mosaicview([srgb, dither_srgb, linear, dither_linear]; ncol=1)
+end;
 # Most dithering algorithms in DitherPunk.jl provide an optional parameter `to_linear`,
 # which converts the input image to a linear color space before applying the dithering.
 # Select what looks best!
@@ -79,6 +92,11 @@ test_on_gradient(IM_c6x6())
 test_on_gradient(IM_c7x7())
 
 # ## Error diffusion
+# !!! note
+#     If you are a dithering expert, the following images might look unusual to you.
+#     This is because DitherPunk iterates over colums first due to Julia's column-first
+#     memory layout for arrays.
+#
 # #### `SimpleErrorDiffusion`
 test_on_gradient(SimpleErrorDiffusion())
 

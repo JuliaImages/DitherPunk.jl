@@ -139,11 +139,13 @@ img_zero_based = OffsetMatrix(rand(Float32, 10, 10), 0:9, 0:9)
 @test_throws ArgumentError dither(img_zero_based)
 
 ## Braille dithering
-@test_reference "references/braille/FloydSteinberg.txt" braille(img; to_string=true)
-@test_reference "references/braille/FloydSteinberg_invert.txt" braille(
-    img; invert=true, to_string=true
-)
-@test_reference "references/braille/Bayer.txt" braille(img, Bayer(); to_string=true)
-@test_reference "references/braille/Bayer_invert.txt" braille(
-    img, Bayer(); invert=true, to_string=true
-)
+@testset "Braille" begin
+    @test_reference "references/braille/FloydSteinberg.txt" braille(img; to_string=true)
+    @test_reference "references/braille/FloydSteinberg_invert.txt" braille(
+        img; invert=true, to_string=true
+    )
+    @test_reference "references/braille/Bayer.txt" braille(img, Bayer(); to_string=true)
+    @test_reference "references/braille/Bayer_invert.txt" braille(
+        img, Bayer(); invert=true, to_string=true
+    )
+end

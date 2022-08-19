@@ -1,0 +1,20 @@
+[deps]
+ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
+ImageBase = "c817782e-172a-44cc-b673-b171935fbb9e"
+ImageIO = "82e4d734-157c-48bb-816b-45c225c6df19"
+ImageMagick = "6218d12a-5da1-5696-b52f-db25d2ecc6d1"
+IndirectArrays = "9b13fd28-a010-5f03-acff-a1bbcff69959"
+OffsetArrays = "6fe1bfb0-de20-5000-8ca7-80f57d26f881"
+ReferenceTests = "324d217c-45ce-50fc-942e-d289b448e8cf"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+TestImages = "5e47fb64-e119-507b-a336-dd2b206d9990"
+
+[compat]
+ColorSchemes = "3"
+ImageBase = "0.1"
+ImageIO = "0.6"
+ImageMagick = "1"
+IndirectArrays = "0.5, 1.0"
+OffsetArrays = "1"
+ReferenceTests = "0.10.1"
+TestImages = "1"

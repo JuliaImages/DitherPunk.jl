@@ -1,6 +1,4 @@
-const BRAILLE_START = 10240
-const BRAILLE_END = BRAILLE_START + 255
-const BRAILLE_SYMBOLS = Char.(BRAILLE_START:BRAILLE_END)
+const BRAILLE_SYMBOLS = Char.(10240:10495)
 const BRAILLE_CODE = [1, 2, 4, 64, 8, 16, 32, 128]
 const H_BRAILLE = 4
 const W_BRAILLE = 2
@@ -30,16 +28,17 @@ end
 
 function braille(A::AbstractMatrix{Bool}; invert::Bool=false, to_string::Bool=false)
     invert && (A .= .!A)
-    B = braille_matrix(A)
+    B = _braille_matrix(A)
     str = join([join(r) for r in eachrow(B)], "\n")
     to_string && return str
     print(str)
     return nothing
 end
 
-braille_index(A) = sum(view(A, :) .* BRAILLE_CODE) + 1
+_braille_index(A) = sum(view(A, :) .* BRAILLE_CODE) + 1
 
-function braille_matrix(A::AbstractMatrix)
+# returns Matrix{Char} of Unicode Braille characters
+function _braille_matrix(A::AbstractMatrix)
     hi, wi = size(A)
     ho, wo = cld(hi, H_BRAILLE), cld(wi, W_BRAILLE)
     out = Matrix{Char}(undef, ho, wo)
@@ -47,7 +46,7 @@ function braille_matrix(A::AbstractMatrix)
     AP = PaddedView(0, A, (ho * H_BRAILLE, wo * W_BRAILLE))
     for (i, tileaxs) in enumerate(TileIterator(axes(AP), (H_BRAILLE, W_BRAILLE)))
         v = view(AP, tileaxs...)
-        out[i] = BRAILLE_SYMBOLS[braille_index(v)]
+        out[i] = BRAILLE_SYMBOLS[_braille_index(v)]
     end
     return out
 end

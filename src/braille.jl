@@ -35,7 +35,13 @@ function braille(A::AbstractMatrix{Bool}; invert::Bool=false, to_string::Bool=fa
     return nothing
 end
 
-_braille_index(A) = sum(view(A, :) .* BRAILLE_CODE) + 1
+Base.@propagate_inbounds function _braille_index(A)
+    idx = 1
+    for i in 1:length(A)
+        idx += A[i] * BRAILLE_CODE[i]
+    end
+    return idx
+end
 
 # returns Matrix{Char} of Unicode Braille characters
 function _braille_matrix(A::AbstractMatrix)

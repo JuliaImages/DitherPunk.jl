@@ -3,7 +3,7 @@
 
 Convert pixel `u` from sRGB to linear color space.
 """
-@inline srgb2linear(u::Number) = Colors.invert_srgb_compand(u)
+@inline srgb2linear(u::Number) = invert_srgb_compand(u)
 @inline srgb2linear(u::Gray) = typeof(u)(srgb2linear(gray(u)))
 @inline srgb2linear(u::Bool) = u
 

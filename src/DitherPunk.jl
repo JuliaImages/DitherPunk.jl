@@ -5,12 +5,12 @@ using ImageBase.ImageCore.Colors: DifferenceMetric, colordiff, DE_AB, invert_srg
 using ImageBase.ImageCore: channelview, floattype, clamp01
 using ImageBase: restrict
 using Base: require_one_based_indexing
+using Random: rand
 using PaddedViews: PaddedView
+using IndirectArrays: IndirectArray
 using TiledIteration: TileIterator
-using Random
-using IndirectArrays
-using ColorSchemes
-using LazyModules
+using ColorSchemes: ColorScheme
+using LazyModules: @lazy
 #! format: off
 @lazy import Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 #! format: on
@@ -36,10 +36,10 @@ include("ordered_imagemagick.jl")
 include("error_diffusion.jl")
 include("closest_color.jl")
 include("api/default_method.jl")
+include("braille.jl")
 
 # lazily loaded features
 include("clustering.jl")
-include("braille.jl")
 
 export dither, dither!
 # Threshold dithering

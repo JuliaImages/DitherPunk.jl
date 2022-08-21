@@ -1,8 +1,9 @@
 module DitherPunk
 
-using ImageBase
-using ImageBase.ImageCore: NumberLike, Pixel, GenericImage, GenericGrayImage, MappedArrays
-using ImageBase.ImageCore.Colors: DifferenceMetric
+using ImageBase.ImageCore.ColorTypes
+using ImageBase.ImageCore.Colors: DifferenceMetric, colordiff, DE_AB, invert_srgb_compand
+using ImageBase.ImageCore: channelview, floattype, clamp01
+using ImageBase: restrict
 using Base: require_one_based_indexing
 using PaddedViews: PaddedView
 using TiledIteration: TileIterator
@@ -15,6 +16,15 @@ using LazyModules
 #! format: on
 
 abstract type AbstractDither end
+
+const BinaryGray = AbstractGray{Bool}
+const NumberLike = Union{Number,AbstractGray}
+const BinaryLike = Union{Bool,BinaryGray}
+const Pixel = Union{Number,Colorant}
+
+const GenericBinaryImage{T<:BinaryLike} = Union{BitMatrix,AbstractArray{T,2}}
+const GenericGrayImage{T<:NumberLike} = AbstractArray{T,2}
+const GenericImage{T<:Pixel,N} = AbstractArray{T,N}
 
 include("colorschemes.jl")
 include("utils.jl")

@@ -1,5 +1,13 @@
 using DitherPunk
 using Test
+using ImageBase: Gray
+
+function gradient_image(height, width)
+    row = reshape(range(0; stop=1, length=width), 1, width)
+    grad = Gray.(vcat(repeat(row, height))) # Linear gradient
+    img = srgb2linear.(grad) # For printing, compensate for SRGB colorspace
+    return grad, img
+end
 
 @testset "DitherPunk.jl" begin
     @testset "Utilities" begin
@@ -13,6 +21,10 @@ using Test
     @testset "Binary dithering" begin
         @info "Testing binary dithering..."
         include("test_gradient.jl")
+    end
+    @testset "Braille" begin
+        @info "Testing printing to braille..."
+        include("test_braille.jl")
     end
     @testset "Color image" begin
         @testset "Fixed palette" begin

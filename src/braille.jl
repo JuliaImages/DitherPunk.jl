@@ -17,7 +17,7 @@ All keyword arguments for binary dithering methods can be used.
 """
 function braille(img::GenericImage, alg::AbstractDither; kwargs...)
     img = convert.(Gray, img)
-    return braille(img, alg; kwargs)
+    return braille(img, alg; kwargs...)
 end
 function braille(
     img::GenericGrayImage,

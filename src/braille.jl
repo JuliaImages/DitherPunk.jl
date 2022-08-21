@@ -29,21 +29,13 @@ end
 function braille(A::AbstractMatrix{Bool}; invert::Bool=false, to_string::Bool=false)
     invert && (A .= .!A)
     B = _braille_matrix(A)
-    str = join([join(r) for r in eachrow(B)], "\n")
+    str = _mat2string(B)
     to_string && return str
     print(str)
     return nothing
 end
 
-Base.@propagate_inbounds function _braille_index(A)
-    idx = 1
-    for i in 1:length(A)
-        idx += A[i] * BRAILLE_CODE[i]
-    end
-    return idx
-end
-
-# returns Matrix{Char} of Unicode Braille characters
+# Construct Matrix{Char} of Unicode Braille characters
 function _braille_matrix(A::AbstractMatrix)
     hi, wi = size(A)
     ho, wo = cld(hi, H_BRAILLE), cld(wi, W_BRAILLE)
@@ -55,4 +47,22 @@ function _braille_matrix(A::AbstractMatrix)
         out[i] = BRAILLE_SYMBOLS[_braille_index(v)]
     end
     return out
+end
+
+Base.@propagate_inbounds function _braille_index(A)
+    idx = 1
+    for i in 1:8
+        idx += A[i] * BRAILLE_CODE[i]
+    end
+    return idx
+end
+
+function _mat2string(A::AbstractMatrix)
+    io = IOBuffer()
+    nmax = size(A, 1)
+    for (i, line) in enumerate(eachrow(A))
+        foreach(c -> print(io, c), line)
+        i < nmax && println(io)
+    end
+    return String(take!(io))
 end

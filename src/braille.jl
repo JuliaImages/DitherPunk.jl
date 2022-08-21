@@ -15,18 +15,34 @@ Binary dither with algorithm `alg`, then print image in braille.
 
 All keyword arguments for binary dithering methods can be used.
 """
+function braille(img::GenericImage, alg::AbstractDither; kwargs...)
+    img = convert.(Gray, img)
+    return braille(img, alg; kwargs)
+end
 function braille(
-    img::GenericImage,
+    img::GenericGrayImage,
     alg::AbstractDither;
     invert::Bool=false,
     to_string::Bool=false,
     kwargs...,
 )
-    d = dither(Bool, Gray.(img), alg; kwargs...)
+    d = dither(Bool, img, alg; kwargs...)
     return braille(d; invert=invert, to_string=to_string)
 end
 
-function braille(A::AbstractMatrix{Bool}; invert::Bool=false, to_string::Bool=false)
+# Default method:
+function braille(img::GenericImage; kwargs...)
+    return braille(img, DEFAULT_METHOD; kwargs...)
+end
+
+# Enable direct prining of Binary images:
+braille(img::AbstractMatrix{Bool}; kwargs...) = _braille(img; kwargs...)
+braille(img::BitMatrix; kwargs...) = _braille(img; kwargs...)
+function braille(img::AbstractMatrix{<:BinaryGray}; kwargs...)
+    return _braille(channelview(img); kwargs...)
+end
+
+function _braille(A::AbstractMatrix; invert::Bool=false, to_string::Bool=false)
     invert && (A .= .!A)
     B = _braille_matrix(A)
     str = _mat2string(B)

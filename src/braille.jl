@@ -27,7 +27,7 @@ function braille(
     kwargs...,
 )
     d = dither(Bool, img, alg; kwargs...)
-    return braille(d; invert=invert, to_string=to_string)
+    return _braille(d; invert=invert, to_string=to_string)
 end
 
 # Default method:

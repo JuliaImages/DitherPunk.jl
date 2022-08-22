@@ -50,14 +50,14 @@ algs_deterministic = Dict(
 for (name, alg) in algs_deterministic
     local img2 = copy(img)
     local d = @inferred dither(img2, alg)
-    @test_reference "references/gradient/$(name).txt" Int.(d)
+    @test_reference "references/gradient/$(name).txt" braille(d; to_string=true)
     @test eltype(d) == eltype(img)
     @test img2 == img # image not modified
 end
 
 # Test error diffusion kwarg `clamp_error`:
 d = @inferred dither(img, FloydSteinberg(); clamp_error=false)
-@test_reference "references/gradient/FloydSteinberg_clamp_error.txt" Int.(d)
+@test_reference "references/gradient/FloydSteinberg_clamp_error.txt" braille(d; to_string=true)
 @test eltype(d) == eltype(img)
 
 ## Algorithms with random output are currently only tested visually
@@ -76,7 +76,7 @@ end
 ## Test to_linear
 img2 = copy(img)
 d = @inferred dither(img2, Bayer(); to_linear=true)
-@test_reference "references/gradient/Bayer_linear.txt" Int.(d)
+@test_reference "references/gradient/Bayer_linear.txt" braille(d; to_string=true)
 alg = FloydSteinberg()
 dl1 = @inferred dither(img2, alg; to_linear=true)
 dl2 = @inferred dither(img2; to_linear=true)

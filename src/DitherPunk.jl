@@ -1,7 +1,7 @@
 module DitherPunk
 
 using ImageBase.ImageCore.ColorTypes
-using ImageBase.ImageCore.Colors: DifferenceMetric, colordiff, DE_AB, invert_srgb_compand
+using ImageBase.ImageCore.Colors: DifferenceMetric, colordiff, DE_2000, invert_srgb_compand
 using ImageBase.ImageCore: channelview, floattype, clamp01
 using ImageBase: restrict
 using Base: require_one_based_indexing

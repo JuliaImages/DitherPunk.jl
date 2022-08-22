@@ -17,6 +17,8 @@ function Base.showerror(io::IO, e::ColorNotImplementedError)
 end
 colordither(alg, img, cs, metric) = throw(ColorNotImplementedError(alg))
 
+const DEFAULT_METRIC = DE_2000()
+
 ##############
 # Public API #
 ##############
@@ -54,7 +56,7 @@ function _colordither(
     img::GenericImage,
     alg::AbstractDither,
     cs::AbstractVector{<:Pixel};
-    metric::DifferenceMetric=DE_AB(),
+    metric::DifferenceMetric=DEFAULT_METRIC,
     to_linear=false,
     kwargs...,
 ) where {T}
@@ -74,7 +76,7 @@ function _colordither(
     img::GenericImage,
     alg::AbstractDither,
     cs::AbstractVector{<:Color{<:Any,3}};
-    metric::DifferenceMetric=DE_AB(),
+    metric::DifferenceMetric=DEFAULT_METRIC,
     to_linear=false,
     kwargs...,
 ) where {T<:NumberLike}

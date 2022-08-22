@@ -107,24 +107,12 @@ rubiks_colors = [white, yellow, green, orange, red, blue]
 
 Currently, dithering in custom colors is limited to [`ErrorDiffusion`](@ref) and [`OrderedDither`](@ref) algorithms:
 ````@example simple_example
-dither(img, rubiks_colors)
-````
-
-This result doesn't look too good since the default metric `DE_AB()` just uses Euclidean distances in `Lab` color space. 
-Playing around with [perceptual color difference metrics from Colors.jl](https://juliagraphics.github.io/Colors.jl/stable/colordifferences/) can help:
-````@example simple_example
-using Colors
-dither(img, rubiks_colors; metric=DE_2000())
+d = dither(img, rubiks_colors)
 ````
 
 This looks much better than simply quantizing to the closest color:
 ````@example simple_example
-dither(img, ClosestColor(), rubiks_colors; metric=DE_2000())
-````
-
-An interesting effect can also be achieved by color dithering gray-scale images:
-````@example simple_example
-d = dither(img_gray, rubiks_colors; metric=DE_2000())
+dither(img, ClosestColor(), rubiks_colors)
 ````
 
 The output from a color dithering algorithm is an [`IndirectArray`](https://github.com/JuliaArrays/IndirectArrays.jl), which contains a color palette
@@ -137,6 +125,18 @@ d.index
 ````
 This `index` Matrix can be used in creative ways. Take a look at [ASCII dithering](@ref) for an example!
 
+An interesting effect can also be achieved by color dithering gray-scale images:
+````@example simple_example
+dither(img_gray, rubiks_colors)
+````
+
+You can also play around with [perceptual color difference metrics from Colors.jl](https://juliagraphics.github.io/Colors.jl/stable/colordifferences/). 
+For faster dithering, the metric `DE_AB()` can be used, which computes Euclidean distances in `Lab` color space:
+````@example simple_example
+using Colors
+dither(img, rubiks_colors; metric=DE_AB())
+````
+
 ### ColorSchemes.jl
 Predefined color schemes from [ColorSchemes.jl](https://juliagraphics.github.io/ColorSchemes.jl/stable/catalogue/) can also be used.
 ````@example simple_example
@@ -145,7 +145,7 @@ dither(img, ColorSchemes.PuOr_7)
 ````
 
 ````@example simple_example
-dither(img, Bayer(), ColorSchemes.berlin; metric=DE_2000())
+dither(img, Bayer(), ColorSchemes.berlin)
 ````
 
 !!! note "Discover new color schemes"

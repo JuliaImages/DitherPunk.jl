@@ -1,19 +1,30 @@
 module DitherPunk
 
-using ImageBase
-using ImageBase.ImageCore: NumberLike, Pixel, GenericImage, GenericGrayImage, MappedArrays
-using ImageBase.ImageCore.Colors: DifferenceMetric
+using ImageBase.ImageCore.ColorTypes
+using ImageBase.ImageCore.Colors: DifferenceMetric, colordiff, DE_AB, invert_srgb_compand
+using ImageBase.ImageCore: channelview, floattype, clamp01
+using ImageBase: restrict
 using Base: require_one_based_indexing
-using Random
-using IndirectArrays
-using ColorSchemes
-using LazyModules
+using Random: rand
+using PaddedViews: PaddedView
+using IndirectArrays: IndirectArray
+using TiledIteration: TileIterator
+using ColorSchemes: ColorScheme
+using LazyModules: @lazy
 #! format: off
 @lazy import Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
-@lazy import UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
 #! format: on
 
 abstract type AbstractDither end
+
+const BinaryGray = AbstractGray{Bool}
+const NumberLike = Union{Number,AbstractGray}
+const BinaryLike = Union{Bool,BinaryGray}
+const Pixel = Union{Number,Colorant}
+
+const GenericBinaryImage{T<:BinaryLike} = Union{BitMatrix,AbstractArray{T,2}}
+const GenericGrayImage{T<:NumberLike} = AbstractArray{T,2}
+const GenericImage{T<:Pixel,N} = AbstractArray{T,N}
 
 include("colorschemes.jl")
 include("utils.jl")
@@ -25,10 +36,10 @@ include("ordered_imagemagick.jl")
 include("error_diffusion.jl")
 include("closest_color.jl")
 include("api/default_method.jl")
+include("braille.jl")
 
 # lazily loaded features
 include("clustering.jl")
-include("braille.jl")
 
 export dither, dither!
 # Threshold dithering

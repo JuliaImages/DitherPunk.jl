@@ -2,19 +2,7 @@ using DitherPunk
 using ReferenceTests
 using OffsetArrays
 
-using ImageBase
-using ImageBase.ImageCore: GenericGrayImage
-
-function gradient_image(height, width)
-    row = reshape(range(0; stop=1, length=width), 1, width)
-    grad = Gray.(vcat(repeat(row, height))) # Linear gradient
-    img = srgb2linear.(grad) # For printing, compensate for SRGB colorspace
-    return grad, img
-end
-
-w = 200
-h = 4 * 4 # multiple of 4 for unicode braille print
-img, srgb = gradient_image(h, w)
+img, srgb = gradient_image(16, 200)
 
 ## Run reference tests for deterministic algorithms
 # using Dict for Julia 1.0 compatibility
@@ -137,9 +125,3 @@ d4def = @inferred dither!(img2def)
 img_zero_based = OffsetMatrix(rand(Float32, 10, 10), 0:9, 0:9)
 @test_throws ArgumentError dither(img_zero_based, FloydSteinberg())
 @test_throws ArgumentError dither(img_zero_based)
-
-## Braille dithering
-braille(img, Bayer())
-braille(img)
-braille(img, Bayer(); invert=true)
-braille(img; invert=true)

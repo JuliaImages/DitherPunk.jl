@@ -29,8 +29,3 @@ for T in (AbstractVector{<:Colorant}, ColorScheme, Integer)
         return dither(img, DEFAULT_METHOD, arg; kwargs...)
     end
 end
-
-# Dithering to Unicode Braille characters
-function braille(img::GenericImage; kwargs...)
-    return braille(img, DEFAULT_METHOD; kwargs...)
-end

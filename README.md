@@ -100,6 +100,11 @@ braille(img, Bayer(); invert=true)
 
 For a more in-depth introduction, [take a look at the docs](https://juliaimages.org/DitherPunk.jl/stable/generated/simple_example/).
 
+## Demonstration
+Check out our [talk at JuliaCon 2022][juliacon-url] for a demonstration of the package:
+
+[![][juliacon-img]][juliacon-url]
+
 ## List of implemented algorithms
 * Error diffusion:
   * `FloydSteinberg` (default)
@@ -152,6 +157,9 @@ ___
 
 [codecov-img]: https://codecov.io/gh/JuliaImages/DitherPunk.jl/branch/master/graph/badge.svg
 [codecov-url]: https://codecov.io/gh/JuliaImages/DitherPunk.jl
+
+[juliacon-img]: http://img.youtube.com/vi/nFDoEkrW2P4/0.jpg
+[juliacon-url]: https://www.youtube.com/watch?v=nFDoEkrW2P4
 
 [alg-list-url]: https://github.com/JuliaImages/DitherPunk.jl#list-of-implemented-algorithms
 

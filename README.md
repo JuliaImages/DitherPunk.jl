@@ -29,6 +29,7 @@ dither!(img, Bayer())             # with the algorithm of your choice
 ```
 
 If no color palette is provided, DitherPunk will apply binary dithering to each color channel of the input:
+
 | **Error diffusion** | **Ordered dithering** | **Digital halftoning** |
 |:-------------------:|:---------------------:|:----------------------:|
 | ![][atkinson-bw]    | ![][bayer-bw]         | ![][ordered-bw]        |
@@ -44,6 +45,7 @@ using ColorSchemes
 cs = ColorSchemes.flag_us
 dither(img, cs) 
 ```
+
 | `flag_us`       | `PuOr_6`       | `websafe`    |
 |:---------------:|:--------------:|:------------:|
 | ![][cs_flag_us] | ![][cs_PuOr_6] | ![][websafe] |
@@ -53,6 +55,7 @@ DitherPunk also lets you generate optimized color palettes for each input image:
 ncolors = 8
 dither(img, ncolors)
 ```
+
 | 2 colors          | 8 colors          | 32 colors          |
 |:-----------------:|:-----------------:|:------------------:|
 | ![][clustering_2] | ![][clustering_8] | ![][clustering_32] |

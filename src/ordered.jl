@@ -55,20 +55,20 @@ function colordither(
     # Precompute lookup tables for modulo indexing of threshold matrix
     mat = numerator.(alg.mat)
     nmax = maximum(mat)
-    matsize = size(mat)
-    rlookup = [mod1(i, matsize[1]) for i in 1:size(img)[1]]
-    clookup = [mod1(i, matsize[2]) for i in 1:size(img)[2]]
+    hm, wm = size(mat)
+    rlut = [mod1(i, hm) for i in axes(img, 1)]
+    clut = [mod1(i, wm) for i in axes(img, 2)]
 
     # Allocate matrices
-    candidates = Array{Int}(undef, nmax)
     index = Matrix{Int}(undef, size(img)...)
 
-    @inbounds for I in CartesianIndices(img)
+    Threads.@threads for I in CartesianIndices(img)
         r, c = Tuple(I)
         err = zero(XYZ)
         px = XYZ(img[I])
 
-        for j in 1:nmax
+        candidates = Array{Int}(undef, nmax)
+        @inbounds @views for j in 1:nmax
             col = px + alg.color_error_multiplier * err
             idx = _closest_color_idx(col, cs_lab, metric)
 
@@ -76,12 +76,10 @@ function colordither(
             # after the first iteration. Breaking out of this loops lets us avoid calling
             # the expensive closest color computation.
             if (j > 2) && (idx in candidates[2:(j - 1)])
-                # Find the range of the loop in `candidates`:
-                looprange = (findfirst(i -> i == idx, candidates[2:(j - 1)]) + 1):(j - 1)
+                # Find the start of the loop in `candidates`:
+                i0 = findfirst(isequal(idx), candidates[2:(j - 1)]) + 1
                 # Fill the rest of `candidates` with this loop:
-                candidates[j:end] .= Iterators.take(
-                    Iterators.cycle(candidates[looprange]), nmax - j + 1
-                )
+                candidates[j:end] .= take(cycle(candidates[i0:(j - 1)]), nmax - j + 1)
                 break
             else
                 candidates[j] = idx
@@ -89,9 +87,7 @@ function colordither(
             end
         end
         # Sort candidates by luminance (dark to bright)
-        index[I] = partialsort!(
-            candidates, mat[rlookup[r], clookup[c]]; by=i -> cs_lab[i].l
-        )
+        index[I] = partialsort!(candidates, mat[rlut[r], clut[c]]; by=i -> cs_lab[i].l)
     end
     return index
 end

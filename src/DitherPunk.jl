@@ -5,6 +5,7 @@ using ImageBase.ImageCore.Colors: DifferenceMetric, colordiff, DE_2000, invert_s
 using ImageBase.ImageCore: channelview, floattype, clamp01
 using ImageBase: restrict
 using Base: require_one_based_indexing
+using Base.Iterators: take, cycle
 using Random: rand
 using PaddedViews: PaddedView
 using IndirectArrays: IndirectArray

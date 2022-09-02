@@ -57,7 +57,9 @@ end
 
 # Test error diffusion kwarg `clamp_error`:
 d = @inferred dither(img, FloydSteinberg(); clamp_error=false)
-@test_reference "references/gradient/FloydSteinberg_clamp_error.txt" braille(d; to_string=true)
+@test_reference "references/gradient/FloydSteinberg_clamp_error.txt" braille(
+    d; to_string=true
+)
 @test eltype(d) == eltype(img)
 
 ## Algorithms with random output are currently only tested visually

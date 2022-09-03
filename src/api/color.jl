@@ -62,7 +62,7 @@ function _colordither(
 ) where {T}
     to_linear && (@warn "Skipping transformation `to_linear` when dithering in color.")
     length(cs) >= 2 ||
-        throw(DomainError(steps, "Color scheme for dither needs >= 2 colors."))
+        throw(DomainError(length(cs), "Color scheme for dither needs >= 2 colors."))
 
     index = colordither(alg, img, cs, metric; kwargs...)
     _cs::Vector{T} = T.(cs)

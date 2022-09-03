@@ -23,18 +23,17 @@ function binarydither!(alg::OrderedDither, out::GenericGrayImage, img::GenericGr
     # eagerly promote to the same eltype to make for-loop faster
     FT = floattype(eltype(img))
     mat = FT.(alg.mat)
-
     T = eltype(out)
-    black, white = T(0), T(1)
+    black, white = zero(T), oneunit(T)
 
     # Precompute lookup tables for modulo indexing of threshold matrix
-    matsize = size(mat)
-    rlookup = [mod1(i, matsize[1]) for i in 1:size(img)[1]]
-    clookup = [mod1(i, matsize[2]) for i in 1:size(img)[2]]
+    hm, wm = size(mat)
+    rlut = [mod1(i, hm) for i in axes(img, 1)]
+    clut = [mod1(i, wm) for i in axes(img, 2)]
 
-    @inbounds @simd for i in CartesianIndices(img)
-        r, c = Tuple(i)
-        out[i] = ifelse(img[i] > mat[rlookup[r], clookup[c]], white, black)
+    Threads.@threads for I in CartesianIndices(img)
+        r, c = Tuple(I)
+        @inbounds @views out[I] = ifelse(img[I] > mat[rlut[r], clut[c]], white, black)
     end
     return out
 end

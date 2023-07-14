@@ -6,10 +6,10 @@ using ImageBase.ImageCore: channelview, floattype, clamp01
 using ImageBase: restrict
 using Base: require_one_based_indexing
 using Random: rand
-using PaddedViews: PaddedView
 using IndirectArrays: IndirectArray
 using TiledIteration: TileIterator
 using ColorSchemes: ColorScheme
+using UnicodeGraphics: uprint, ustring
 using LazyModules: @lazy
 #! format: off
 @lazy import Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
@@ -57,6 +57,6 @@ export Sierra, TwoRowSierra, SierraLite, Atkinson, Fan93, ShiauFan, ShiauFan2
 export ClosestColor
 # Other utilities
 export upscale
-export braille, brailleprint
+export braille
 
 end # module

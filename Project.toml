@@ -14,11 +14,11 @@ Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 TiledIteration = "06e1c1a7-607b-532d-9fad-de7d9aa2abac"
 
 [compat]
-Clustering = "0.14"
+Clustering = "0.14, 0.15"
 ColorSchemes = "3"
 ImageBase = "0.1.3"
 IndirectArrays = "0.5, 1.0"
 LazyModules = "0.3"
 PaddedViews = "0.5"
-TiledIteration = "0.3, 0.4"
+TiledIteration = "0.3, 0.4, 0.5"
 julia = "1.6"

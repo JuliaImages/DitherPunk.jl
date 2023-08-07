@@ -1,12 +1,15 @@
 ![](./docs/logo/DitheredPunk.png)
 # 💀 DitherPunk.jl 💀
 
-| **Documentation**                                                     | **Build Status**                                      |
-|:--------------------------------------------------------------------- |:----------------------------------------------------- |
-| [![][docs-stab-img]][docs-stab-url] [![][docs-dev-img]][docs-dev-url] | [![][ci-img]][ci-url] [![][codecov-img]][codecov-url] |
+| **Documentation**                                                     | **Build Status**                                                                |
+|:--------------------------------------------------------------------- |:------------------------------------------------------------------------------- |
+| [![][docs-stab-img]][docs-stab-url] [![][docs-dev-img]][docs-dev-url] | [![][ci-img]][ci-url] [![][codecov-img]][codecov-url] [![][aqua-img]][aqua-url] |
 
-A dithering / digital halftoning package inspired by Lucas Pope's [Obra Dinn](https://obradinn.com) and [Surma's blogpost](https://surma.dev/things/ditherpunk/) of the same name. 
-**[Check out the gallery](https://JuliaImages.github.io/DitherPunk.jl/stable/generated/gallery_images/)** for an overview of all currently implemented algorithms.
+A dithering / digital halftoning package 
+inspired by Lucas Pope's [Obra Dinn](https://obradinn.com) 
+and [Surma's blogpost](https://surma.dev/things/ditherpunk/) of the same name. 
+**[Check out the gallery](https://JuliaImages.github.io/DitherPunk.jl/stable/generated/gallery_images/)** 
+for an overview of all currently implemented algorithms.
 
 ## Installation
 To install this package and its dependencies, open the Julia REPL and run 
@@ -38,7 +41,8 @@ If no color palette is provided, DitherPunk will apply binary dithering to each 
 Any of the [29 implemented algorithms][alg-list-url] can be used.
 
 ### Color dithering
-All error diffusion, ordered dithering and halftoning methods support custom color palettes. Define your own palette or use those from [ColorSchemes.jl](https://juliagraphics.github.io/ColorSchemes.jl/stable/catalogue):
+All error diffusion, ordered dithering and halftoning methods support custom color palettes.
+Define your own palette or use those from [ColorSchemes.jl](https://juliagraphics.github.io/ColorSchemes.jl/stable/catalogue):
 ```julia
 using ColorSchemes
 
@@ -123,7 +127,7 @@ Check out our [talk at JuliaCon 2022][juliacon-url] for a demonstration of the p
   * `ShiauFan2`
   * `SimpleErrorDiffusion`
 * Ordered dithering:
-  * `Bayer` (default level = 1)
+  * `Bayer`
 * Halftoning:
   * `ClusteredDots` 
   * `CentralWhitePoint` 
@@ -147,7 +151,8 @@ Check out our [talk at JuliaCon 2022][juliacon-url] for a demonstration of the p
 
 ___
 
-**Share your creations in the [discussions tab](https://github.com/JuliaImages/DitherPunk.jl/discussions/categories/show-and-tell) and leave a GitHub Issue if you know of any cool  algorithms you'd like to see implemented! 🔬🔧**
+**Share your creations in the [discussions tab](https://github.com/JuliaImages/DitherPunk.jl/discussions/categories/show-and-tell) 
+and leave a GitHub Issue if you know of any cool algorithms you'd like to see implemented! 🔬🔧**
 
 [docs-stab-img]: https://img.shields.io/badge/docs-stable-blue.svg
 [docs-stab-url]: https://JuliaImages.github.io/DitherPunk.jl/stable
@@ -157,6 +162,9 @@ ___
 
 [ci-img]: https://github.com/JuliaImages/DitherPunk.jl/workflows/CI/badge.svg
 [ci-url]: https://github.com/JuliaImages/DitherPunk.jl/actions
+
+[aqua-img]: https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg
+[aqua-url]: https://github.com/JuliaTesting/Aqua.jl
 
 [codecov-img]: https://codecov.io/gh/JuliaImages/DitherPunk.jl/branch/master/graph/badge.svg
 [codecov-url]: https://codecov.io/gh/JuliaImages/DitherPunk.jl

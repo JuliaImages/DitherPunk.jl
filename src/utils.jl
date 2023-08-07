@@ -28,3 +28,4 @@ Clamp colorant within the limits of each color channel.
 clamp_limits(c::Colorant) = clamp01(c)
 clamp_limits(c::HSV) = typeof(c)(mod(c.h, 360), clamp01(c.s), clamp01(c.v))
 clamp_limits(c::Lab) = c
+clamp_limits(c::XYZ) = c

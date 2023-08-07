@@ -2,13 +2,14 @@
 # We will try to fake a subtle animation of the water in this public domain image:
 using Images
 using DitherPunk
+using ColorQuantization
 using IndirectArrays
 
 img = load("../../assets/waterfall.png")
 
-# We import DitherPunk's internal function `get_colorscheme` to obtain a color scheme:
+# We use ColorQuantization's `KMeansQuantization` to obtain a color scheme:
 ncolors = 16
-cs = DitherPunk.get_colorscheme(img, ncolors)
+cs = quantize(Lab, img, KMeansQuantization(ncolors))
 cs = sort(cs; by=c -> -c.l)
 # The first three colors are white-ish and correspond to the water.
 

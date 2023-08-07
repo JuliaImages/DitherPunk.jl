@@ -1,13 +1,12 @@
 module DitherPunk
 
-using ImageBase.ImageCore.ColorTypes
-using ImageBase.ImageCore.Colors: DifferenceMetric, colordiff, DE_2000, invert_srgb_compand
-using ImageBase.ImageCore: channelview, floattype, clamp01
-using ImageBase: restrict
 using Base: require_one_based_indexing
 using Random: rand
+using ImageCore.ColorTypes
+using ImageCore.Colors: DifferenceMetric, colordiff, DE_2000, invert_srgb_compand
+using ImageCore: channelview, floattype, clamp01
 using IndirectArrays: IndirectArray
-using TiledIteration: TileIterator
+
 using ColorSchemes: ColorScheme
 using ColorQuantization: quantize, AbstractColorQuantizer, KMeansQuantization
 using UnicodeGraphics: uprint, ustring

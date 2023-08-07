@@ -1,7 +1,13 @@
 using DitherPunk
 using Test
+using Aqua
 using ImageBase: Gray
 
+# Run Aqua.jl quality assurance tests
+Aqua.test_all(DitherPunk; ambiguities=false)
+Aqua.test_ambiguities([DitherPunk, Core])
+
+# Run package tests
 function gradient_image(height, width)
     row = reshape(range(0; stop=1, length=width), 1, width)
     grad = Gray.(vcat(repeat(row, height))) # Linear gradient

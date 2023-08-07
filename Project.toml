@@ -4,7 +4,7 @@ authors = ["Adrian Hill"]
 version = "3.0.3"
 
 [deps]
-Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
+ColorQuantization = "652893fb-f6a0-4a00-a44a-7fb8fac69e01"
 ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
 ImageBase = "c817782e-172a-44cc-b673-b171935fbb9e"
 IndirectArrays = "9b13fd28-a010-5f03-acff-a1bbcff69959"
@@ -14,7 +14,7 @@ TiledIteration = "06e1c1a7-607b-532d-9fad-de7d9aa2abac"
 UnicodeGraphics = "ebadf6b4-db70-5817-83da-4a19ad584e34"
 
 [compat]
-Clustering = "0.14, 0.15"
+ColorQuantization = "0.1"
 ColorSchemes = "3"
 ImageBase = "0.1.3"
 IndirectArrays = "0.5, 1.0"

@@ -1,4 +1,14 @@
 # DitherPunk
+## Version `v3.1.0`
+This release moves some functionality out of DitherPunk and into [ColorQuantization.jl][color-quantization-url] and [UnicodeGraphics.jl][unicode-graphics-url].
+- ![Feature][badge-feature] `braille` is faster and supports new printing methods via UnicodeGraphics.jl, 
+  e.g. `braille(img, method=:block)` ([#97][pr-97])
+- ![Feature][badge-feature] Add support for `AbstractColorQuantizers` from ColorQuantization.jl for color palette dithering ([#98][pr-98])
+- ![Bugfix][badge-bugfix] Fix bug in `DomainError` ([8fae2d](https://github.com/JuliaImages/DitherPunk.jl/commit/8fae2d79ee4ffc19a563a5db8f33e53b1909c009))
+- ![Maintenance][badge-maintenance] Move clustering functionality into ColorQuantization.jl ([#98][pr-98])
+- ![Maintenance][badge-maintenance] Add Aqua.jl quality assurance tests ([#99][pr-99])
+- ![Maintenance][badge-maintenance] Update dependencies ([#98][pr-98])
+
 ## Version `v3.0.3`
 - ![Enhancement][badge-enhancement] Replace UnicodePlots.jl dependency with custom `braille` implementation ([#91][pr-91])
 - ![Enhancement][badge-enhancement] Revert default metric to `DE_2000` for higher image quality ([#92][pr-92])
@@ -104,8 +114,14 @@ This release introduces some breaking changes due to an API overhaul and adds ne
 [pr-90]: https://github.com/JuliaImages/DitherPunk.jl/pull/90
 [pr-91]: https://github.com/JuliaImages/DitherPunk.jl/pull/91
 [pr-92]: https://github.com/JuliaImages/DitherPunk.jl/pull/92
+[pr-97]: https://github.com/JuliaImages/DitherPunk.jl/pull/97
+[pr-98]: https://github.com/JuliaImages/DitherPunk.jl/pull/98
+[pr-99]: https://github.com/JuliaImages/DitherPunk.jl/pull/99
 
 [commit-477c98e]: https://github.com/JuliaImages/DitherPunk.jl/commit/477c98ed37b81fed7f6292a364b08a6b516bfb07
+
+[color-quantization-url]: https://github.com/JuliaImages/ColorQuantization.jl
+[unicode-graphics-url]: https://github.com/JuliaGraphics/UnicodeGraphics.jl
 
 [badge-breaking]: https://img.shields.io/badge/BREAKING-red.svg
 [badge-deprecation]: https://img.shields.io/badge/deprecation-orange.svg

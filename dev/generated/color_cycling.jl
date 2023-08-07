@@ -1,11 +1,12 @@
 using Images
 using DitherPunk
+using ColorQuantization
 using IndirectArrays
 
 img = load("../../assets/waterfall.png")
 
 ncolors = 16
-cs = DitherPunk.get_colorscheme(img, ncolors)
+cs = quantize(Lab, img, KMeansQuantization(ncolors))
 cs = sort(cs; by=c -> -c.l)
 
 d1 = dither(img, Bayer(; color_error_multiplier=1.0), cs)

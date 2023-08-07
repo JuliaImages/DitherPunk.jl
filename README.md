@@ -101,7 +101,7 @@ braille(img, Bayer(); invert=true)
 ⠝⠽⠝⠵⠝⠕⠕⠅⠕⠅⠁⠄⠁⠄⠁⠄⠁⠄⠁⠄⠁⠄⠁⠅⠕⠽⠝⠽⠝⠵⠝⠽⠽⠽⠿⠽⠽⠵⠝⠵⠝⠵⠝⠵⠝⠵⠝⠵⠝⠵⠝⠅⠢⠂⠢⠊⠢⠪⠪⠺⠪⠺⠾⠻⠾⠻⠾⠻⠾⠻⠾⠻⠾⠻⠾⠺⠪⠂⠢⠂⠢⠊⠢⠂⠂⠂⠀⠂⠂⠊⠢⠊⠢⠊⠢⠊⠢⠊⠢⠊⠢⠊⠢⠂
 ```
 
-For a more in-depth introduction, [take a look at the docs](https://juliaimages.org/DitherPunk.jl/stable/generated/simple_example/).
+For a more in-depth introduction, [take a look at the docs](https://juliaimages.org/DitherPunk.jl/stable/).
 
 ## Demonstration
 Check out our [talk at JuliaCon 2022][juliacon-url] for a demonstration of the package:

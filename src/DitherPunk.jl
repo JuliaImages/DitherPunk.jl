@@ -51,6 +51,7 @@ export SimpleErrorDiffusion, FloydSteinberg, JarvisJudice, Stucki, Burkes
 export Sierra, TwoRowSierra, SierraLite, Atkinson, Fan93, ShiauFan, ShiauFan2
 # Closest color
 export ClosestColor
+export FastEuclideanMetric
 # Other utilities
 export upscale
 export braille

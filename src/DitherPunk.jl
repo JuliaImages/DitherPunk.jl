@@ -24,6 +24,7 @@ const GenericImage{T<:Pixel,N} = AbstractArray{T,N}
 
 include("colorschemes.jl")
 include("utils.jl")
+include("colordiff.jl")
 include("api/binary.jl")
 include("api/color.jl")
 include("threshold.jl")

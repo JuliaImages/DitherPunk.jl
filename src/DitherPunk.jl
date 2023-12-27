@@ -26,6 +26,7 @@ const GenericImage{T<:Pixel,N} = AbstractArray{T,N}
 include("colorschemes.jl")
 include("utils.jl")
 include("colordiff.jl")
+include("find_closest_color.jl")
 include("api/binary.jl")
 include("api/color.jl")
 include("threshold.jl")
@@ -51,6 +52,8 @@ export SimpleErrorDiffusion, FloydSteinberg, JarvisJudice, Stucki, Burkes
 export Sierra, TwoRowSierra, SierraLite, Atkinson, Fan93, ShiauFan, ShiauFan2
 # Closest color
 export ClosestColor
+# Closest color lookup
+export ClosestColorLookup
 export FastEuclideanMetric
 # Other utilities
 export upscale

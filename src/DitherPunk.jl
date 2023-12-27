@@ -3,6 +3,7 @@ module DitherPunk
 using Base: require_one_based_indexing
 using Random: rand
 using ImageCore.ColorTypes
+using ImageCore.FixedPointNumbers: N0f8
 using ImageCore.Colors: DifferenceMetric, colordiff, DE_2000, invert_srgb_compand
 using ImageCore: channelview, floattype, clamp01
 using IndirectArrays: IndirectArray

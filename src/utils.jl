@@ -23,3 +23,16 @@ clamp_limits(c::Colorant) = clamp01(c)
 clamp_limits(c::HSV) = typeof(c)(mod(c.h, 360), clamp01(c.s), clamp01(c.v))
 clamp_limits(c::Lab) = c
 clamp_limits(c::XYZ) = c
+
+# Utilities to create LUT
+rgb_n0f8_to_ints(c::RGB{N0f8}) = (c.r.i, c.g.i, c.b.i)
+
+int_to_n0f8(x::UInt8) = reinterpret(N0f8, x)
+int_to_n0f8(x::Integer) = int_to_n0f8(UInt8(x))
+
+function ints_to_rgb_n0f8(r::Integer, g::Integer, b::Integer)
+    vr = int_to_n0f8(r)
+    vg = int_to_n0f8(g)
+    vb = int_to_n0f8(b)
+    return RGB(vr, vg, vb)
+end

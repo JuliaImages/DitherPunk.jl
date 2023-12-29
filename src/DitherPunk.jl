@@ -24,7 +24,9 @@ const Pixel = Union{Number,Colorant}
 
 const GenericBinaryImage{T<:BinaryLike} = Union{BitMatrix,AbstractArray{T,2}}
 const GenericGrayImage{T<:NumberLike} = AbstractArray{T,2}
-const GenericImage{T<:Pixel,N} = AbstractArray{T,N}
+const GenericImage{T<:Pixel} = AbstractArray{T,2}
+const ColorArray{T<:Pixel,N} = AbstractArray{T,N}
+const ColorVector{T<:Pixel} = AbstractVector{T}
 
 include("colorschemes.jl")
 include("utils.jl")
@@ -57,6 +59,7 @@ export Sierra, TwoRowSierra, SierraLite, Atkinson, Fan93, ShiauFan, ShiauFan2
 export ClosestColor
 # Closest color lookup
 export AbstractColorPicker
+export RuntimeColorPicker
 export LookupColorPicker
 export FastEuclideanMetric
 # Other utilities

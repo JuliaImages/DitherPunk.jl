@@ -77,4 +77,3 @@ dither(img, ShiauFan2())
 dither(img, Atkinson())
 
 # This file was generated using Literate.jl, https://github.com/fredrikekre/Literate.jl
-

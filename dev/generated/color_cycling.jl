@@ -18,4 +18,3 @@ ds = cat(d1, d2, d3; dims=3)
 save("waterfall.gif", ds; fps=5)
 
 # This file was generated using Literate.jl, https://github.com/fredrikekre/Literate.jl
-

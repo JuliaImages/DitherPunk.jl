@@ -34,4 +34,3 @@ alg = sdf2halftone(star_sdf, 30)
 dither(img, alg)
 
 # This file was generated using Literate.jl, https://github.com/fredrikekre/Literate.jl
-

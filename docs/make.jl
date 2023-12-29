@@ -35,6 +35,7 @@ makedocs(;
         ],
         "API Reference" => "api.md",
     ],
+    linkcheck=true,
     checkdocs=:exports,
 )
 

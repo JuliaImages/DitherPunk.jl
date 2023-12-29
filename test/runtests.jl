@@ -3,11 +3,6 @@ using Test
 using Aqua
 using ImageBase: Gray
 
-# Run Aqua.jl quality assurance tests
-Aqua.test_all(DitherPunk; ambiguities=false)
-Aqua.test_ambiguities([DitherPunk, Core])
-
-# Run package tests
 function gradient_image(height, width)
     row = reshape(range(0; stop=1, length=width), 1, width)
     grad = Gray.(vcat(repeat(row, height))) # Linear gradient
@@ -16,6 +11,10 @@ function gradient_image(height, width)
 end
 
 @testset "DitherPunk.jl" begin
+    @testset "Aqua.jl" begin
+        @info "Running Aqua.jl's auto quality assurance tests. These might print warnings from dependencies."
+        Aqua.test_all(DitherPunk; ambiguities=false)
+    end
     @testset "Utilities" begin
         @info "Testing utilities..."
         include("test_utils.jl")

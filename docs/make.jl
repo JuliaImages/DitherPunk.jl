@@ -35,6 +35,7 @@ makedocs(;
         ],
         "API Reference" => "api.md",
     ],
+    checkdocs=:exports,
 )
 
 deploydocs(; repo="github.com/JuliaImages/DitherPunk.jl")

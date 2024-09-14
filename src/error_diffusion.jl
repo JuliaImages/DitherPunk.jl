@@ -32,7 +32,7 @@ end
 function ErrorDiffusion(inds, vals, ranges)
     length(inds) != length(vals) &&
         throw(ArgumentError("Lengths of filter indices and values don't match."))
-    return ErrorDiffusion{typeof(vals)}(inds, vals, ranges)
+    return ErrorDiffusion{typeof(vals),typeof(ranges)}(inds, vals, ranges)
 end
 
 function ErrorDiffusion(filter::AbstractMatrix, offset::Integer)

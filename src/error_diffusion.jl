@@ -54,7 +54,7 @@ function inner_range(img, alg::ErrorDiffusion)
 end
 
 function binarydither!(
-    alg::ErrorDiffusion, out::GenericGrayImage, img::GenericGrayImage; clamp_error=true
+    alg::ErrorDiffusion, out::GrayImage, img::GrayImage; clamp_error=true
 )
     # This function does not yet support OffsetArray
     require_one_based_indexing(img)
@@ -95,7 +95,7 @@ end
 function colordither(
     alg::ErrorDiffusion,
     img::GenericImage,
-    cs::AbstractVector{<:Pixel},
+    cs::AbstractVector{<:ColorLike},
     metric::DifferenceMetric;
     clamp_error=true,
 )

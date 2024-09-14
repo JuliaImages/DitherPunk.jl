@@ -5,13 +5,16 @@ Technically this not a dithering algorithm as the quatization error is not "rand
 """
 struct ClosestColor <: AbstractDither end
 
-function binarydither!(::ClosestColor, out::GenericGrayImage, img::GenericGrayImage)
+function binarydither!(::ClosestColor, out::GrayImage, img::GrayImage)
     threshold = eltype(img)(0.5)
     return out .= img .> threshold
 end
 
 function colordither(
-    ::ClosestColor, img::GenericImage, cs::AbstractVector{<:Pixel}, metric::DifferenceMetric
+    ::ClosestColor,
+    img::GenericImage,
+    cs::AbstractVector{<:ColorLike},
+    metric::DifferenceMetric,
 )::Matrix{Int}
     cs_lab = Lab.(cs)
     return map(px -> _closest_color_idx(px, cs_lab, metric), img)

@@ -27,7 +27,7 @@ struct OrderedDither{I<:Integer,M<:AbstractMatrix{<:I},R<:Real} <: AbstractDithe
     end
 end
 
-function binarydither!(alg::OrderedDither, out::GenericGrayImage, img::GenericGrayImage)
+function binarydither!(alg::OrderedDither, out::GrayImage, img::GrayImage)
     # eagerly promote to the same eltype to make for-loop faster
     FT = floattype(eltype(img))
     mat = FT.(alg.mat / alg.max)
@@ -55,7 +55,7 @@ end
 function colordither(
     alg::OrderedDither,
     img::GenericImage,
-    cs::AbstractVector{<:Pixel},
+    cs::AbstractVector{<:ColorLike},
     metric::DifferenceMetric,
 )
     cs_lab = Lab.(cs)

@@ -1,4 +1,5 @@
 abstract type AbstractColorPicker end
+
 (l::AbstractColorPicker)(c::Colorant) = get_closest_color_index(l, c)
 
 """
@@ -9,14 +10,14 @@ Select closest color in `colorscheme` during runtime.
 Used by default if `dither` is called without a color picker.
     
 """
-struct RuntimeColorPicker{M<:DifferenceMetric,T::Pixel} <: AbstractColorPicker
+struct RuntimeColorPicker{M<:DifferenceMetric,T<:ColorLike} <: AbstractColorPicker
     metric::M
     colorscheme::Vector{T}
 
-    function RuntimeColorPicker(colorscheme, metric::DifferenceMetric)
+    function RuntimeColorPicker(colorscheme, metric::M) where {M<:DifferenceMetric}
         T = colorspace(metric)
         colorscheme = convert.(T, colorscheme)
-        return new{typeof{M},T}(metric, colorscheme)
+        return new{M,T}(metric, colorscheme)
     end
 end
 

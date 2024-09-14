@@ -40,8 +40,8 @@ end
 
 # ...and defaults to the type of the input image.
 function dither(
-    img::GenericImage{T,N}, alg::AbstractDither, arg; kwargs...
-) where {T<:Pixel,N}
+    img::GenericImage{T}, alg::AbstractDither, arg; kwargs...
+) where {T<:ColorLike}
     return _colordither(T, img, alg, arg; kwargs...)
 end
 
@@ -55,7 +55,7 @@ function _colordither(
     ::Type{T},
     img::GenericImage,
     alg::AbstractDither,
-    cs::AbstractVector{<:Pixel};
+    cs::AbstractVector{<:ColorLike};
     metric::DifferenceMetric=DEFAULT_METRIC,
     to_linear=false,
     kwargs...,
@@ -79,7 +79,7 @@ function _colordither(
     metric::DifferenceMetric=DEFAULT_METRIC,
     to_linear=false,
     kwargs...,
-) where {T<:NumberLike}
+) where {T<:ColorLike}
     return _colordither(
         eltype(cs), img, alg, cs; metric=metric, to_linear=to_linear, kwargs...
     )

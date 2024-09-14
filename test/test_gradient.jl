@@ -17,28 +17,28 @@ isoutputrandom(::WhiteNoiseThreshold) = true
 # using Dict for Julia 1.0 compatibility
 const ALGS = Dict(
     # threshold methods
-    "ConstantThreshold"   => ConstantThreshold(),
-    "ClosestColor"        => ClosestColor(),
-    "WhiteNoiseThreshold" => WhiteNoiseThreshold(),
+    "ConstantThreshold"   => @inferred(ConstantThreshold()),
+    "ClosestColor"        => @inferred(ClosestColor()),
+    "WhiteNoiseThreshold" => @inferred(WhiteNoiseThreshold()),
     # ordered dithering
-    "Bayer"                 => Bayer(),
-    "Bayer_l2"              => Bayer(2),
-    "Bayer_l3"              => Bayer(3),
-    "Bayer_l4"              => Bayer(4),
-    "ClusteredDots"         => ClusteredDots(),
-    "CentralWhitePoint"     => CentralWhitePoint(),
-    "BalancedCenteredPoint" => BalancedCenteredPoint(),
-    "Rhombus"               => Rhombus(),
-    "IM_checks"             => IM_checks(),
-    "IM_h4x4a"              => IM_h4x4a(),
-    "IM_h6x6a"              => IM_h6x6a(),
-    "IM_h8x8a"              => IM_h8x8a(),
-    "IM_h4x4o"              => IM_h4x4o(),
-    "IM_h6x6o"              => IM_h6x6o(),
-    "IM_h8x8o"              => IM_h8x8o(),
-    "IM_c5x5"               => IM_c5x5(),
-    "IM_c6x6"               => IM_c6x6(),
-    "IM_c7x7"               => IM_c7x7(),
+    "Bayer"                 => @inferred(Bayer()),
+    "Bayer_l2"              => @inferred(Bayer(2)),
+    "Bayer_l3"              => @inferred(Bayer(3)),
+    "Bayer_l4"              => @inferred(Bayer(4)),
+    "ClusteredDots"         => @inferred(ClusteredDots()),
+    "CentralWhitePoint"     => @inferred(CentralWhitePoint()),
+    "BalancedCenteredPoint" => @inferred(BalancedCenteredPoint()),
+    "Rhombus"               => @inferred(Rhombus()),
+    "IM_checks"             => @inferred(IM_checks()),
+    "IM_h4x4a"              => @inferred(IM_h4x4a()),
+    "IM_h6x6a"              => @inferred(IM_h6x6a()),
+    "IM_h8x8a"              => @inferred(IM_h8x8a()),
+    "IM_h4x4o"              => @inferred(IM_h4x4o()),
+    "IM_h6x6o"              => @inferred(IM_h6x6o()),
+    "IM_h8x8o"              => @inferred(IM_h8x8o()),
+    "IM_c5x5"               => @inferred(IM_c5x5()),
+    "IM_c6x6"               => @inferred(IM_c6x6()),
+    "IM_c7x7"               => @inferred(IM_c7x7()),
     # error error_diffusion
     "SimpleErrorDiffusion" => @inferred(SimpleErrorDiffusion()),
     "FloydSteinberg"       => @inferred(FloydSteinberg()),
@@ -54,7 +54,7 @@ const ALGS = Dict(
     "ShiauFan2"            => @inferred(ShiauFan2()),
     "FalseFloydSteinberg"  => @inferred(DitherPunk.FalseFloydSteinberg()),
     # Keyword arguments
-    "Bayer_invert_map" => Bayer(; invert_map=true),
+    "Bayer_invert_map" => @inferred(Bayer(; invert_map=true)),
 )
 
 # Test setting output type

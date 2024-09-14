@@ -1,7 +1,7 @@
 name = "DitherPunk"
 uuid = "b8f752a5-abd5-43b6-a55b-e75efda20de0"
 authors = ["Adrian Hill"]
-version = "3.1.0"
+version = "3.2.0-DEV"
 
 [deps]
 ColorQuantization = "652893fb-f6a0-4a00-a44a-7fb8fac69e01"

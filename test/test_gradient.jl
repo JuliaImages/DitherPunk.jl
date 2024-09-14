@@ -1,15 +1,30 @@
 using DitherPunk
-using ReferenceTests
+using DitherPunk: DEFAULT_METHOD, AbstractDither, srgb2linear
+using ImageBase: Gray
 using OffsetArrays
 
-img, srgb = gradient_image(16, 200)
+using Test
+using ReferenceTests
+
+function gradient_image(height, width)
+    row = reshape(range(0; stop=1, length=width), 1, width)
+    grad = Gray.(vcat(repeat(row, height))) # Linear gradient
+    img = srgb2linear.(grad) # For printing, compensate for SRGB colorspace
+    return grad, img
+end
+
+const img, srgb = gradient_image(16, 200)
+
+isoutputrandom(::AbstractDither) = false
+isoutputrandom(::WhiteNoiseThreshold) = true
 
 ## Run reference tests for deterministic algorithms
 # using Dict for Julia 1.0 compatibility
-algs_deterministic = Dict(
+const ALGS = Dict(
     # threshold methods
-    "ConstantThreshold" => ConstantThreshold(),
-    "ClosestColor"      => ClosestColor(),
+    "ConstantThreshold"   => ConstantThreshold(),
+    "ClosestColor"        => ClosestColor(),
+    "WhiteNoiseThreshold" => WhiteNoiseThreshold(),
     # ordered dithering
     "Bayer"                 => Bayer(),
     "Bayer_l2"              => Bayer(2),
@@ -47,83 +62,99 @@ algs_deterministic = Dict(
     "Bayer_invert_map" => Bayer(; invert_map=true),
 )
 
-for (name, alg) in algs_deterministic
-    local img2 = copy(img)
-    local d = @inferred dither(img2, alg)
-    @test_reference "references/gradient/$(name).txt" braille(d; to_string=true)
-    @test eltype(d) == eltype(img)
-    @test img2 == img # image not modified
+# Test setting output type
+@testset verbose = true "Binary dithering methods" begin
+    @testset "$(name)" for (name, alg) in ALGS
+        _img = copy(img)
+        dref = @inferred dither(_img, alg)
+        @test eltype(dref) == eltype(img)
+        @test _img == img # image not modified
+
+        if !isoutputrandom(alg)
+            @testset "Reference tests" begin
+                @test_reference "references/gradient/$(name).txt" braille(
+                    dref; to_string=true
+                )
+            end
+        end
+
+        @testset "Output type selection: $T" for T in (Float16, Float32, Bool)
+            d2 = @inferred dither(Gray{T}, _img, alg)
+            @test eltype(d2) == Gray{T}
+            @test d2 ≈ dref
+            @test _img == img # image not modified
+        end
+
+        # Inplace modify output image
+        @testset "In-place updates" begin
+            @testset "2-arg" begin
+                out = zeros(Bool, size(_img)...)
+                d_inplace = @inferred dither!(out, _img, alg)
+                @test eltype(out) == Bool
+                @test out == dref # image updated in-place
+                @test d_inplace === out
+                @test _img == img # image not modified
+            end
+
+            @testset "3-arg" begin
+                # Inplace modify  image
+                imgcopy = deepcopy(img)
+                d4 = @inferred dither!(imgcopy, alg)
+                @test d4 == dref
+                @test imgcopy === d4 # image updated in-place
+                @test eltype(d4) == eltype(_img)
+            end
+        end
+    end
+end
+
+## Test API
+@testset "Default algorithm" begin
+    _img = copy(img)
+
+    d1 = @inferred dither(_img, DEFAULT_METHOD)
+    d1_default = @inferred dither(_img)
+    @test d1_default == d1
+
+    d2 = @inferred dither(Gray{Float16}, _img, DEFAULT_METHOD)
+    d2_default = @inferred dither(Gray{Float16}, _img)
+    @test d2_default == d2
+
+    out = zeros(Bool, size(_img)...)
+    d3_default = @inferred dither!(out, _img)
+    @test out == d1
+    @test d3_default === out
+
+    imgcopy = deepcopy(_img)
+    d4_default = @inferred dither!(imgcopy)
+    @test d4_default == d1
+    @test d4_default === imgcopy
 end
 
 # Test error diffusion kwarg `clamp_error`:
-d = @inferred dither(img, FloydSteinberg(); clamp_error=false)
-@test_reference "references/gradient/FloydSteinberg_clamp_error.txt" braille(
-    d; to_string=true
-)
-@test eltype(d) == eltype(img)
-
-## Algorithms with random output are currently only tested visually
-algs_random = Dict(
-    # threshold methods
-    "white_noise_dithering" => WhiteNoiseThreshold(),
-)
-
-for (name, alg) in algs_random
-    local img2 = copy(img)
-    local d = @inferred dither(Gray{Bool}, img2, alg)
-    @test eltype(d) == Gray{Bool}
-    @test img2 == img # image not modified
+@testset "clamp_error" begin
+    d = @inferred dither(img, FloydSteinberg(); clamp_error=false)
+    @test_reference "references/gradient/FloydSteinberg_clamp_error.txt" braille(
+        d; to_string=true
+    )
+    @test eltype(d) == eltype(img)
 end
 
 ## Test to_linear
-img2 = copy(img)
-d = @inferred dither(img2, Bayer(); to_linear=true)
-@test_reference "references/gradient/Bayer_linear.txt" braille(d; to_string=true)
-alg = FloydSteinberg()
-dl1 = @inferred dither(img2, alg; to_linear=true)
-dl2 = @inferred dither(img2; to_linear=true)
-@test dl1 == dl2
-
-## Test API
-d = @inferred dither(img2, alg)
-ddef = @inferred dither(img2)
-@test d == ddef
-
-# Test setting output type
-d2 = @inferred dither(Gray{Float16}, img2, alg)
-@test eltype(d2) == Gray{Float16}
-@test d2 == d
-@test img2 == img # image not modified
-d2def = @inferred dither(Gray{Float16}, img2)
-@test d2 == d2def
-
-# Inplace modify output image
-out = zeros(Bool, size(img2)...)
-d3 = @inferred dither!(out, img2, alg)
-@test out == d # image updated in-place
-@test d3 == d
-@test eltype(out) == Bool
-@test eltype(d3) == Bool
-@test img2 == img # image not modified
-outdef = zeros(Bool, size(img2)...)
-d3def = @inferred dither!(outdef, img2)
-@test out == outdef
-@test d3 == d3def
-
-# Inplace modify  image
-img2def = deepcopy(img2)
-d4 = @inferred dither!(img2, alg)
-@test d4 == d
-@test img2 == d # image updated in-place
-@test eltype(d4) == eltype(img)
-@test eltype(img2) == eltype(img)
-d4def = @inferred dither!(img2def)
-@test d4 == d4def
-@test img2 == img2def
+@testset "to_linear" begin
+    _img = copy(img)
+    d = @inferred dither(_img, Bayer(); to_linear=true)
+    @test_reference "references/gradient/Bayer_linear.txt" braille(d; to_string=true)
+    dl1 = @inferred dither(_img, DEFAULT_METHOD; to_linear=true)
+    dl2 = @inferred dither(_img; to_linear=true)
+    @test dl1 == dl2
+end
 
 ## Test error messages
-@test_throws DomainError ConstantThreshold(; threshold=-0.5)
+@testset "Error messages" begin
+    @test_throws DomainError ConstantThreshold(; threshold=-0.5)
 
-img_zero_based = OffsetMatrix(rand(Float32, 10, 10), 0:9, 0:9)
-@test_throws ArgumentError dither(img_zero_based, FloydSteinberg())
-@test_throws ArgumentError dither(img_zero_based)
+    img_zero_based = OffsetMatrix(rand(Float32, 10, 10), 0:9, 0:9)
+    @test_throws ArgumentError dither(img_zero_based, FloydSteinberg())
+    @test_throws ArgumentError dither(img_zero_based)
+end

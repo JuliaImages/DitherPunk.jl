@@ -3,9 +3,9 @@ using Test
 using Aqua
 
 @testset "DitherPunk.jl" begin
-    @testset "Aqua.jl" begin
-        @info "Running Aqua.jl's auto quality assurance tests. These might print warnings from dependencies."
-        Aqua.test_all(DitherPunk; ambiguities=false)
+    @testset verbose = true "Linting" begin
+        @info "Testing linting..."
+        include("test_linting.jl")
     end
     @testset "Utilities" begin
         @info "Testing utilities..."

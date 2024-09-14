@@ -1,9 +1,8 @@
 module DitherPunk
 
 using Base: require_one_based_indexing
-using Random: rand
-using ImageCore.ColorTypes
-using ImageCore.Colors: DifferenceMetric, colordiff, DE_2000, invert_srgb_compand
+using ColorTypes: ColorTypes, AbstractGray, Color, Colorant, Gray, HSV, Lab, XYZ, gray
+using Colors: DifferenceMetric, colordiff, DE_2000, invert_srgb_compand
 using ImageCore: channelview, floattype, clamp01
 using IndirectArrays: IndirectArray
 

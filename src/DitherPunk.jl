@@ -1,13 +1,19 @@
 module DitherPunk
 
 using Base: require_one_based_indexing
-using Random: rand
-using ImageCore.ColorTypes
-using ImageCore.FixedPointNumbers: N0f8
-using ImageCore.Colors: DifferenceMetric, EuclideanDifferenceMetric
-using ImageCore.Colors: DE_2000, DE_94, DE_JPC79, DE_CMC, DE_BFD
-using ImageCore.Colors: colordiff, invert_srgb_compand
-import ImageCore.Colors: _colordiff # extended in colordiff.jl
+using FixedPointNumbers: N0f8
+using ColorTypes: ColorTypes, AbstractGray, Color, Colorant, Gray, HSV, Lab, XYZ, gray
+using Colors:
+    DifferenceMetric,
+    EuclideanDifferenceMetric,
+    DE_2000,
+    DE_94,
+    DE_JPC79,
+    DE_CMC,
+    DE_BFD,
+    colordiff,
+    invert_srgb_compand
+import Colors: _colordiff # extended in colordiff.jl
 using ImageCore: channelview, floattype, clamp01
 using IndirectArrays: IndirectArray
 

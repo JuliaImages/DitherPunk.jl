@@ -1,19 +1,13 @@
 using DitherPunk
 using Test
 using Aqua
-using ImageBase: Gray
-
-function gradient_image(height, width)
-    row = reshape(range(0; stop=1, length=width), 1, width)
-    grad = Gray.(vcat(repeat(row, height))) # Linear gradient
-    img = srgb2linear.(grad) # For printing, compensate for SRGB colorspace
-    return grad, img
-end
 
 @testset "DitherPunk.jl" begin
-    @testset "Aqua.jl" begin
-        @info "Running Aqua.jl's auto quality assurance tests. These might print warnings from dependencies."
-        Aqua.test_all(DitherPunk; ambiguities=false)
+    if VERSION >= v"1.10"
+        @testset verbose = true "Linting" begin
+            @info "Testing linting..."
+            include("test_linting.jl")
+        end
     end
     @testset "Utilities" begin
         @info "Testing utilities..."

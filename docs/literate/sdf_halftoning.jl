@@ -33,10 +33,10 @@ function sdf2halftone(sdf, n)
     rg = range(-1, 1; length=n)
     A = [sdf(x, y) for y in rg, x in rg]
     p = sortperm(reshape(-A, :))
-    B = Vector{Int}(undef, n^2)
+    B = Matrix{Int}(undef, n, n)
     B[p] .= 1:(n^2)
-    return OrderedDither(reshape(B, size(A)...)//(n^2 + 1))
-end;
+    return OrderedDither(B)
+end
 
 # Let's try it on a test image:
 img = testimage("fabio_gray_512")

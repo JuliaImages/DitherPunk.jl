@@ -1,3 +1,10 @@
+using DitherPunk
+using ImageBase: RGB, Gray
+using Test
+using ReferenceTests
+
+include("gradient_image.jl")
+
 w = 200
 h = 4 * 4 # multiple of 4 for unicode braille print
 img, srgb = gradient_image(h, w)

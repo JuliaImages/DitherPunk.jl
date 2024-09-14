@@ -1,19 +1,14 @@
 using DitherPunk
-using DitherPunk: DEFAULT_METHOD, AbstractDither, srgb2linear
+using DitherPunk: DEFAULT_METHOD, AbstractDither
 using ImageBase: Gray
 using OffsetArrays
 
 using Test
 using ReferenceTests
 
-function gradient_image(height, width)
-    row = reshape(range(0; stop=1, length=width), 1, width)
-    grad = Gray.(vcat(repeat(row, height))) # Linear gradient
-    img = srgb2linear.(grad) # For printing, compensate for SRGB colorspace
-    return grad, img
-end
+include("gradient_image.jl")
 
-const img, srgb = gradient_image(16, 200)
+img, srgb = gradient_image(16, 200)
 
 isoutputrandom(::AbstractDither) = false
 isoutputrandom(::WhiteNoiseThreshold) = true

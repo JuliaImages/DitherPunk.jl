@@ -12,7 +12,7 @@ using ExplicitImports: ExplicitImports
 end
 
 @testset "Aqua tests" begin
-    @info "...with Aqua.jl"
+    @info "...with Aqua.jl – this might print warnings from dependencies."
     Aqua.test_all(DitherPunk; ambiguities=false)
 end
 
@@ -30,17 +30,14 @@ end
         @test ExplicitImports.check_no_stale_explicit_imports(DitherPunk;) === nothing
         @test ExplicitImports.check_all_explicit_imports_via_owners(DitherPunk) === nothing
         # TODO: test in the future when `public` is more common
-        # @test ExplicitImports.check_all_explicit_imports_are_public(
-        #     DitherPunk
-        # ) === nothing
+        # @test ExplicitImports.check_all_explicit_imports_are_public(DitherPunk) === nothing
     end
     @testset "Improper qualified accesses" begin
         @test ExplicitImports.check_all_qualified_accesses_via_owners(DitherPunk) ===
             nothing
         @test ExplicitImports.check_no_self_qualified_accesses(DitherPunk) === nothing
         # TODO: test in the future when `public` is more common
-        # @test ExplicitImports.check_all_qualified_accesses_are_public(
-        #     DitherPunk
-        # ) === nothing
+        @test ExplicitImports.check_all_qualified_accesses_are_public(DitherPunk) ===
+            nothing
     end
 end

@@ -3,9 +3,11 @@ using Test
 using Aqua
 
 @testset "DitherPunk.jl" begin
-    @testset verbose = true "Linting" begin
-        @info "Testing linting..."
-        include("test_linting.jl")
+    if VERSION >= v"1.10"
+        @testset verbose = true "Linting" begin
+            @info "Testing linting..."
+            include("test_linting.jl")
+        end
     end
     @testset "Utilities" begin
         @info "Testing utilities..."

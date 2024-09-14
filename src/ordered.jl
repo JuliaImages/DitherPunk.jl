@@ -1,36 +1,44 @@
 """
-    OrderedDither(mat::AbstractMatrix)
+    OrderedDither(mat::AbstractMatrix, [max::Integer])
 
 Generalized ordered dithering algorithm using a threshold map.
-Takes a normalized threshold matrix `mat`.
+Takes an unnormalized threshold matrix `mat` and optionally a normalization quotient `max` (defaults to `length(mat)+1`).
 
 When applying the algorithm to an image, the threshold matrix is repeatedly tiled
 to match the size of the image. It is then applied as a per-pixel threshold map.
 Optionally, this final threshold map can be inverted by selecting `invert_map=true`.
 """
-struct OrderedDither{T<:AbstractMatrix{<:Rational},R<:Real} <: AbstractDither
-    mat::T
+struct OrderedDither{I<:Integer,R<:Real} <: AbstractDither
+    mat::Matrix{I}
+    max::I
     color_error_multiplier::R
 end
-function OrderedDither(mat; invert_map=false, color_error_multiplier=0.5)
+function OrderedDither(
+    mat::AbstractMatrix{I};
+    max=convert(I, length(mat) + 1),
+    invert_map=false,
+    color_error_multiplier=0.5,
+) where {I<:Integer}
     if invert_map
-        return OrderedDither(1 .- mat, color_error_multiplier)
+        mat_inv = max .- mat
+        return OrderedDither(mat_inv, max, color_error_multiplier)
     end
-    return OrderedDither(mat, color_error_multiplier)
+    return OrderedDither(mat, max, color_error_multiplier)
 end
 
 function binarydither!(alg::OrderedDither, out::GenericGrayImage, img::GenericGrayImage)
     # eagerly promote to the same eltype to make for-loop faster
     FT = floattype(eltype(img))
-    mat = FT.(alg.mat)
+    mat = FT.(alg.mat / alg.max)
 
     T = eltype(out)
     black, white = T(0), T(1)
 
     # Precompute lookup tables for modulo indexing of threshold matrix
-    matsize = size(mat)
-    rlookup = [mod1(i, matsize[1]) for i in 1:size(img)[1]]
-    clookup = [mod1(i, matsize[2]) for i in 1:size(img)[2]]
+    hm, wm = size(mat)
+    hi, wi = size(img)
+    rlookup = [mod1(i, hm) for i in 1:hi]
+    clookup = [mod1(i, wm) for i in 1:wi]
 
     @inbounds @simd for i in CartesianIndices(img)
         r, c = Tuple(i)
@@ -53,11 +61,12 @@ function colordither(
     cs_xyz = XYZ.(cs)
 
     # Precompute lookup tables for modulo indexing of threshold matrix
-    mat = numerator.(alg.mat)
+    mat = alg.mat
     nmax = maximum(mat)
-    matsize = size(mat)
-    rlookup = [mod1(i, matsize[1]) for i in 1:size(img)[1]]
-    clookup = [mod1(i, matsize[2]) for i in 1:size(img)[2]]
+    hm, wm = size(mat)
+    hi, wi = size(img)
+    rlookup = [mod1(i, hm) for i in 1:hi]
+    clookup = [mod1(i, wm) for i in 1:wi]
 
     # Allocate matrices
     candidates = Array{Int}(undef, nmax)
@@ -109,7 +118,7 @@ which defaults to `1`.
 """
 function Bayer(level=1; kwargs...)
     bayer = bayer_matrix(level) .+ 1
-    return OrderedDither(bayer//(2^(2 * level + 2) + 1); kwargs...)
+    return OrderedDither(bayer; kwargs...)
 end
 
 """
@@ -136,15 +145,14 @@ Clustered dots ordered dithering.
 Uses ``6 \\times 6`` threshold matrix `CLUSTERED_DOTS_MAT`.
 """
 ClusteredDots(; kwargs...) = OrderedDither(CLUSTERED_DOTS_MAT; kwargs...)
-const CLUSTERED_DOTS_MAT =
-    [
-        35 30 18 22 31 36
-        29 15 10 17 21 32
-        14  9  5  6 16 20
-        13  4  1  2 11 19
-        28  8  3  7 24 25
-        34 27 12 23 26 33
-    ]//37
+const CLUSTERED_DOTS_MAT = [
+    35 30 18 22 31 36
+    29 15 10 17 21 32
+    14  9  5  6 16 20
+    13  4  1  2 11 19
+    28  8  3  7 24 25
+    34 27 12 23 26 33
+]
 
 """
     CentralWhitePoint()
@@ -153,15 +161,14 @@ Central white point ordered dithering.
 Uses ``6 \\times 6`` threshold matrix `CENTRAL_WHITE_POINT_MAT`.
 """
 CentralWhitePoint(; kwargs...) = OrderedDither(CENTRAL_WHITE_POINT_MAT; kwargs...)
-const CENTRAL_WHITE_POINT_MAT =
-    [
-        35 26 22 18 30 34
-        31 14 10  6 13 25
-        19  7  2  1  9 21
-        23 11  3  4  5 17
-        27 15  8 12 16 29
-        36 32 20 24 28 33
-    ]//37
+const CENTRAL_WHITE_POINT_MAT = [
+    35 26 22 18 30 34
+    31 14 10  6 13 25
+    19  7  2  1  9 21
+    23 11  3  4  5 17
+    27 15  8 12 16 29
+    36 32 20 24 28 33
+]
 
 """
     BalancedCenteredPoint()
@@ -170,15 +177,14 @@ Balanced centered point ordered dithering.
 Uses ``6 \\times 6`` threshold matrix `BALANCED_CENTERED_POINT_MAT`.
 """
 BalancedCenteredPoint(; kwargs...) = OrderedDither(BALANCED_CENTERED_POINT_MAT; kwargs...)
-const BALANCED_CENTERED_POINT_MAT =
-    [
-        31 23 17 22 34 36
-        25 12  8 10 27 29
-        14  6  1  3 15 20
-        16  4  2  5 13 19
-        28  9  7 11 26 30
-        33 21 18 24 32 35
-    ]//37
+const BALANCED_CENTERED_POINT_MAT = [
+    31 23 17 22 34 36
+    25 12  8 10 27 29
+    14  6  1  3 15 20
+    16  4  2  5 13 19
+    28  9  7 11 26 30
+    33 21 18 24 32 35
+]
 
 """
     Rhombus()
@@ -186,15 +192,14 @@ const BALANCED_CENTERED_POINT_MAT =
 Diagonal ordered matrix with balanced centered points.
 Uses ``8 \\times 8`` threshold matrix `RHOMBUS_MAT`.
 """
-Rhombus(; kwargs...) = OrderedDither(RHOMBUS_MAT; kwargs...)
-const RHOMBUS_MAT =
-    [
-        14 10  6 13 19 23 27 20
-         7  2  1  9 26 31 32 24
-        11  3  4  5 22 30 29 28
-        15  8 12 16 18 25 21 17
-        19 23 27 20 14 10  6 13
-        26 31 32 24  7  2  1  9
-        22 30 29 28 11  3  4  5
-        18 25 21 17 15  8 12 16
-    ]//33
+Rhombus(; kwargs...) = OrderedDither(RHOMBUS_MAT; max=33, kwargs...)
+const RHOMBUS_MAT = [
+    14 10  6 13 19 23 27 20
+     7  2  1  9 26 31 32 24
+    11  3  4  5 22 30 29 28
+    15  8 12 16 18 25 21 17
+    19 23 27 20 14 10  6 13
+    26 31 32 24  7  2  1  9
+    22 30 29 28 11  3  4  5
+    18 25 21 17 15  8 12 16
+]

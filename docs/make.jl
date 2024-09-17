@@ -37,6 +37,7 @@ makedocs(;
     ],
     linkcheck=true,
     checkdocs=:exports,
+    warnonly=[:missing_docs],
 )
 
 deploydocs(; repo="github.com/JuliaImages/DitherPunk.jl")

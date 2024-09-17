@@ -33,20 +33,20 @@ const COLOR_ALGS = Dict(
 @testset verbose = true "Binary dithering methods" begin
     @testset "$(name)" for (name, alg) in COLOR_ALGS
         # Test custom color dithering on color images
-        local img2 = copy(img)
-        local d = @inferred dither(img2, alg, cs)
+        local img_copy = copy(img)
+        local d = @inferred dither(img_copy, alg, cs)
         @test_reference "references/color/$(name).txt" d
 
-        @test eltype(d) == eltype(img2)
-        @test img2 == img # image not modified
+        @test eltype(d) == eltype(img_copy)
+        @test img_copy == img # image not modified
 
         # Test custom color dithering on gray images
-        local img2_gray = copy(img_gray)
-        local d = @inferred dither(img2_gray, alg, cs)
+        local img_copy_gray = copy(img_gray)
+        local d = @inferred dither(img_copy_gray, alg, cs)
         @test_reference "references/color/$(name)_from_gray.txt" d
 
         @test eltype(d) == eltype(cs)
-        @test img2_gray == img_gray # image not modified
+        @test img_copy_gray == img_gray # image not modified
     end
 end
 
@@ -65,53 +65,56 @@ end
     end
 end
 
-img2 = copy(img)
-alg = FloydSteinberg()
-d = dither(img2, alg, cs)
+img_copy = copy(img)
+d_ref = dither(img_copy, DEFAULT_METHOD, cs)
 
 # Test setting output type
 @testset "Custom output type" begin
-    d2 = @inferred dither(HSV, img2, alg, cs)
-    @test d2 isa IndirectArray
-    @test eltype(d2) <: HSV
-    @test RGB{N0f8}.(d2) ≈ d
-    @test img2 == img # image not modified
-    d2default = @inferred dither(HSV, img2, cs)
-    @test d2 == d2default
+    d = @inferred dither(HSV, img_copy, DEFAULT_METHOD, cs)
+    @test d isa IndirectArray
+    @test eltype(d) <: HSV
+    @test RGB{N0f8}.(d) ≈ d_ref
+    @test img_copy == img # image not modified
+
+    d_default = @inferred dither(HSV, img_copy, cs)
+    @test d_default == d
 end
 
 # Inplace modify output image
 @testset "Inplace modify 3-arg" begin
-    out = zeros(RGB{Float16}, size(img2)...)
-    d3 = @inferred dither!(out, img2, alg, cs)
-    @test out ≈ d # image updated in-place
-    @test d3 ≈ d
+    out = zeros(RGB{Float16}, size(img_copy)...)
+    d = @inferred dither!(out, img_copy, DEFAULT_METHOD, cs)
+    @test out === d # image updated in-place
     @test eltype(out) == RGB{Float16}
-    @test eltype(d3) == RGB{Float16}
-    @test img2 == img # image not modified
-    out = zeros(RGB{Float16}, size(img2)...)
-    d3default = @inferred dither!(out, img2, cs)
-    @test d2 == d2default
+    @test d ≈ d_ref
+    @test img_copy == img # image not modified
+
+    out = zeros(RGB{Float16}, size(img_copy)...)
+    d_default = @inferred dither!(out, img_copy, cs)
+    @test d_default == d
 end
 
 # Inplace modify  image
 @testset "Inplace modify 2-arg" begin
-    d4 = @inferred dither!(img2, alg, cs)
-    @test d4 == d
-    @test img2 == d # image updated in-place
-    @test eltype(d4) == eltype(img)
-    @test eltype(img2) == eltype(img)
-    img2default = deepcopy(img)
-    d4default = @inferred dither!(img2default, cs)
-    @test img2default == d
-    @test d4 == d4default
+    img_copy = deepcopy(img)
+    d = @inferred dither!(img_copy, DEFAULT_METHOD, cs)
+    @test d == d_ref
+    @test img_copy === d # image updated in-place
+    @test img_copy != img # image updated in-place
+    @test eltype(d) == eltype(img)
+    @test eltype(img_copy) == eltype(img)
+
+    img_copy = deepcopy(img)
+    d_default = @inferred dither!(img_copy, cs)
+    @test img_copy === d_default
+    @test d_default == d
 end
 
 ## Conditional dependencies
 # Test conditional dependency on ColorSchemes.jl
 @testset "Colorschemes.jl" begin
-    d1 = @inferred dither(img, alg, ColorSchemes.jet)
-    d2 = @inferred dither(img, alg, ColorSchemes.jet.colors)
+    d1 = @inferred dither(img, DEFAULT_METHOD, ColorSchemes.jet)
+    d2 = @inferred dither(img, DEFAULT_METHOD, ColorSchemes.jet.colors)
     @test d1 == d2
     d3 = @inferred dither(img, ColorSchemes.jet)
     d4 = @inferred dither(img, ColorSchemes.jet.colors)

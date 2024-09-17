@@ -115,7 +115,7 @@ function colordither(
     @inbounds for I in CartesianIndices(img)
         px = img[I]
         clamp_error && (px = clamp_limits(px))
-        index[I] = _closest_color_idx(px, cs_lab, metric)
+        index[I] = closest_color_index_runtime(px, cs_lab, metric)
 
         # Diffuse "error" to neighborhood in filter
         err = px - cs_err[index[I]]  # diffuse "error" to neighborhood in filter

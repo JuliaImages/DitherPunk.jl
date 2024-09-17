@@ -17,5 +17,5 @@ function colordither(
     metric::DifferenceMetric,
 )::Matrix{Int}
     cs_lab = Lab.(cs)
-    return map(px -> _closest_color_idx(px, cs_lab, metric), img)
+    return map(px -> closest_color_index_runtime(px, cs_lab, metric), img)
 end

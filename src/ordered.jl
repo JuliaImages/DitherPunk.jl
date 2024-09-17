@@ -80,7 +80,7 @@ function colordither(
 
         for j in 1:nmax
             col = px + alg.color_error_multiplier * err
-            idx = _closest_color_idx(col, cs_lab, metric)
+            idx = closest_color_index_runtime(col, cs_lab, metric)
 
             # We are in loop (idx ↔ err) if we already computed `idx` as the closest color
             # after the first iteration. Breaking out of this loops lets us avoid calling

@@ -1,5 +1,5 @@
 using DitherPunk
-using ImageBase: RGB, Gray
+using ColorTypes: RGB, Gray
 using Test
 using ReferenceTests
 

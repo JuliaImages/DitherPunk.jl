@@ -1,6 +1,6 @@
 using DitherPunk
 using DitherPunk: DEFAULT_METHOD, AbstractDither
-using ImageBase: Gray
+using ColorTypes: Gray
 using OffsetArrays
 
 using Test

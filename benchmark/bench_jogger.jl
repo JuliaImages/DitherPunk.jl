@@ -20,32 +20,32 @@ cs = [white, yellow, green, orange, red, blue]
 # Use one representative algorithm of each type
 algs = Dict(
     "error diffusion" => FloydSteinberg(),
-    "ordered dithering" => Bayer(; level=3),
+    "ordered dithering" => Bayer(3;),
     "closest color" => ClosestColor(),
     "threshold dithering" => WhiteNoiseThreshold(),
 )
 
 # Tag what is tested on each algorithm type
-SUITE = BenchmarkGroup()
-SUITE["error diffusion"] = BenchmarkGroup(["binary", "color"])
-SUITE["ordered dithering"] = BenchmarkGroup(["binary", "color"])
-SUITE["threshold dithering"] = BenchmarkGroup(["binary"])
-SUITE["closest color"] = BenchmarkGroup(["binary", "color"])
+suite = BenchmarkGroup()
+suite["error diffusion"] = BenchmarkGroup(["binary", "color"])
+suite["ordered dithering"] = BenchmarkGroup(["binary", "color"])
+suite["threshold dithering"] = BenchmarkGroup(["binary"])
+suite["closest color"] = BenchmarkGroup(["binary", "color"])
 
-println(SUITE)
+println(suite)
 
 for (algname, alg) in algs
-    SUITE[algname]["binary new"] = @benchmarkable dither($(img_gray), $(alg))
-    SUITE[algname]["binary inplace"] = @benchmarkable dither!($(copy(img_gray)), $(alg))
+    suite[algname]["binary new"] = @benchmarkable dither($(img_gray), $(alg))
+    suite[algname]["binary inplace"] = @benchmarkable dither!($(copy(img_gray)), $(alg))
 
-    SUITE[algname]["per-channel new"] = @benchmarkable dither($(img_color), $(alg))
-    SUITE[algname]["per-channel inplace"] = @benchmarkable dither!(
+    suite[algname]["per-channel new"] = @benchmarkable dither($(img_color), $(alg))
+    suite[algname]["per-channel inplace"] = @benchmarkable dither!(
         $(copy(img_color)), $(alg)
     )
 
-    if "color" in SUITE[algname].tags
-        SUITE[algname]["color new"] = @benchmarkable dither($(img_color), $(alg), $(cs))
-        SUITE[algname]["color inplace"] = @benchmarkable dither!(
+    if "color" in suite[algname].tags
+        suite[algname]["color new"] = @benchmarkable dither($(img_color), $(alg), $(cs))
+        suite[algname]["color inplace"] = @benchmarkable dither!(
             $(copy(img_color)), $(alg), $(cs)
         )
     end

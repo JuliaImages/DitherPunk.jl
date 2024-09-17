@@ -1,5 +1,5 @@
 using DitherPunk
-using ImageBase
+using ColorTypes: RGB, HSV
 using ReferenceTests
 using TestImages
 

@@ -5,7 +5,8 @@ using Test
 
 using ColorSchemes
 using IndirectArrays
-using ImageBase
+using ColorTypes: RGB, HSV
+using FixedPointNumbers: N0f8
 using ReferenceTests
 using TestImages
 

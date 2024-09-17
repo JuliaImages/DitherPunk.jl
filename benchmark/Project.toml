@@ -1,7 +1,7 @@
 [deps]
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+ColorTypes = "3da002f7-5984-5a60-b8a6-cbb66c0b333f"
 DitherPunk = "b8f752a5-abd5-43b6-a55b-e75efda20de0"
-ImageCore = "a09fc81d-aa75-5fe9-8630-4744c3626534"
-ImageMagick = "6218d12a-5da1-5696-b52f-db25d2ecc6d1"
 PkgBenchmark = "32113eaa-f34f-5b0d-bd6c-c81e245fc73d"
+PkgJogger = "10150987-6cc1-4b76-abee-b1c1cbd91c01"
 TestImages = "5e47fb64-e119-507b-a336-dd2b206d9990"

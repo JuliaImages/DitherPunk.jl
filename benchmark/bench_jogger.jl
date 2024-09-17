@@ -1,7 +1,7 @@
 using BenchmarkTools
 using DitherPunk
 using TestImages
-using ImageCore
+using ColorTypes: RGB
 
 on_CI = haskey(ENV, "GITHUB_ACTIONS")
 

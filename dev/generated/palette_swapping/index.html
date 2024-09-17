@@ -6,42 +6,42 @@ using TestImages
 
 img = testimage(&quot;peppers&quot;)
 img_secret = testimage(&quot;airplaneF16&quot;);</code></pre><p>First we dither to eight colors:</p><pre><code class="language-julia hljs">ncolors = 8
-d = dither(img, ncolors)</code></pre><img src="2eb44386.png" alt="Example block output"/><pre><code class="language-julia hljs">d_secret = dither(img_secret, ncolors)</code></pre><img src="2f408d39.png" alt="Example block output"/><p>Both of these images are IndirectArrays, which means they contain a color scheme</p><pre><code class="language-julia hljs">d.values</code></pre><img src='data:image/svg+xml;utf-8,<?xml version="1.0" encoding="UTF-8"?>
+d = dither(img, ncolors)</code></pre><img src="af464ab0.png" alt="Example block output"/><pre><code class="language-julia hljs">d_secret = dither(img_secret, ncolors)</code></pre><img src="07adec39.png" alt="Example block output"/><p>Both of these images are IndirectArrays, which means they contain a color scheme</p><pre><code class="language-julia hljs">d.values</code></pre><img src='data:image/svg+xml;utf-8,<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
      width="180mm" height="25mm"
      viewBox="0 0 8 1" preserveAspectRatio="none"
      shape-rendering="crispEdges" stroke="none">
-<rect width=".96" height=".96" x="0" y="0" fill="%2381A256" />
-<rect width=".96" height=".96" x="1" y="0" fill="%23AAB962" />
-<rect width=".96" height=".96" x="2" y="0" fill="%23C24737" />
-<rect width=".96" height=".96" x="3" y="0" fill="%23565630" />
-<rect width=".96" height=".96" x="4" y="0" fill="%2398221F" />
-<rect width=".96" height=".96" x="5" y="0" fill="%23672F20" />
-<rect width=".96" height=".96" x="6" y="0" fill="%234B1913" />
-<rect width=".96" height=".96" x="7" y="0" fill="%2385753E" />
+<rect width=".96" height=".96" x="0" y="0" fill="%2392251F" />
+<rect width=".96" height=".96" x="1" y="0" fill="%2383753E" />
+<rect width=".96" height=".96" x="2" y="0" fill="%23575430" />
+<rect width=".96" height=".96" x="3" y="0" fill="%23ACC16A" />
+<rect width=".96" height=".96" x="4" y="0" fill="%237DA559" />
+<rect width=".96" height=".96" x="5" y="0" fill="%23552117" />
+<rect width=".96" height=".96" x="6" y="0" fill="%23C24737" />
+<rect width=".96" height=".96" x="7" y="0" fill="%23A3A14D" />
 </svg>'/><p>and a matrix of indices of type <code>UInt8</code> pointing to the color in the color scheme:</p><pre><code class="language-julia hljs">d.index</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">512×512 Matrix{Int64}:
- 7  5  5  5  5  5  7  5  5  5  5  3  5  …  3  3  3  3  3  3  3  3  3  3  3  5
- 5  3  3  3  3  3  3  3  3  3  3  3  3     8  1  3  2  3  1  1  8  1  8  1  1
- 5  3  3  3  3  3  3  3  3  3  3  3  3     2  2  2  2  2  2  2  2  2  2  2  2
- 6  3  8  3  8  3  3  3  3  3  3  3  3     2  2  2  2  2  2  2  2  2  2  2  2
- 5  3  3  3  3  8  3  3  8  3  8  3  3     2  2  2  2  2  2  2  2  2  2  2  2
- 6  3  8  3  8  3  8  3  3  3  3  8  8  …  2  2  2  2  2  2  2  2  2  2  2  2
- 5  3  3  3  3  3  3  3  8  3  3  3  3     2  2  2  2  2  2  2  2  2  2  2  2
- 6  5  3  3  3  8  3  3  3  3  8  3  8     2  2  2  2  2  2  2  2  2  2  2  2
- 5  3  3  8  3  3  3  8  3  3  3  3  3     2  2  2  2  2  2  2  2  2  2  2  2
- 7  3  3  3  3  8  3  3  3  8  3  3  8     2  2  2  2  2  2  2  2  2  2  2  2
+ 6  1  1  1  1  1  1  1  1  1  7  7  7  …  7  7  7  7  7  7  7  7  7  7  7  1
+ 1  7  7  7  7  7  7  7  7  7  1  7  1     4  2  5  7  5  7  5  5  2  5  7  5
+ 1  7  7  7  7  7  7  7  7  7  7  7  7     4  4  4  4  4  4  4  4  4  4  4  4
+ 6  7  2  7  2  7  7  7  7  7  7  7  7     4  4  4  4  4  4  4  4  4  4  4  4
+ 1  7  7  7  7  7  2  7  2  7  7  2  7     4  4  4  4  4  4  4  4  4  4  4  4
+ 1  7  2  7  2  7  7  7  7  2  7  7  2  …  4  4  4  4  4  4  4  4  4  4  4  4
+ 6  7  7  7  7  2  7  2  7  7  7  2  7     4  4  4  4  4  4  4  4  4  4  4  4
+ 1  7  7  7  7  7  7  7  7  7  2  7  2     4  4  4  4  4  4  4  4  4  4  4  4
+ 6  7  7  2  7  7  7  2  7  7  7  7  7     4  4  4  4  4  4  4  4  4  4  4  4
+ 1  1  7  7  7  2  7  7  7  2  7  7  2     4  4  4  4  4  4  4  4  4  4  4  4
  ⋮              ⋮              ⋮        ⋱  ⋮              ⋮              ⋮  
- 5  8  8  1  8  8  1  2  2  2  2  2  8     2  2  2  2  2  2  2  2  2  2  2  2
- 6  2  2  8  1  1  8  2  2  8  8  8  2     2  2  2  2  2  2  2  2  2  2  2  2
- 5  8  8  8  8  4  2  2  2  2  2  8  8  …  2  2  2  2  2  2  2  2  2  2  2  2
- 7  8  1  8  8  4  8  2  2  8  2  2  2     2  2  2  2  2  2  2  2  2  2  2  2
- 6  8  1  8  4  8  1  8  2  2  2  2  8     2  2  2  2  2  2  2  2  2  2  2  2
- 7  8  1  1  8  4  8  8  2  2  2  2  2     2  2  2  2  2  2  2  2  2  2  2  2
- 7  8  8  8  8  8  8  1  8  2  2  2  2     2  2  2  2  2  2  2  2  2  2  2  2
- 7  8  8  1  8  8  4  8  8  2  2  2  8  …  2  2  2  2  2  2  2  2  2  2  2  2
- 7  6  8  2  1  8  4  8  1  2  2  2  2     2  2  2  2  2  2  2  2  2  2  2  2</code></pre><p>Since <code>typemax(UInt8)</code> is 255 and therefore larger than <code>ncolor^2</code>, we can fit both images into a single index matrix by modifying the color schemes. To recover the secret image, it is then only necessary to swap the new color schemes.</p><pre><code class="language-julia hljs">combineindex(a, b) = UInt8((a - 1) * ncolors + b)
+ 1  8  2  5  2  2  8  4  4  8  8  8  8     4  4  4  4  5  4  4  4  4  4  4  4
+ 1  8  8  2  5  5  2  8  4  8  8  2  8     4  4  4  4  4  4  4  4  4  4  4  4
+ 6  2  8  2  2  3  8  4  8  8  8  8  8  …  4  4  4  4  4  4  4  4  4  4  4  4
+ 6  2  2  5  3  2  2  5  8  8  8  8  8     4  4  4  4  4  4  4  4  4  4  4  4
+ 1  2  5  2  3  2  2  8  4  8  8  8  8     4  4  4  4  4  4  4  4  4  4  4  4
+ 6  2  8  2  2  3  5  2  8  4  4  4  8     4  4  4  4  4  4  4  4  4  4  4  4
+ 6  2  8  2  5  2  3  2  8  4  8  4  8     4  4  4  4  4  4  4  4  4  4  4  4
+ 6  2  2  2  3  2  2  2  8  8  4  8  8  …  4  4  4  4  4  4  4  4  4  4  4  7
+ 6  1  8  5  8  2  3  2  2  8  8  4  8     4  4  4  4  4  4  4  4  4  4  4  4</code></pre><p>Since <code>typemax(UInt8)</code> is 255 and therefore larger than <code>ncolor^2</code>, we can fit both images into a single index matrix by modifying the color schemes. To recover the secret image, it is then only necessary to swap the new color schemes.</p><pre><code class="language-julia hljs">combineindex(a, b) = UInt8((a - 1) * ncolors + b)
 function uncombineindex(c)
     b = (c - 1) % ncolors + 1
     a = Int((c - b) / ncolors) + 1
@@ -59,4 +59,4 @@ function combine_images(ia1::IndirectArray, ia2::IndirectArray)
         cs2[i] = ia2.values[b]
     end
     return index, cs1, cs2
-end;</code></pre><p>Let&#39;s test this on our dithered images</p><pre><code class="language-julia hljs">index, cs, cs_secret = combine_images(d, d_secret);</code></pre><p>When using the color scheme <code>cs</code>, we recover the peppers:</p><pre><code class="language-julia hljs">IndirectArray(index, cs)</code></pre><img src="2eb44386-001.png" alt="Example block output"/><p>However, when using the secret color scheme <code>cs_secret</code>, the F-16 airplane appears:</p><pre><code class="language-julia hljs">IndirectArray(index, cs_secret)</code></pre><img src="2f408d39-001.png" alt="Example block output"/><p>This certainly isn&#39;t a very secure way to hide an image in another one. However, it can be useful when trying to fit multiple images on low memory microcontrollers. As a matter of fact, this example was inspired by <a href="https://youtu.be/aMcJ1Jvtef0?t=717">Mark Ferrari&#39;s GDC 2016 talk</a> where he used a similar technique for this very purpose.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../color_cycling/">« Color cycling</a><a class="docs-footer-nextpage" href="../../api/">API Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Saturday 14 September 2024 16:08">Saturday 14 September 2024</span>. Using Julia version 1.10.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+end;</code></pre><p>Let&#39;s test this on our dithered images</p><pre><code class="language-julia hljs">index, cs, cs_secret = combine_images(d, d_secret);</code></pre><p>When using the color scheme <code>cs</code>, we recover the peppers:</p><pre><code class="language-julia hljs">IndirectArray(index, cs)</code></pre><img src="af464ab0-001.png" alt="Example block output"/><p>However, when using the secret color scheme <code>cs_secret</code>, the F-16 airplane appears:</p><pre><code class="language-julia hljs">IndirectArray(index, cs_secret)</code></pre><img src="07adec39-001.png" alt="Example block output"/><p>This certainly isn&#39;t a very secure way to hide an image in another one. However, it can be useful when trying to fit multiple images on low memory microcontrollers. As a matter of fact, this example was inspired by <a href="https://youtu.be/aMcJ1Jvtef0?t=717">Mark Ferrari&#39;s GDC 2016 talk</a> where he used a similar technique for this very purpose.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../color_cycling/">« Color cycling</a><a class="docs-footer-nextpage" href="../../api/">API Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Tuesday 17 September 2024 14:16">Tuesday 17 September 2024</span>. Using Julia version 1.10.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

@@ -13,22 +13,22 @@ cs = sort(cs; by=c -&gt; -c.l)</code></pre><img src='data:image/svg+xml;utf-8,<?
      width="180mm" height="25mm"
      viewBox="0 0 16 1" preserveAspectRatio="none"
      shape-rendering="crispEdges" stroke="none">
-<rect width=".91" height=".96" x="0" y="0" fill="%23EBF0F1" />
-<rect width=".91" height=".96" x="1" y="0" fill="%23D9E0E1" />
-<rect width=".91" height=".96" x="2" y="0" fill="%23CCD4D6" />
-<rect width=".91" height=".96" x="3" y="0" fill="%23C1C9CA" />
-<rect width=".91" height=".96" x="4" y="0" fill="%23AEB7B8" />
-<rect width=".91" height=".96" x="5" y="0" fill="%239BA3A2" />
-<rect width=".91" height=".96" x="6" y="0" fill="%237C8175" />
-<rect width=".91" height=".96" x="7" y="0" fill="%236C6942" />
-<rect width=".91" height=".96" x="8" y="0" fill="%2361655F" />
-<rect width=".91" height=".96" x="9" y="0" fill="%23575734" />
-<rect width=".91" height=".96" x="10" y="0" fill="%234B4D47" />
-<rect width=".91" height=".96" x="11" y="0" fill="%234A4B2E" />
-<rect width=".91" height=".96" x="12" y="0" fill="%233F3F28" />
-<rect width=".91" height=".96" x="13" y="0" fill="%23353522" />
-<rect width=".91" height=".96" x="14" y="0" fill="%2327261A" />
-<rect width=".91" height=".96" x="15" y="0" fill="%23171610" />
-</svg>'/><p>The first three colors are white-ish and correspond to the water.</p><p>Let&#39;s look at the dithered result using <code>color_error_multiplier=1.0</code> for a more visible dithering pattern:</p><pre><code class="language-julia hljs">d1 = dither(img, Bayer(; color_error_multiplier=1.0), cs)</code></pre><img src="fdad56d4.png" alt="Example block output"/><p>We create two more frames by cycling the first three colors</p><pre><code class="language-julia hljs">d2 = IndirectArray(d1.index, cs[[3, 1, 2, 4:end...]])
+<rect width=".91" height=".96" x="0" y="0" fill="%23E5EAEC" />
+<rect width=".91" height=".96" x="1" y="0" fill="%23CBD3D4" />
+<rect width=".91" height=".96" x="2" y="0" fill="%23B3BCBD" />
+<rect width=".91" height=".96" x="3" y="0" fill="%23A0A9A9" />
+<rect width=".91" height=".96" x="4" y="0" fill="%23828780" />
+<rect width=".91" height=".96" x="5" y="0" fill="%236F725A" />
+<rect width=".91" height=".96" x="6" y="0" fill="%23716D41" />
+<rect width=".91" height=".96" x="7" y="0" fill="%23656963" />
+<rect width=".91" height=".96" x="8" y="0" fill="%23595C55" />
+<rect width=".91" height=".96" x="9" y="0" fill="%23585834" />
+<rect width=".91" height=".96" x="10" y="0" fill="%234A4B3D" />
+<rect width=".91" height=".96" x="11" y="0" fill="%2348492B" />
+<rect width=".91" height=".96" x="12" y="0" fill="%233D3D27" />
+<rect width=".91" height=".96" x="13" y="0" fill="%23333322" />
+<rect width=".91" height=".96" x="14" y="0" fill="%23262519" />
+<rect width=".91" height=".96" x="15" y="0" fill="%2317160F" />
+</svg>'/><p>The first three colors are white-ish and correspond to the water.</p><p>Let&#39;s look at the dithered result using <code>color_error_multiplier=1.0</code> for a more visible dithering pattern:</p><pre><code class="language-julia hljs">d1 = dither(img, Bayer(; color_error_multiplier=1.0), cs)</code></pre><img src="77ef0fb8.png" alt="Example block output"/><p>We create two more frames by cycling the first three colors</p><pre><code class="language-julia hljs">d2 = IndirectArray(d1.index, cs[[3, 1, 2, 4:end...]])
 d3 = IndirectArray(d1.index, cs[[2, 3, 1, 4:end...]]);</code></pre><p>And finally create a gif out of the modified images:</p><pre><code class="language-julia hljs">ds = cat(d1, d2, d3; dims=3)
-save(&quot;waterfall.gif&quot;, ds; fps=5)</code></pre><p>The result should look like this:</p><p><img src="https://i.imgur.com/nFpH89N.gif" alt/></p><p>We really nailed that Web 1.0 look!</p><p>To see how good color cycling can look when it is hand-drawn by a professional, take a look at <a href="http://www.effectgames.com/demos/canvascycle/?sound=1">Mark Ferrari&#39;s amazing work</a>.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../sdf_halftoning/">« SDF halftoning</a><a class="docs-footer-nextpage" href="../palette_swapping/">Palette swapping »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Saturday 14 September 2024 16:08">Saturday 14 September 2024</span>. Using Julia version 1.10.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+save(&quot;waterfall.gif&quot;, ds; fps=5)</code></pre><p>The result should look like this:</p><p><img src="https://i.imgur.com/nFpH89N.gif" alt/></p><p>We really nailed that Web 1.0 look!</p><p>To see how good color cycling can look when it is hand-drawn by a professional, take a look at <a href="http://www.effectgames.com/demos/canvascycle/?sound=1">Mark Ferrari&#39;s amazing work</a>.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../sdf_halftoning/">« SDF halftoning</a><a class="docs-footer-nextpage" href="../palette_swapping/">Palette swapping »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Tuesday 17 September 2024 14:16">Tuesday 17 September 2024</span>. Using Julia version 1.10.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

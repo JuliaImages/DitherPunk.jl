@@ -79,7 +79,7 @@ function _colordither(
     metric::DifferenceMetric=DEFAULT_METRIC,
     to_linear=false,
     kwargs...,
-) where {T<:ColorLike}
+) where {T<:GrayLike}
     return _colordither(
         eltype(cs), img, alg, cs; metric=metric, to_linear=to_linear, kwargs...
     )

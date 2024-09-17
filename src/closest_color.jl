@@ -14,8 +14,9 @@ function colordither(
     ::ClosestColor,
     img::GenericImage,
     cs::AbstractVector{<:ColorLike},
-    metric::DifferenceMetric,
-)::Matrix{Int}
+    colorpicker::AbstractColorPicker,
+)
     cs_lab = Lab.(cs)
-    return map(px -> closest_color_index_runtime(px, cs_lab, metric), img)
+    index = similar(img, Int)
+    return map!(colorpicker, index, img)
 end

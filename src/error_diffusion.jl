@@ -96,12 +96,12 @@ function colordither(
     alg::ErrorDiffusion,
     img::GenericImage,
     cs::AbstractVector{<:ColorLike},
-    metric::DifferenceMetric;
+    colorpicker::AbstractColorPicker;
     clamp_error=true,
 )
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
-    index = Matrix{Int}(undef, size(img)...) # allocate matrix of color indices
+    index = similar(img, Int) # allocate matrix of color indices
     Inner = inner_range(img, alg) # domain in which boundschecks can be skipped
 
     # Change from normalized intensities to Float as error will get added!
@@ -109,13 +109,12 @@ function colordither(
     img = convert.(floattype(eltype(img)), img)
     FT = floattype(eltype(eltype(img))) # type of Float
     cs_err = convert.(eltype(img), cs)
-    cs_lab = Lab.(cs)
     vals = convert.(FT, alg.vals)
 
     @inbounds for I in CartesianIndices(img)
         px = img[I]
         clamp_error && (px = clamp_limits(px))
-        index[I] = closest_color_index_runtime(px, cs_lab, metric)
+        index[I] = colorpicker(px)
 
         # Diffuse "error" to neighborhood in filter
         err = px - cs_err[index[I]]  # diffuse "error" to neighborhood in filter

@@ -1,3 +1,6 @@
+const DEFAULT_METRIC = DE_2000()
+DefaultColorPicker(colors) = RuntimeColorPicker(colors, DEFAULT_METRIC)
+
 # Binary dithering and color dithering can be distinguished by the extra argument `arg`,
 # which is either
 #   - a color scheme (array of colors)
@@ -6,22 +9,9 @@
 #
 # All functions in this file end up calling `colordither` and return IndirectArrays.
 
-struct ColorNotImplementedError <: Exception
-    algname::String
-    ColorNotImplementedError(alg::AbstractDither) = new("$alg")
-end
-function Base.showerror(io::IO, e::ColorNotImplementedError)
-    return print(
-        io, e.algname, " algorithm currently doesn't support custom color palettes."
-    )
-end
-colordither(alg, img, cs, metric) = throw(ColorNotImplementedError(alg))
-
-const DEFAULT_METRIC = DE_2000()
-
-##############
+#============#
 # Public API #
-##############
+#============#
 
 # If `out` is specified, it will be changed in place...
 function dither!(out::GenericImage, img::GenericImage, alg::AbstractDither, arg; kwargs...)
@@ -45,9 +35,9 @@ function dither(
     return _colordither(T, img, alg, arg; kwargs...)
 end
 
-#############################
+#===========================#
 # Low-level algorithm calls #
-#############################
+#===========================#
 
 # Dispatch to dithering with custom color palettes on any image type
 # when color palette is provided
@@ -56,7 +46,7 @@ function _colordither(
     img::GenericImage,
     alg::AbstractDither,
     cs::AbstractVector{<:ColorLike};
-    metric::DifferenceMetric=DEFAULT_METRIC,
+    colorpicker::AbstractColorPicker=DefaultColorPicker(cs),
     to_linear=false,
     kwargs...,
 ) where {T}
@@ -64,11 +54,12 @@ function _colordither(
     length(cs) >= 2 ||
         throw(DomainError(length(cs), "Color scheme for dither needs >= 2 colors."))
 
-    index = colordither(alg, img, cs, metric; kwargs...)
+    index = colordither(alg, img, cs, colorpicker; kwargs...)
     _cs::Vector{T} = T.(cs)
     return IndirectArray(index, _cs)
 end
 
+# TODO: deprecate
 # A special case occurs when a grayscale output image is to be dithered in colors.
 # Since this is not possible, instead the return image will be of type of the color scheme.
 function _colordither(
@@ -76,11 +67,26 @@ function _colordither(
     img::GenericImage,
     alg::AbstractDither,
     cs::AbstractVector{<:Color{<:Any,3}};
-    metric::DifferenceMetric=DEFAULT_METRIC,
+    colorpicker::AbstractColorPicker=DefaultColorPicker(cs),
     to_linear=false,
     kwargs...,
 ) where {T<:GrayLike}
     return _colordither(
-        eltype(cs), img, alg, cs; metric=metric, to_linear=to_linear, kwargs...
+        eltype(cs), img, alg, cs; colorpicker=colorpicker, to_linear=to_linear, kwargs...
     )
 end
+
+#================#
+# Error handling #
+#================#
+
+struct ColorNotImplementedError <: Exception
+    algname::String
+    ColorNotImplementedError(alg::AbstractDither) = new("$alg")
+end
+function Base.showerror(io::IO, e::ColorNotImplementedError)
+    return print(
+        io, e.algname, " algorithm currently doesn't support custom color palettes."
+    )
+end
+colordither(alg, img, cs, metric) = throw(ColorNotImplementedError(alg))

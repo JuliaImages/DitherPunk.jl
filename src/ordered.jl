@@ -56,7 +56,7 @@ function colordither(
     alg::OrderedDither,
     img::GenericImage,
     cs::AbstractVector{<:ColorLike},
-    metric::DifferenceMetric,
+    colorpicker::AbstractColorPicker,
 )
     cs_lab = Lab.(cs)
     cs_xyz = XYZ.(cs)
@@ -71,7 +71,7 @@ function colordither(
 
     # Allocate matrices
     candidates = Array{Int}(undef, nmax)
-    index = Matrix{Int}(undef, size(img)...)
+    index = similar(img, Int)
 
     @inbounds for I in CartesianIndices(img)
         r, c = Tuple(I)
@@ -80,7 +80,7 @@ function colordither(
 
         for j in 1:nmax
             col = px + alg.color_error_multiplier * err
-            idx = closest_color_index_runtime(col, cs_lab, metric)
+            idx = colorpicker(col)
 
             # We are in loop (idx ↔ err) if we already computed `idx` as the closest color
             # after the first iteration. Breaking out of this loops lets us avoid calling
@@ -117,7 +117,7 @@ which defaults to `1`.
      Tone Pictures," IEEE International Conference on Communications,
      Conference Records, 1973, pp. 26-11 to 26-15.
 """
-function Bayer(level=1; kwargs...)
+function Bayer(level=1; kwargs...) # TODO: deprecate optional argument
     bayer = bayer_matrix(level) .+ 1
     return OrderedDither(bayer; kwargs...)
 end

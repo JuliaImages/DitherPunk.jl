@@ -1,5 +1,7 @@
 abstract type AbstractColorPicker end
 
+(colorpicker::AbstractColorPicker)(c::ColorLike) = closest_color_index(colorpicker, c)
+
 """
   RuntimeColorPicker(colorscheme)
   RuntimeColorPicker(colorscheme, metric)
@@ -21,7 +23,7 @@ end
 
 RuntimeColorPicker(cs; metric=DEFAULT_METRIC) = RuntimeColorPicker(cs, metric)
 
-function closest_color_index(p::RuntimeColorPicker, c::Colorant)
+function closest_color_index(p::RuntimeColorPicker, c::ColorLike)
     return closest_color_index_runtime(c, p.colorscheme, p.metric)
 end
 
@@ -75,6 +77,6 @@ function closest_color_index(p::LookupColorPicker, c::RGB{N0f8})
     ir, ig, ib = rgb_n0f8_to_ints(c) .+ 0x01
     return @inbounds p.lut[ir, ig, ib]
 end
-function closest_color_index(p::LookupColorPicker, c::Colorant)
+function closest_color_index(p::LookupColorPicker, c::ColorLike)
     return closest_color_index(p, convert(RGB{N0f8}, c))
 end

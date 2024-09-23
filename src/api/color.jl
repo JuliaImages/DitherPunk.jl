@@ -1,5 +1,5 @@
 const DEFAULT_METRIC = FastEuclideanMetric()
-DefaultColorPicker(colors) = RuntimeColorPicker(colors, DEFAULT_METRIC)
+select_colorpicker(::AbstractDither, colors) = RuntimeColorPicker(colors, DEFAULT_METRIC)
 
 # Binary dithering and color dithering can be distinguished by the extra argument `arg`,
 # which is either
@@ -46,26 +46,24 @@ function _colordither(
     img::GenericImage,
     alg::AbstractDither,
     colorscheme::AbstractVector{<:ColorLike};
-    colorpicker::AbstractColorPicker=DefaultColorPicker(colorscheme),
+    colorpicker::AbstractColorPicker{C}=select_colorpicker(alg, colorscheme),
     to_linear=false,
     kwargs...,
-) where {T}
+) where {T,C}
     to_linear && (@warn "Skipping transformation `to_linear` when dithering in color.")
-    length(colorscheme) >= 2 || throw(
-        DomainError(length(colorscheme), "Color scheme for dither needs >= 2 colors.")
-    )
+    length(colorscheme) > 1 ||
+        throw(ArgumentError("Color scheme for dither needs more than one color."))
 
     # Allocate output: matrix of indices onto the colorscheme
     out = similar(img, Int)
     # Eagerly promote to the optimal color space to make loop run faster
-    CS = colorspace(colorpicker)
-    img = convert.(CS, img)
-    cs_alg = convert.(CS, colorscheme)
+    img = convert.(C, img)
+    cs = convert.(C, colorscheme)
     # Call method
-    index = colordither!(out, alg, img, cs_alg, colorpicker; kwargs...)
+    out = colordither!(out, alg, img, cs, colorpicker; kwargs...)
     # Assemble IndirectArray with correct colorant-type
-    cs_out = convert.(T, colorscheme)
-    return IndirectArray(index, cs_out)
+    colorscheme = convert.(T, colorscheme)
+    return IndirectArray(out, colorscheme)
 end
 
 # TODO: deprecate
@@ -76,7 +74,7 @@ function _colordither(
     img::GenericImage,
     alg::AbstractDither,
     colorscheme::AbstractVector{<:Color{<:Any,3}};
-    colorpicker::AbstractColorPicker=DefaultColorPicker(colorscheme),
+    colorpicker::AbstractColorPicker=select_colorpicker(alg, colorscheme),
     to_linear=false,
     kwargs...,
 ) where {T<:GrayLike}
@@ -96,14 +94,19 @@ end
 #================#
 
 struct ColorNotImplementedError <: Exception
-    algname::String
-    ColorNotImplementedError(alg::AbstractDither) = new("$alg")
+    alg::String
+    colorpicker::String
+    function ColorNotImplementedError(alg::AbstractDither, colorpicker::AbstractColorPicker)
+        new(string(typeof(alg)), string(typeof(colorpicker)))
+    end
 end
 function Base.showerror(io::IO, e::ColorNotImplementedError)
     return print(
-        io, e.algname, " algorithm currently doesn't support custom color palettes."
+        io,
+        e.alg,
+        " algorithm currently doesn't support custom color palettes with colorpicker $(e.colorpicker).",
     )
 end
 function colordither!(out, alg, img, colorscheme, colorpicker; kwargs...)
-    throw(ColorNotImplementedError(alg))
+    throw(ColorNotImplementedError(alg, colorpicker))
 end

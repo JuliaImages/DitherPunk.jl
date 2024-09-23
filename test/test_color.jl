@@ -1,11 +1,13 @@
 using DitherPunk
 using DitherPunk: DEFAULT_METHOD, AbstractDither
 using DitherPunk: ColorNotImplementedError
+using DitherPunk: RuntimeColorPicker, LookupColorPicker, FastEuclideanMetric
 using Test
 
 using ColorSchemes
 using IndirectArrays
 using ColorTypes: RGB, HSV
+using Colors: DE_2000
 using FixedPointNumbers: N0f8
 using ReferenceTests
 using TestImages
@@ -25,29 +27,37 @@ img = testimage("fabio_color_256")
 img_gray = testimage("fabio_gray_256")
 
 # Run & test custom color palette dithering methods
-const COLOR_ALGS = Dict(
+COLOR_ALGS = Dict(
     "FloydSteinberg" => @inferred(FloydSteinberg()),
     "ClosestColor" => @inferred(ClosestColor()),
     "Bayer" => @inferred(Bayer()),
 )
+COLOR_PICKERS = Dict(
+    "Runtime_FastEuclideanMetric" => RuntimeColorPicker(cs; metric=FastEuclideanMetric()),
+    "Runtime_DE_2000"             => RuntimeColorPicker(cs; metric=DE_2000()),
+    "Lookup_FastEuclideanMetric"  => LookupColorPicker(cs; metric=FastEuclideanMetric()),
+    "Lookup_DE_2000"              => LookupColorPicker(cs; metric=DE_2000()),
+)
 
 @testset verbose = true "Binary dithering methods" begin
-    @testset "$(name)" for (name, alg) in COLOR_ALGS
-        # Test custom color dithering on color images
-        local img_copy = copy(img)
-        local d = @inferred dither(img_copy, alg, cs)
-        @test_reference "references/color/$(name).txt" d
+    @testset "$(algname)" for (algname, alg) in COLOR_ALGS
+        @testset "$(cpname)" for (cpname, colorpicker) in COLOR_PICKERS
+            # Test custom color dithering on color images
+            local img_copy = copy(img)
+            local d = @inferred dither(img_copy, alg, cs; colorpicker=colorpicker)
+            @test_reference "references/color/$(algname)_$(cpname).txt" d
 
-        @test eltype(d) == eltype(img_copy)
-        @test img_copy == img # image not modified
+            @test eltype(d) == eltype(img_copy)
+            @test img_copy == img # image not modified
 
-        # Test custom color dithering on gray images
-        local img_copy_gray = copy(img_gray)
-        local d = @inferred dither(img_copy_gray, alg, cs)
-        @test_reference "references/color/$(name)_from_gray.txt" d
+            # Test custom color dithering on gray images
+            local img_copy_gray = copy(img_gray)
+            local d = @inferred dither(img_copy_gray, alg, cs; colorpicker=colorpicker)
+            @test_reference "references/color/$(algname)_$(cpname)_from_gray.txt" d
 
-        @test eltype(d) == eltype(cs)
-        @test img_copy_gray == img_gray # image not modified
+            @test eltype(d) == eltype(cs)
+            @test img_copy_gray == img_gray # image not modified
+        end
     end
 end
 

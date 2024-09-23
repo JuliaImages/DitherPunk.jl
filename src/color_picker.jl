@@ -71,10 +71,13 @@ struct LookupColorPicker <: AbstractColorPicker{LUT_COLORSPACE}
     end
 end
 
+LookupColorPicker(cs; metric=DEFAULT_METRIC) = LookupColorPicker(cs, metric)
+
 # Construct LUT from colorscheme and color difference metric
-function LookupColorPicker(
-    colorscheme::ColorVector; metric::DifferenceMetric=DEFAULT_METRIC
-)
+function LookupColorPicker(colorscheme::ColorVector, metric::DifferenceMetric)
+    CS = colorspace(metric)
+    colorscheme = convert.(CS, colorscheme)
+
     lut = Array{LUT_INDEXTYPE}(undef, 256, 256, 256)
     @inbounds @simd for I in CartesianIndices(lut)
         r, g, b = I.I

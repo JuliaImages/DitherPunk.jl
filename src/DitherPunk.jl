@@ -1,8 +1,8 @@
 module DitherPunk
 
 using Base: require_one_based_indexing
-using FixedPointNumbers: N0f8
-using ColorTypes: ColorTypes, AbstractGray, Color, Colorant, RGB, Gray, HSV, Lab, XYZ, gray
+using FixedPointNumbers: N0f8, floattype
+using ColorTypes: ColorTypes, AbstractGray, Color, Colorant, RGB, Gray, HSV, Lab, XYZ
 using Colors:
     DifferenceMetric,
     EuclideanDifferenceMetric,
@@ -13,9 +13,9 @@ using Colors:
     DE_BFD,
     colordiff,
     invert_srgb_compand
-import Colors: _colordiff # extended in colordiff.jl
-using ImageCore: channelview, floattype, clamp01
+using ImageCore: channelview, clamp01
 using IndirectArrays: IndirectArray
+import Colors: _colordiff # extended in colordiff.jl
 
 using ColorSchemes: ColorScheme
 using ColorQuantization: quantize, AbstractColorQuantizer, KMeansQuantization

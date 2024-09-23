@@ -95,18 +95,20 @@ end
 
 struct ColorNotImplementedError <: Exception
     alg::String
-    colorpicker::String
-    function ColorNotImplementedError(alg::AbstractDither, colorpicker::AbstractColorPicker)
-        new(string(typeof(alg)), string(typeof(colorpicker)))
+    function ColorNotImplementedError(alg)
+        new(string(typeof(alg)))
     end
 end
 function Base.showerror(io::IO, e::ColorNotImplementedError)
-    return print(
-        io,
-        e.alg,
-        " algorithm currently doesn't support custom color palettes with colorpicker $(e.colorpicker).",
-    )
+    return print(io, e.alg, " algorithm currently doesn't support custom color palettes.")
 end
-function colordither!(out, alg, img, colorscheme, colorpicker; kwargs...)
-    throw(ColorNotImplementedError(alg, colorpicker))
+function colordither!(
+    out::Matrix{Int},
+    alg::AbstractDither,
+    img::GenericImage{C},
+    cs::AbstractVector{C},
+    colorpicker::AbstractColorPicker{C};
+    kwargs...,
+) where {C<:ColorLike}
+    throw(ColorNotImplementedError(alg))
 end

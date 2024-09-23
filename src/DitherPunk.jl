@@ -2,7 +2,8 @@ module DitherPunk
 
 using Base: require_one_based_indexing
 using FixedPointNumbers: N0f8, floattype
-using ColorTypes: ColorTypes, AbstractGray, Color, Colorant, RGB, Gray, HSV, Lab, XYZ
+using ColorTypes: ColorTypes, AbstractGray, Color, Colorant
+using ColorTypes: RGB, HSV, Lab, XYZ, Gray, gray
 using Colors:
     DifferenceMetric,
     EuclideanDifferenceMetric,

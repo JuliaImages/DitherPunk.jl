@@ -17,8 +17,15 @@ function _colordiff(a::Colorant, b::Colorant, m::FastEuclideanMetric)
     b = convert(RGB{N0f8}, b)
     return _colordiff(a, b, m)
 end
+# avoid method ambiguity
+function _colordiff(a::Color, b::Color, m::FastEuclideanMetric)
+    a = convert(RGB{N0f8}, a)
+    b = convert(RGB{N0f8}, b)
+    return _colordiff(a, b, m)
+end
+# TODO: safe coversion to RGB{N0f8} using clamp01
 
-# TODO: add fast metric for numberic inputs
+# TODO: add fast metric for numeric inputs
 
 # Performance can be gained by converting colors to the colorspace `colordiff`
 # operates in for a given metric

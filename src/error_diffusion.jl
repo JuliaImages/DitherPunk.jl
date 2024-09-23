@@ -31,7 +31,7 @@ struct ErrorDiffusion{V<:Real,R<:AbstractUnitRange} <: AbstractDither
 end
 function ErrorDiffusion(inds, vals, ranges)
     length(inds) != length(vals) &&
-        throw(ArgumentError("Lengths of filter indices and values don't match."))
+        throw(ArgumentError("Lengths of ErrorDiffusion indices and values don't match."))
     return ErrorDiffusion{typeof(vals),typeof(ranges)}(inds, vals, ranges)
 end
 
@@ -92,32 +92,28 @@ function binarydither!(
     return out
 end
 
-function colordither(
+function colordither!(
+    out::Matrix{Int},
     alg::ErrorDiffusion,
-    img::GenericImage,
-    cs::AbstractVector{<:ColorLike},
-    colorpicker::AbstractColorPicker;
+    img::GenericImage{C},
+    cs::AbstractVector{C},
+    colorpicker::AbstractColorPicker{C};
     clamp_error=true,
-)
+) where {C<:ColorLike}
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
-    index = similar(img, Int) # allocate matrix of color indices
     Inner = inner_range(img, alg) # domain in which boundschecks can be skipped
 
-    # Change from normalized intensities to Float as error will get added!
-    # Eagerly promote to the same type to make loop run faster.
-    img = convert.(floattype(eltype(img)), img)
-    FT = floattype(eltype(eltype(img))) # type of Float
-    cs_err = convert.(eltype(img), cs)
+    FT = eltype(eltype(img)) # Float type
     vals = convert.(FT, alg.vals)
 
     @inbounds for I in CartesianIndices(img)
         px = img[I]
         clamp_error && (px = clamp_limits(px))
-        index[I] = colorpicker(px)
+        out[I] = colorpicker(px)
 
         # Diffuse "error" to neighborhood in filter
-        err = px - cs_err[index[I]]  # diffuse "error" to neighborhood in filter
+        err = px - cs[out[I]]  # diffuse "error" to neighborhood in filter
         if I in Inner
             for i in 1:length(alg.inds)
                 img[I + alg.inds[i]] += err * vals[i]
@@ -130,7 +126,7 @@ function colordither(
             end
         end
     end
-    return index
+    return out
 end
 
 """

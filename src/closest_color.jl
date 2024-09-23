@@ -10,13 +10,12 @@ function binarydither!(::ClosestColor, out::GrayImage, img::GrayImage)
     return out .= img .> threshold
 end
 
-function colordither(
+function colordither!(
+    out::Matrix{Int},
     ::ClosestColor,
-    img::GenericImage,
-    cs::AbstractVector{<:ColorLike},
-    colorpicker::AbstractColorPicker,
-)
-    cs_lab = Lab.(cs)
-    index = similar(img, Int)
-    return map!(colorpicker, index, img)
+    img::GenericImage{C},
+    cs::AbstractVector{C},
+    colorpicker::AbstractColorPicker{C},
+) where {C<:ColorLike}
+    return map!(colorpicker, out, img)
 end

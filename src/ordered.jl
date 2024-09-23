@@ -52,14 +52,16 @@ end
 # https://patents.google.com/patent/US6606166B1/en
 # Implemented according to Joel Yliluoma's pseudocode
 # https://bisqwit.iki.fi/story/howto/dither/jy/
-function colordither(
+function colordither!(
+    out::Matrix{Int},
     alg::OrderedDither,
-    img::GenericImage,
-    cs::AbstractVector{<:ColorLike},
-    colorpicker::AbstractColorPicker,
-)
+    img::GenericImage{C},
+    cs::AbstractVector{C},
+    colorpicker::AbstractColorPicker{C},
+) where {C<:ColorLike}
     cs_lab = Lab.(cs)
-    cs_xyz = XYZ.(cs)
+    T = eltype(C)
+    error_multiplier = convert(T, alg.color_error_multiplier)
 
     # Precompute lookup tables for modulo indexing of threshold matrix
     mat = alg.mat
@@ -71,15 +73,14 @@ function colordither(
 
     # Allocate matrices
     candidates = Array{Int}(undef, nmax)
-    index = similar(img, Int)
 
     @inbounds for I in CartesianIndices(img)
         r, c = Tuple(I)
-        err = zero(XYZ)
-        px = XYZ(img[I])
+        err = zero(C)
+        px = img[I]
 
         for j in 1:nmax
-            col = px + alg.color_error_multiplier * err
+            col = px + error_multiplier * err
             idx = colorpicker(col)
 
             # We are in loop (idx ↔ err) if we already computed `idx` as the closest color
@@ -95,15 +96,13 @@ function colordither(
                 break
             else
                 candidates[j] = idx
-                err = px - cs_xyz[idx]
+                err = px - cs[idx]
             end
         end
         # Sort candidates by luminance (dark to bright)
-        index[I] = partialsort!(
-            candidates, mat[rlookup[r], clookup[c]]; by=i -> cs_lab[i].l
-        )
+        out[I] = partialsort!(candidates, mat[rlookup[r], clookup[c]]; by=i -> cs_lab[i].l)
     end
-    return index
+    return out
 end
 
 """

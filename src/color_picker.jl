@@ -7,6 +7,7 @@ The parametric type `C` indicates the color space in which the closest color is 
 abstract type AbstractColorPicker{C<:ColorLike} end
 colorspace(::AbstractColorPicker{C}) where {C} = C
 
+# By design, to ensure performance, color pickers only work on inputs of the same color space.
 function (picker::AbstractColorPicker{C})(color::C) where {C<:ColorLike}
     closest_color_index(picker, color)
 end

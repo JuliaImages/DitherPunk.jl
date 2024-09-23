@@ -33,6 +33,7 @@ const GenericImage{T<:ColorLike} = AbstractArray{T,2}
 const GrayImage{T<:GrayLike} = AbstractArray{T,2}
 const BinaryImage{T<:BinaryLike} = AbstractArray{T,2}
 
+include("compat.jl")
 include("colorschemes.jl")
 include("utils.jl")
 include("colordiff.jl")
@@ -48,6 +49,7 @@ include("api/default_method.jl")
 include("braille.jl")
 include("clustering.jl")
 
+@public AbstractDither
 export dither, dither!
 # Threshold dithering
 export ConstantThreshold, WhiteNoiseThreshold
@@ -63,10 +65,10 @@ export Sierra, TwoRowSierra, SierraLite, Atkinson, Fan93, ShiauFan, ShiauFan2
 # Closest color
 export ClosestColor
 # Closest color lookup
-export AbstractColorPicker
-export RuntimeColorPicker
-export LookupColorPicker
-export FastEuclideanMetric
+@public AbstractColorPicker
+@public RuntimeColorPicker
+@public LookupColorPicker
+@public FastEuclideanMetric
 # Other utilities
 export upscale
 export braille

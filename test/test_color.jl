@@ -7,7 +7,7 @@ using Test
 using ColorSchemes
 using IndirectArrays
 using ColorTypes: RGB, HSV
-using Colors: DE_2000
+using Colors: DE_2000, DE_BFD
 using FixedPointNumbers: N0f8
 using ReferenceTests
 using TestImages
@@ -35,8 +35,10 @@ COLOR_ALGS = Dict(
 COLOR_PICKERS = Dict(
     "Runtime_FastEuclideanMetric" => RuntimeColorPicker(cs; metric=FastEuclideanMetric()),
     "Runtime_DE_2000"             => RuntimeColorPicker(cs; metric=DE_2000()),
+    "Runtime_DE_BFD"              => RuntimeColorPicker(cs; metric=DE_BFD()),
     "Lookup_FastEuclideanMetric"  => LookupColorPicker(cs; metric=FastEuclideanMetric()),
     "Lookup_DE_2000"              => LookupColorPicker(cs; metric=DE_2000()),
+    "Lookup_DE_BFD"               => LookupColorPicker(cs; metric=DE_BFD()),
 )
 
 @testset verbose = true "Binary dithering methods" begin

@@ -29,11 +29,11 @@ end
 
 # Performance can be gained by converting colors to the colorspace `colordiff`
 # operates in for a given metric
-colorspace(::DifferenceMetric) = Lab # fallback
+colorspace(::DifferenceMetric) = Lab{Float32} # fallback
 colorspace(::EuclideanDifferenceMetric{T}) where {T} = T
 colorspace(::FastEuclideanMetric) = RGB{N0f8} # DitherPunk's custom metric
-colorspace(::DE_2000) = Lab
-colorspace(::DE_94) = Lab
-colorspace(::DE_JPC79) = Lab
-colorspace(::DE_CMC) = Lab
-colorspace(::DE_BFD) = XYZ
+colorspace(::DE_2000) = Lab{Float32}
+colorspace(::DE_94) = Lab{Float32}
+colorspace(::DE_JPC79) = Lab{Float32}
+colorspace(::DE_CMC) = Lab{Float32}
+colorspace(::DE_BFD) = XYZ{Float32}

@@ -38,14 +38,12 @@ function closest_color_index(p::RuntimeColorPicker{C}, c::C) where {C<:ColorLike
     return closest_color_index_runtime(c, p.colorscheme, p.metric)
 end
 
-if VERSION >= v"1.7"
-    function closest_color_index_runtime(px, cs, metr)
-        return argmin(colordiff(px, c; metric=metr) for c in cs)
-    end
-else
-    function closest_color_index_runtime(px, cs, metr)
-        return argmin([colordiff(px, c; metric=metr) for c in cs])
-    end
+function closest_color_index_runtime(
+    px::C, colorscheme::AbstractArray{C}, metric
+) where {C<:ColorLike}
+    mycolordiff(c) = colordiff(px, c; metric=metric)
+    c, index = findmin(mycolordiff, colorscheme)
+    return index
 end
 
 #===================#

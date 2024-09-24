@@ -1,5 +1,5 @@
 style = "blue"
-always_use_return = false
+always_use_return = true
 pipe_to_function_call = false
 align_assignment = true
 align_struct_field = true

@@ -96,7 +96,7 @@ end
 struct ColorNotImplementedError <: Exception
     alg::String
     function ColorNotImplementedError(alg)
-        new(string(typeof(alg)))
+        return new(string(typeof(alg)))
     end
 end
 function Base.showerror(io::IO, e::ColorNotImplementedError)

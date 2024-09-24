@@ -9,7 +9,7 @@ colorspace(::AbstractColorPicker{C}) where {C} = C
 
 # By design, to ensure performance, color pickers only work on inputs of the same color space.
 function (picker::AbstractColorPicker{C})(color::C) where {C<:ColorLike}
-    closest_color_index(picker, color)
+    return closest_color_index(picker, color)
 end
 
 """
@@ -30,7 +30,12 @@ struct RuntimeColorPicker{C<:ColorLike,M<:DifferenceMetric} <: AbstractColorPick
     end
 end
 
-RuntimeColorPicker(cs; metric=DEFAULT_METRIC) = RuntimeColorPicker(cs, metric)
+function RuntimeColorPicker(colorscheme::ColorVector; metric=DEFAULT_METRIC)
+    return RuntimeColorPicker(colorscheme, metric)
+end
+function RuntimeColorPicker(colorscheme::ColorScheme; metric=DEFAULT_METRIC)
+    return RuntimeColorPicker(colorscheme.colors, metric)
+end
 
 # Performance can be gained by converting colors to the colorspace the picker operates in:
 
@@ -69,17 +74,23 @@ struct LookupColorPicker <: AbstractColorPicker{LUT_COLORSPACE}
     end
 end
 
-LookupColorPicker(cs; metric=DEFAULT_METRIC) = LookupColorPicker(cs, metric)
+function LookupColorPicker(colorscheme::ColorVector; metric=DEFAULT_METRIC)
+    return LookupColorPicker(colorscheme, metric)
+end
+function LookupColorPicker(colorscheme::ColorScheme; metric=DEFAULT_METRIC)
+    return LookupColorPicker(colorscheme.colors, metric)
+end
 
 # Construct LUT from colorscheme and color difference metric
 function LookupColorPicker(colorscheme::ColorVector, metric::DifferenceMetric)
-    CS = colorspace(metric)
-    colorscheme = convert.(CS, colorscheme)
+    C = colorspace(metric)
+    colorscheme = convert.(C, colorscheme)
 
     lut = Array{LUT_INDEXTYPE}(undef, 256, 256, 256)
     @inbounds @simd for I in CartesianIndices(lut)
         r, g, b = I.I
-        px = ints_to_rgb_n0f8(r - 1, g - 1, b - 1)
+        px_rgb = ints_to_rgb_n0f8(r - 1, g - 1, b - 1)
+        px = convert(C, px_rgb)
         lut[I] = closest_color_index_runtime(px, colorscheme, metric)
     end
     return LookupColorPicker(lut)

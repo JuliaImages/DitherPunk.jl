@@ -1,7 +1,7 @@
 using DitherPunk
 using DitherPunk: DEFAULT_METHOD, AbstractDither
 using DitherPunk: ColorNotImplementedError
-using DitherPunk: RuntimeColorPicker, LookupColorPicker, FastEuclideanMetric
+using DitherPunk: RuntimeColorPicker, LookupColorPicker, FastEuclideanMetric, colorspace
 using Test
 
 using ColorSchemes
@@ -13,52 +13,42 @@ using ReferenceTests
 using TestImages
 
 ## Define color scheme
-white  = RGB{Float32}(1, 1, 1)
-yellow = RGB{Float32}(1, 1, 0)
-green  = RGB{Float32}(0, 0.5, 0)
-orange = RGB{Float32}(1, 0.5, 0)
-red    = RGB{Float32}(1, 0, 0)
-blue   = RGB{Float32}(0, 0, 1)
-
-cs = [white, yellow, green, orange, red, blue]
+colorscheme = ColorSchemes.PuOr_6
 
 # Load test image
 img = testimage("fabio_color_256")
 img_gray = testimage("fabio_gray_256")
 
 # Run & test custom color palette dithering methods
-COLOR_ALGS = Dict(
-    "FloydSteinberg" => @inferred(FloydSteinberg()),
-    "ClosestColor" => @inferred(ClosestColor()),
-    "Bayer" => @inferred(Bayer()),
-)
-COLOR_PICKERS = Dict(
-    "Runtime_FastEuclideanMetric" => RuntimeColorPicker(cs; metric=FastEuclideanMetric()),
-    "Runtime_DE_2000"             => RuntimeColorPicker(cs; metric=DE_2000()),
-    "Runtime_DE_BFD"              => RuntimeColorPicker(cs; metric=DE_BFD()),
-    "Lookup_FastEuclideanMetric"  => LookupColorPicker(cs; metric=FastEuclideanMetric()),
-    "Lookup_DE_2000"              => LookupColorPicker(cs; metric=DE_2000()),
-    "Lookup_DE_BFD"               => LookupColorPicker(cs; metric=DE_BFD()),
-)
+COLOR_ALGS = (FloydSteinberg, ClosestColor, Bayer)
+COLOR_METRICS = (FastEuclideanMetric, DE_2000, DE_BFD)
+COLOR_PICKERS = (RuntimeColorPicker, LookupColorPicker)
 
-@testset verbose = true "Binary dithering methods" begin
-    @testset "$(algname)" for (algname, alg) in COLOR_ALGS
-        @testset "$(cpname)" for (cpname, colorpicker) in COLOR_PICKERS
-            # Test custom color dithering on color images
-            local img_copy = copy(img)
-            local d = @inferred dither(img_copy, alg, cs; colorpicker=colorpicker)
-            @test_reference "references/color/$(algname)_$(cpname).txt" d
+@testset verbose = true "Color dithering methods" begin
+    @testset "$(Method)" for Method in COLOR_ALGS
+        alg = Method()
+        @testset "$(Metric)" for Metric in COLOR_METRICS
+            metric = Metric()
+            CS = colorspace(metric)
+            @testset "$(ColorPicker)" for ColorPicker in COLOR_PICKERS
+                colorpicker = ColorPicker(colorscheme, metric)
 
-            @test eltype(d) == eltype(img_copy)
-            @test img_copy == img # image not modified
+                # Test custom color dithering on color images
+                local img_copy = copy(img)
+                local d = @inferred dither(img_copy, alg, cs; colorpicker=colorpicker)
+                @test_reference "references/color/$(Method)_$(Metric)_$(CS).png" d
 
-            # Test custom color dithering on gray images
-            local img_copy_gray = copy(img_gray)
-            local d = @inferred dither(img_copy_gray, alg, cs; colorpicker=colorpicker)
-            @test_reference "references/color/$(algname)_$(cpname)_from_gray.txt" d
+                @test eltype(d) == eltype(img_copy)
+                @test img_copy == img # image not modified
 
-            @test eltype(d) == eltype(cs)
-            @test img_copy_gray == img_gray # image not modified
+                # Test custom color dithering on gray images
+                local img_copy_gray = copy(img_gray)
+                local d = @inferred dither(img_copy_gray, alg, cs; colorpicker=colorpicker)
+                @test_reference "references/color/$(Method)_$(Metric)_$(CS)_from_gray.png" d
+
+                @test eltype(d) == eltype(cs)
+                @test img_copy_gray == img_gray # image not modified
+            end
         end
     end
 end

@@ -23,17 +23,19 @@ struct RuntimeColorPicker{C<:ColorLike,M<:DifferenceMetric} <: AbstractColorPick
     metric::M
     colorscheme::Vector{C}
 
-    function RuntimeColorPicker(colorscheme, metric::M) where {M<:DifferenceMetric}
+    function RuntimeColorPicker(
+        colorscheme::ColorVector, metric::M
+    ) where {M<:DifferenceMetric}
         C = colorspace(metric)
         colorscheme = convert.(C, colorscheme)
         return new{C,M}(metric, colorscheme)
     end
 end
 
-function RuntimeColorPicker(colorscheme::ColorVector; metric=DEFAULT_METRIC)
+function RuntimeColorPicker(colorscheme; metric=DEFAULT_METRIC)
     return RuntimeColorPicker(colorscheme, metric)
 end
-function RuntimeColorPicker(colorscheme::ColorScheme; metric=DEFAULT_METRIC)
+function RuntimeColorPicker(colorscheme::ColorScheme, metric)
     return RuntimeColorPicker(colorscheme.colors, metric)
 end
 
@@ -74,10 +76,10 @@ struct LookupColorPicker <: AbstractColorPicker{LUT_COLORSPACE}
     end
 end
 
-function LookupColorPicker(colorscheme::ColorVector; metric=DEFAULT_METRIC)
+function LookupColorPicker(colorscheme; metric=DEFAULT_METRIC)
     return LookupColorPicker(colorscheme, metric)
 end
-function LookupColorPicker(colorscheme::ColorScheme; metric=DEFAULT_METRIC)
+function LookupColorPicker(colorscheme::ColorScheme, metric)
     return LookupColorPicker(colorscheme.colors, metric)
 end
 

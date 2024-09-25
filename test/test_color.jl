@@ -19,6 +19,16 @@ colorscheme = ColorSchemes.PuOr_6
 img = testimage("fabio_color_256")
 img_gray = testimage("fabio_gray_256")
 
+@testset verbose = true "Color dithering defaults" begin
+    d = @inferred dither(img, colorscheme)
+    @info d typeof(d)
+    @test_reference "references/color/default.png" d
+
+    d = @inferred dither(img_gray, colorscheme)
+    @info d typeof(d)
+    @test_reference "references/color/default_from_gray.png" d
+end
+
 # Run & test custom color palette dithering methods
 COLOR_ALGS = (FloydSteinberg, ClosestColor, Bayer)
 COLOR_METRICS = (FastEuclideanMetric, DE_2000, DE_BFD)

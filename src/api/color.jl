@@ -7,7 +7,7 @@ select_colorpicker(::AbstractDither, colors) = RuntimeColorPicker(colors, DEFAUL
 #   - a ColorSchemes.jl symbol
 #   - the number of colors specified for color quantization
 #
-# All functions in this file end up calling `colordither` and return IndirectArrays.
+# All functions in this file end up calling `colordither!` and return IndirectArrays.
 
 #============#
 # Public API #
@@ -15,24 +15,24 @@ select_colorpicker(::AbstractDither, colors) = RuntimeColorPicker(colors, DEFAUL
 
 # If `out` is specified, it will be changed in place...
 function dither!(out::GenericImage, img::GenericImage, alg::AbstractDither, arg; kwargs...)
-    return out .= _colordither(eltype(out), img, alg, arg; kwargs...)
+    return out .= colordither(eltype(out), img, alg, arg; kwargs...)
 end
 
 # ...otherwise `img` will be changed in place.
 function dither!(img::GenericImage, alg::AbstractDither, arg; kwargs...)
-    return img .= _colordither(eltype(img), img, alg, arg; kwargs...)
+    return img .= colordither(eltype(img), img, alg, arg; kwargs...)
 end
 
 # The return type can be chosen...
 function dither(::Type{T}, img::GenericImage, alg::AbstractDither, arg; kwargs...) where {T}
-    return _colordither(T, img, alg, arg; kwargs...)
+    return colordither(T, img, alg, arg; kwargs...)
 end
 
 # ...and defaults to the type of the input image.
 function dither(
     img::GenericImage{T}, alg::AbstractDither, arg; kwargs...
 ) where {T<:ColorLike}
-    return _colordither(T, img, alg, arg; kwargs...)
+    return colordither(T, img, alg, arg; kwargs...)
 end
 
 #===========================#
@@ -41,7 +41,7 @@ end
 
 # Dispatch to dithering with custom color palettes on any image type
 # when color palette is provided
-function _colordither(
+function colordither(
     ::Type{T},
     img::GenericImage,
     alg::AbstractDither,
@@ -69,7 +69,7 @@ end
 # TODO: deprecate
 # A special case occurs when a grayscale output image is to be dithered in colors.
 # Since this is not possible, instead the return image will be of type of the color scheme.
-function _colordither(
+function colordither(
     ::Type{T},
     img::GenericImage,
     alg::AbstractDither,
@@ -78,7 +78,7 @@ function _colordither(
     to_linear=false,
     kwargs...,
 ) where {T<:GrayLike}
-    return _colordither(
+    return colordither(
         eltype(colorscheme),
         img,
         alg,

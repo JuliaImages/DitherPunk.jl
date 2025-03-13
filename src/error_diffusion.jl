@@ -104,6 +104,11 @@ function colordither!(
     require_one_based_indexing(img)
     Inner = inner_range(img, alg) # domain in which boundschecks can be skipped
 
+    # DitherPunk uses two different colorspaces when running Error Diffusion:
+    # - one to compute the closest color: C
+    # - one to diffuse the error in: E
+    # This is mostly due to some color spaces like Lab being useful for 
+
     FT = eltype(eltype(img)) # Float type
     vals = convert.(FT, alg.vals)
 

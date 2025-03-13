@@ -1,4 +1,4 @@
-const DEFAULT_METRIC = FastEuclideanMetric()
+const DEFAULT_METRIC = DE_2000()
 select_colorpicker(::AbstractDither, colors) = RuntimeColorPicker(colors, DEFAULT_METRIC)
 
 # Binary dithering and color dithering can be distinguished by the extra argument `arg`,

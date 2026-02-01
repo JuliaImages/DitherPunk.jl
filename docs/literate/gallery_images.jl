@@ -6,13 +6,13 @@ using TestImages
 # This gallery uses images from [*TestImages.jl*](https://testimages.juliaimages.org).
 function preprocess(img)
     img = Gray.(img)
-    return imresize(img; ratio=1 / 2)
+    return imresize(img; ratio = 1 / 2)
 end
 
 file_names = [
-    "cameraman", "lake_gray", "house", "fabio_gray_512", "mandril_gray", "peppers_gray"
+    "cameraman", "lake_gray", "house", "fabio_gray_512", "mandril_gray", "peppers_gray",
 ]
-img = mosaic([preprocess(testimage(file)) for file in file_names]; ncol=3)
+img = mosaic([preprocess(testimage(file)) for file in file_names]; ncol = 3)
 
 # ## Threshold dithering
 # #### `ConstantThreshold`

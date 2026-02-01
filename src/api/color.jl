@@ -40,8 +40,8 @@ end
 
 # ...and defaults to the type of the input image.
 function dither(
-    img::GenericImage{T,N}, alg::AbstractDither, arg; kwargs...
-) where {T<:Pixel,N}
+        img::GenericImage{T, N}, alg::AbstractDither, arg; kwargs...
+    ) where {T <: Pixel, N}
     return _colordither(T, img, alg, arg; kwargs...)
 end
 
@@ -52,14 +52,14 @@ end
 # Dispatch to dithering with custom color palettes on any image type
 # when color palette is provided
 function _colordither(
-    ::Type{T},
-    img::GenericImage,
-    alg::AbstractDither,
-    cs::AbstractVector{<:Pixel};
-    metric::DifferenceMetric=DEFAULT_METRIC,
-    to_linear=false,
-    kwargs...,
-) where {T}
+        ::Type{T},
+        img::GenericImage,
+        alg::AbstractDither,
+        cs::AbstractVector{<:Pixel};
+        metric::DifferenceMetric = DEFAULT_METRIC,
+        to_linear = false,
+        kwargs...,
+    ) where {T}
     to_linear && (@warn "Skipping transformation `to_linear` when dithering in color.")
     length(cs) >= 2 ||
         throw(DomainError(length(cs), "Color scheme for dither needs >= 2 colors."))
@@ -72,15 +72,15 @@ end
 # A special case occurs when a grayscale output image is to be dithered in colors.
 # Since this is not possible, instead the return image will be of type of the color scheme.
 function _colordither(
-    ::Type{T},
-    img::GenericImage,
-    alg::AbstractDither,
-    cs::AbstractVector{<:Color{<:Any,3}};
-    metric::DifferenceMetric=DEFAULT_METRIC,
-    to_linear=false,
-    kwargs...,
-) where {T<:NumberLike}
+        ::Type{T},
+        img::GenericImage,
+        alg::AbstractDither,
+        cs::AbstractVector{<:Color{<:Any, 3}};
+        metric::DifferenceMetric = DEFAULT_METRIC,
+        to_linear = false,
+        kwargs...,
+    ) where {T <: NumberLike}
     return _colordither(
-        eltype(cs), img, alg, cs; metric=metric, to_linear=to_linear, kwargs...
+        eltype(cs), img, alg, cs; metric = metric, to_linear = to_linear, kwargs...
     )
 end

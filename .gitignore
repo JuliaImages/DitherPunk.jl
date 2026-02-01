@@ -8,4 +8,5 @@ Manifest.toml
 /benchmark/*.json
 
 .vscode
+CLAUDE.md
 *.DS_Store

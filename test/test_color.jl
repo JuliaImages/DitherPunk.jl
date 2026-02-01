@@ -7,12 +7,12 @@ using ReferenceTests
 using TestImages
 
 ## Define color scheme
-white  = RGB{Float32}(1, 1, 1)
+white = RGB{Float32}(1, 1, 1)
 yellow = RGB{Float32}(1, 1, 0)
-green  = RGB{Float32}(0, 0.5, 0)
+green = RGB{Float32}(0, 0.5, 0)
 orange = RGB{Float32}(1, 0.5, 0)
-red    = RGB{Float32}(1, 0, 0)
-blue   = RGB{Float32}(0, 0, 1)
+red = RGB{Float32}(1, 0, 0)
+blue = RGB{Float32}(0, 0, 1)
 
 cs = [white, yellow, green, orange, red, blue]
 
@@ -46,7 +46,7 @@ for (name, alg) in algs
 end
 
 # Test error diffusion kwarg `clamp_error`:
-d = @inferred dither(img, FloydSteinberg(), cs; clamp_error=false)
+d = @inferred dither(img, FloydSteinberg(), cs; clamp_error = false)
 @test_reference "references/color/FloydSteinberg_clamp_error.png" d
 @test eltype(d) == eltype(img)
 

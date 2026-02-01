@@ -13,13 +13,13 @@ using UnicodeGraphics: uprint, ustring
 abstract type AbstractDither end
 
 const BinaryGray = AbstractGray{Bool}
-const NumberLike = Union{Number,AbstractGray}
-const BinaryLike = Union{Bool,BinaryGray}
-const Pixel = Union{Number,Colorant}
+const NumberLike = Union{Number, AbstractGray}
+const BinaryLike = Union{Bool, BinaryGray}
+const Pixel = Union{Number, Colorant}
 
-const GenericBinaryImage{T<:BinaryLike} = Union{BitMatrix,AbstractArray{T,2}}
-const GenericGrayImage{T<:NumberLike} = AbstractArray{T,2}
-const GenericImage{T<:Pixel,N} = AbstractArray{T,N}
+const GenericBinaryImage{T <: BinaryLike} = Union{BitMatrix, AbstractArray{T, 2}}
+const GenericGrayImage{T <: NumberLike} = AbstractArray{T, 2}
+const GenericImage{T <: Pixel, N} = AbstractArray{T, N}
 
 include("colorschemes.jl")
 include("utils.jl")

@@ -4,11 +4,11 @@
 Abstract supertype of all color pickers.
 The parametric type `C` indicates the color space in which the closest color is computed. 
 """
-abstract type AbstractColorPicker{C<:ColorLike} end
+abstract type AbstractColorPicker{C <: ColorLike} end
 colorspace(::AbstractColorPicker{C}) where {C} = C
 
 # By design, to ensure performance, color pickers only work on inputs of the same color space.
-function (picker::AbstractColorPicker{C})(color::C) where {C<:ColorLike}
+function (picker::AbstractColorPicker{C})(color::C) where {C <: ColorLike}
     return closest_color_index(picker, color)
 end
 
@@ -19,20 +19,20 @@ end
 Select closest color in `colorscheme` during runtime.
 Used by default if `dither` is called without a color picker.
 """
-struct RuntimeColorPicker{C<:ColorLike,M<:DifferenceMetric} <: AbstractColorPicker{C}
+struct RuntimeColorPicker{C <: ColorLike, M <: DifferenceMetric} <: AbstractColorPicker{C}
     metric::M
     colorscheme::Vector{C}
 
     function RuntimeColorPicker(
-        colorscheme::ColorVector, metric::M
-    ) where {M<:DifferenceMetric}
+            colorscheme::ColorVector, metric::M
+        ) where {M <: DifferenceMetric}
         C = colorspace(metric)
         colorscheme = convert.(C, colorscheme)
-        return new{C,M}(metric, colorscheme)
+        return new{C, M}(metric, colorscheme)
     end
 end
 
-function RuntimeColorPicker(colorscheme; metric=DEFAULT_METRIC)
+function RuntimeColorPicker(colorscheme; metric = DEFAULT_METRIC)
     return RuntimeColorPicker(colorscheme, metric)
 end
 function RuntimeColorPicker(colorscheme::ColorScheme, metric)
@@ -41,14 +41,14 @@ end
 
 # Performance can be gained by converting colors to the colorspace the picker operates in:
 
-function closest_color_index(p::RuntimeColorPicker{C}, c::C) where {C<:ColorLike}
+function closest_color_index(p::RuntimeColorPicker{C}, c::C) where {C <: ColorLike}
     return closest_color_index_runtime(c, p.colorscheme, p.metric)
 end
 
 function closest_color_index_runtime(
-    px::C, colorscheme::AbstractArray{C}, metric
-) where {C<:ColorLike}
-    mycolordiff(c) = colordiff(px, c; metric=metric)
+        px::C, colorscheme::AbstractArray{C}, metric
+    ) where {C <: ColorLike}
+    mycolordiff(c) = colordiff(px, c; metric = metric)
     c, index = findmin(mycolordiff, colorscheme)
     return index
 end
@@ -67,16 +67,16 @@ const LUT_INDEXTYPE = UInt16
 Compute a look-up table of closest colors on the `$LUT_COLORSPACE` color cube.
 """
 struct LookupColorPicker <: AbstractColorPicker{LUT_COLORSPACE}
-    lut::Array{LUT_INDEXTYPE,3} # look-up table
+    lut::Array{LUT_INDEXTYPE, 3} # look-up table
 
-    function LookupColorPicker(lut::Array{LUT_INDEXTYPE,3})
+    function LookupColorPicker(lut::Array{LUT_INDEXTYPE, 3})
         size(lut) != (256, 256, 256) &&
             error("Look-up table has to be of size `(256, 256, 256)`, got $(size(lut)).")
         return new(lut)
     end
 end
 
-function LookupColorPicker(colorscheme; metric=DEFAULT_METRIC)
+function LookupColorPicker(colorscheme; metric = DEFAULT_METRIC)
     return LookupColorPicker(colorscheme, metric)
 end
 function LookupColorPicker(colorscheme::ColorScheme, metric)

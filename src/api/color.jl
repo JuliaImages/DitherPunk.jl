@@ -30,8 +30,8 @@ end
 
 # ...and defaults to the type of the input image.
 function dither(
-    img::GenericImage{T}, alg::AbstractDither, arg; kwargs...
-) where {T <: ColorLike}
+        img::GenericImage{T}, alg::AbstractDither, arg; kwargs...
+    ) where {T <: ColorLike}
     return colordither(T, img, alg, arg; kwargs...)
 end
 
@@ -42,14 +42,14 @@ end
 # Dispatch to dithering with custom color palettes on any image type
 # when color palette is provided
 function colordither(
-    ::Type{T},
-    img::GenericImage,
-    alg::AbstractDither,
-    colorscheme::AbstractVector{<:ColorLike};
-    colorpicker::AbstractColorPicker{C} = select_colorpicker(alg, colorscheme),
-    to_linear = false,
-    kwargs...,
-) where {T, C}
+        ::Type{T},
+        img::GenericImage,
+        alg::AbstractDither,
+        colorscheme::AbstractVector{<:ColorLike};
+        colorpicker::AbstractColorPicker{C} = select_colorpicker(alg, colorscheme),
+        to_linear = false,
+        kwargs...,
+    ) where {T, C}
     to_linear && (@warn "Skipping transformation `to_linear` when dithering in color.")
     length(colorscheme) > 1 ||
         throw(ArgumentError("Color scheme for dither needs more than one color."))
@@ -70,14 +70,14 @@ end
 # A special case occurs when a grayscale output image is to be dithered in colors.
 # Since this is not possible, instead the return image will be of type of the color scheme.
 function colordither(
-    ::Type{T},
-    img::GenericImage,
-    alg::AbstractDither,
-    colorscheme::AbstractVector{<:Color{<:Any, 3}};
-    colorpicker::AbstractColorPicker = select_colorpicker(alg, colorscheme),
-    to_linear = false,
-    kwargs...,
-) where {T <: GrayLike}
+        ::Type{T},
+        img::GenericImage,
+        alg::AbstractDither,
+        colorscheme::AbstractVector{<:Color{<:Any, 3}};
+        colorpicker::AbstractColorPicker = select_colorpicker(alg, colorscheme),
+        to_linear = false,
+        kwargs...,
+    ) where {T <: GrayLike}
     return colordither(
         eltype(colorscheme),
         img,
@@ -103,12 +103,12 @@ function Base.showerror(io::IO, e::ColorNotImplementedError)
     return print(io, e.alg, " algorithm currently doesn't support custom color palettes.")
 end
 function colordither!(
-    out::Matrix{Int},
-    alg::AbstractDither,
-    img::GenericImage{C},
-    cs::AbstractVector{C},
-    colorpicker::AbstractColorPicker{C};
-    kwargs...,
-) where {C <: ColorLike}
+        out::Matrix{Int},
+        alg::AbstractDither,
+        img::GenericImage{C},
+        cs::AbstractVector{C},
+        colorpicker::AbstractColorPicker{C};
+        kwargs...,
+    ) where {C <: ColorLike}
     throw(ColorNotImplementedError(alg))
 end

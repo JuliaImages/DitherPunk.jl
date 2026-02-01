@@ -53,12 +53,12 @@ end
 # Implemented according to Joel Yliluoma's pseudocode
 # https://bisqwit.iki.fi/story/howto/dither/jy/
 function colordither!(
-    out::Matrix{Int},
-    alg::OrderedDither,
-    img::GenericImage{C},
-    cs::AbstractVector{C},
-    colorpicker::AbstractColorPicker{C},
-) where {C <: ColorLike}
+        out::Matrix{Int},
+        alg::OrderedDither,
+        img::GenericImage{C},
+        cs::AbstractVector{C},
+        colorpicker::AbstractColorPicker{C},
+    ) where {C <: ColorLike}
     cs_lab = Lab.(cs)
     T = eltype(C)
     error_multiplier = convert(T, alg.color_error_multiplier)

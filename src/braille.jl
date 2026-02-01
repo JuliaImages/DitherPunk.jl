@@ -19,13 +19,13 @@ function braille(img::GenericImage, alg::AbstractDither; kwargs...)
     return braille(img, alg; kwargs...)
 end
 function braille(
-    img::GrayImage,
-    alg::AbstractDither;
-    invert::Bool = false,
-    to_string::Bool = false,
-    method::Symbol = DEFAULT_UNICODE_METHOD,
-    kwargs...,
-)
+        img::GrayImage,
+        alg::AbstractDither;
+        invert::Bool = false,
+        to_string::Bool = false,
+        method::Symbol = DEFAULT_UNICODE_METHOD,
+        kwargs...,
+    )
     d = dither(Bool, img, alg; kwargs...)
     return _braille(d; invert = invert, to_string = to_string, method = method)
 end

@@ -11,11 +11,11 @@ function binarydither!(::ClosestColor, out::GrayImage, img::GrayImage)
 end
 
 function colordither!(
-    out::Matrix{Int},
-    ::ClosestColor,
-    img::GenericImage{C},
-    cs::AbstractVector{C},
-    colorpicker::AbstractColorPicker{C},
-) where {C <: ColorLike}
+        out::Matrix{Int},
+        ::ClosestColor,
+        img::GenericImage{C},
+        cs::AbstractVector{C},
+        colorpicker::AbstractColorPicker{C},
+    ) where {C <: ColorLike}
     return map!(colorpicker, out, img)
 end

@@ -54,8 +54,8 @@ function inner_range(img, alg::ErrorDiffusion)
 end
 
 function binarydither!(
-    alg::ErrorDiffusion, out::GrayImage, img::GrayImage; clamp_error = true
-)
+        alg::ErrorDiffusion, out::GrayImage, img::GrayImage; clamp_error = true
+    )
     # This function does not yet support OffsetArray
     require_one_based_indexing(img)
 
@@ -93,13 +93,13 @@ function binarydither!(
 end
 
 function colordither!(
-    out::Matrix{Int},
-    alg::ErrorDiffusion,
-    img::GenericImage{C},
-    cs::AbstractVector{C},
-    colorpicker::AbstractColorPicker{C};
-    clamp_error = true,
-) where {C <: ColorLike}
+        out::Matrix{Int},
+        alg::ErrorDiffusion,
+        img::GenericImage{C},
+        cs::AbstractVector{C},
+        colorpicker::AbstractColorPicker{C};
+        clamp_error = true,
+    ) where {C <: ColorLike}
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
     Inner = inner_range(img, alg) # domain in which boundschecks can be skipped
@@ -107,7 +107,7 @@ function colordither!(
     # DitherPunk uses two different colorspaces when running Error Diffusion:
     # - one to compute the closest color: C
     # - one to diffuse the error in: E
-    # This is mostly due to some color spaces like Lab being useful for 
+    # This is mostly due to some color spaces like Lab being useful for
 
     FT = eltype(eltype(img)) # Float type
     vals = convert.(FT, alg.vals)

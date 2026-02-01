@@ -11,3 +11,10 @@ PkgJogger = "10150987-6cc1-4b76-abee-b1c1cbd91c01"
 ReferenceTests = "324d217c-45ce-50fc-942e-d289b448e8cf"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 TestImages = "5e47fb64-e119-507b-a336-dd2b206d9990"
+
+[compat]
+Aqua = "0.8"
+ExplicitImports = "1"
+JET = "0.9, 0.11"
+ReferenceTests = "0.10"
+

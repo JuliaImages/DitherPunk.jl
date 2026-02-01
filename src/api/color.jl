@@ -31,7 +31,7 @@ end
 # ...and defaults to the type of the input image.
 function dither(
     img::GenericImage{T}, alg::AbstractDither, arg; kwargs...
-) where {T<:ColorLike}
+) where {T <: ColorLike}
     return colordither(T, img, alg, arg; kwargs...)
 end
 
@@ -46,10 +46,10 @@ function colordither(
     img::GenericImage,
     alg::AbstractDither,
     colorscheme::AbstractVector{<:ColorLike};
-    colorpicker::AbstractColorPicker{C}=select_colorpicker(alg, colorscheme),
-    to_linear=false,
+    colorpicker::AbstractColorPicker{C} = select_colorpicker(alg, colorscheme),
+    to_linear = false,
     kwargs...,
-) where {T,C}
+) where {T, C}
     to_linear && (@warn "Skipping transformation `to_linear` when dithering in color.")
     length(colorscheme) > 1 ||
         throw(ArgumentError("Color scheme for dither needs more than one color."))
@@ -73,18 +73,18 @@ function colordither(
     ::Type{T},
     img::GenericImage,
     alg::AbstractDither,
-    colorscheme::AbstractVector{<:Color{<:Any,3}};
-    colorpicker::AbstractColorPicker=select_colorpicker(alg, colorscheme),
-    to_linear=false,
+    colorscheme::AbstractVector{<:Color{<:Any, 3}};
+    colorpicker::AbstractColorPicker = select_colorpicker(alg, colorscheme),
+    to_linear = false,
     kwargs...,
-) where {T<:GrayLike}
+) where {T <: GrayLike}
     return colordither(
         eltype(colorscheme),
         img,
         alg,
         colorscheme;
-        colorpicker=colorpicker,
-        to_linear=to_linear,
+        colorpicker = colorpicker,
+        to_linear = to_linear,
         kwargs...,
     )
 end
@@ -109,6 +109,6 @@ function colordither!(
     cs::AbstractVector{C},
     colorpicker::AbstractColorPicker{C};
     kwargs...,
-) where {C<:ColorLike}
+) where {C <: ColorLike}
     throw(ColorNotImplementedError(alg))
 end

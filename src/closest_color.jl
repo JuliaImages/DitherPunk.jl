@@ -16,6 +16,6 @@ function colordither!(
     img::GenericImage{C},
     cs::AbstractVector{C},
     colorpicker::AbstractColorPicker{C},
-) where {C<:ColorLike}
+) where {C <: ColorLike}
     return map!(colorpicker, out, img)
 end

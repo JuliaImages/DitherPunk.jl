@@ -21,13 +21,13 @@ end
 function braille(
     img::GrayImage,
     alg::AbstractDither;
-    invert::Bool=false,
-    to_string::Bool=false,
-    method::Symbol=DEFAULT_UNICODE_METHOD,
+    invert::Bool = false,
+    to_string::Bool = false,
+    method::Symbol = DEFAULT_UNICODE_METHOD,
     kwargs...,
 )
     d = dither(Bool, img, alg; kwargs...)
-    return _braille(d; invert=invert, to_string=to_string, method=method)
+    return _braille(d; invert = invert, to_string = to_string, method = method)
 end
 
 # Default method:
@@ -44,11 +44,11 @@ end
 
 # Call UnicodeGraphics for printing:
 function _braille(
-    A::AbstractMatrix;
-    invert::Bool=false,
-    to_string::Bool=false,
-    method::Symbol=DEFAULT_UNICODE_METHOD,
-)
+        A::AbstractMatrix;
+        invert::Bool = false,
+        to_string::Bool = false,
+        method::Symbol = DEFAULT_UNICODE_METHOD,
+    )
     invert && (A .= .!A)
     to_string && return ustring(A, method)
     return uprint(A, method)

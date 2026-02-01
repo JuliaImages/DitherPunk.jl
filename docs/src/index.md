@@ -32,7 +32,7 @@ img_gray = convert.(Gray, img)
 
 ## Binary dithering
 Since we already turned the image to grayscale, we are ready to apply a dithering method. 
-When no algorithm is specified as the second argument to `dither`, [`FloydSteinberg`](@ref) is used as the default method:
+When no algorithm is specified as the second argument to `dither`, [`FloydSteinberg`](@ref DitherPunk.FloydSteinberg) is used as the default method:
 ````@example simple_example
 dither(img_gray)
 ````

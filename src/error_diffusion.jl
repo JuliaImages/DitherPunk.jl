@@ -24,15 +24,15 @@ julia> dither(img, alg, cs)
 julia> dither(img, alg, cs; clamp_error=false)
 ```
 """
-struct ErrorDiffusion{V<:Real,R<:AbstractUnitRange} <: AbstractDither
+struct ErrorDiffusion{V <: Real, R <: AbstractUnitRange} <: AbstractDither
     inds::Vector{CartesianIndex{2}} # indices of filter
     vals::Vector{V} # values of filter
-    ranges::Tuple{R,R} # range of filter: (column_range, row_range)
+    ranges::Tuple{R, R} # range of filter: (column_range, row_range)
 end
 function ErrorDiffusion(inds, vals, ranges)
     length(inds) != length(vals) &&
         throw(ArgumentError("Lengths of ErrorDiffusion indices and values don't match."))
-    return ErrorDiffusion{typeof(vals),typeof(ranges)}(inds, vals, ranges)
+    return ErrorDiffusion{typeof(vals), typeof(ranges)}(inds, vals, ranges)
 end
 
 function ErrorDiffusion(filter::AbstractMatrix, offset::Integer)
@@ -54,7 +54,7 @@ function inner_range(img, alg::ErrorDiffusion)
 end
 
 function binarydither!(
-    alg::ErrorDiffusion, out::GrayImage, img::GrayImage; clamp_error=true
+    alg::ErrorDiffusion, out::GrayImage, img::GrayImage; clamp_error = true
 )
     # This function does not yet support OffsetArray
     require_one_based_indexing(img)
@@ -98,8 +98,8 @@ function colordither!(
     img::GenericImage{C},
     cs::AbstractVector{C},
     colorpicker::AbstractColorPicker{C};
-    clamp_error=true,
-) where {C<:ColorLike}
+    clamp_error = true,
+) where {C <: ColorLike}
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
     Inner = inner_range(img, alg) # domain in which boundschecks can be skipped
@@ -151,7 +151,7 @@ Error diffusion algorithm using the filter
 function SimpleErrorDiffusion()
     return ErrorDiffusion(SIMPLE_ERROR_DIFFUSION, 1)
 end
-const SIMPLE_ERROR_DIFFUSION = [0 1; 1 0]//2
+const SIMPLE_ERROR_DIFFUSION = [0 1; 1 0] // 2
 
 """
     FloydSteinberg()
@@ -168,7 +168,7 @@ Error diffusion algorithm using the filter
      vol 1975m, pp. 36-37.
 """
 FloydSteinberg() = ErrorDiffusion(FLOYD_STEINBERG, 2)
-const FLOYD_STEINBERG = [0 0 7; 3 5 1]//16
+const FLOYD_STEINBERG = [0 0 7; 3 5 1] // 16
 
 """
     JarvisJudice()
@@ -187,7 +187,7 @@ Also known as the Jarvis, Judice, and Ninke filter.
      Graphics and Image Processing, vol. 5, pp. 13-40, 1976.
 """
 JarvisJudice() = ErrorDiffusion(JARVIS_JUDICE, 3)
-const JARVIS_JUDICE = [0 0 0 7 5; 3 5 7 5 3; 1 3 5 3 1]//48
+const JARVIS_JUDICE = [0 0 0 7 5; 3 5 7 5 3; 1 3 5 3 1] // 48
 
 """
     Stucki()
@@ -205,7 +205,7 @@ Error diffusion algorithm using the filter
      Research Laboratory, Zurich, Switzerland, 1981.
 """
 Stucki() = ErrorDiffusion(STUCKI, 3)
-const STUCKI = [0 0 0 8 4; 2 4 8 4 2; 1 2 4 2 1]//42
+const STUCKI = [0 0 0 8 4; 2 4 8 4 2; 1 2 4 2 1] // 42
 
 """
     Burkes()
@@ -222,7 +222,7 @@ Error diffusion algorithm using the filter
     continuous-tone images for presentation on bi-level devices." Unpublished, 1988.
 """
 Burkes() = ErrorDiffusion(BURKES, 3)
-const BURKES = [0 0 0 8 4; 2 4 8 4 2]//32
+const BURKES = [0 0 0 8 4; 2 4 8 4 2] // 32
 
 """
     Sierra()
@@ -236,7 +236,7 @@ Error diffusion algorithm using the filter
 Also known as Sierra3 or three-row Sierra due to the filter shape.
 """
 Sierra() = ErrorDiffusion(SIERRA, 3)
-const SIERRA = [0 0 0 5 3; 2 4 5 4 2; 0 2 3 2 0]//32
+const SIERRA = [0 0 0 5 3; 2 4 5 4 2; 0 2 3 2 0] // 32
 
 """
     TwoRowSierra()
@@ -249,7 +249,7 @@ Error diffusion algorithm using the filter
 Also known as Sierra2.
 """
 TwoRowSierra() = ErrorDiffusion(TWO_ROW_SIERRA, 3)
-const TWO_ROW_SIERRA = [0 0 0 4 3; 1 2 3 2 1]//16
+const TWO_ROW_SIERRA = [0 0 0 4 3; 1 2 3 2 1] // 16
 
 """
     SierraLite()
@@ -262,7 +262,7 @@ Error diffusion algorithm using the filter
 Also known as Sierra-2-4A filter.
 """
 SierraLite() = ErrorDiffusion(SIERRA_LITE, 2)
-const SIERRA_LITE = [0 0 2; 1 1 0]//4
+const SIERRA_LITE = [0 0 2; 1 1 0] // 4
 
 """
     Atkinson()
@@ -275,7 +275,7 @@ Error diffusion algorithm using the filter
 ```
 """
 Atkinson() = ErrorDiffusion(ATKINSON, 2)
-const ATKINSON = [0 0 1 1; 1 1 1 0; 0 1 0 0]//8
+const ATKINSON = [0 0 1 1; 1 1 1 0; 0 1 0 0] // 8
 
 """
     Fan93()
@@ -293,7 +293,7 @@ A modification of the weights used in the Floyd-Steinberg algorithm.
     Paper Summaries, pp 113-115 (1993).
 """
 Fan93() = ErrorDiffusion(FAN_93, 3)
-const FAN_93 = [0 0 0 7; 1 3 5 0]//16
+const FAN_93 = [0 0 0 7; 1 3 5 0] // 16
 
 """
     ShiauFan()
@@ -309,7 +309,7 @@ Error diffusion algorithm using the filter
      distribution set", US 5353127A, United States Patent and Trademark Office, Oct. 4, 1993
 """
 ShiauFan() = ErrorDiffusion(SHIAU_FAN, 3)
-const SHIAU_FAN = [0 0 0 4; 1 1 2 0]//8
+const SHIAU_FAN = [0 0 0 4; 1 1 2 0] // 8
 
 """
     ShiauFan2()
@@ -328,7 +328,7 @@ Error diffusion algorithm using the filter
      and Graphics Arts, volume 2658, pages 222–225. SPIE, March 1996.
 """
 ShiauFan2() = ErrorDiffusion(SHIAU_FAN_2, 4)
-const SHIAU_FAN_2 = [0 0 0 0 8; 1 1 2 4 0]//16
+const SHIAU_FAN_2 = [0 0 0 0 8; 1 1 2 4 0] // 16
 
 """
     FalseFloydSteinberg()
@@ -349,4 +349,4 @@ There is no reason to use this algorithm, which is why DitherPunk doesn't export
 function FalseFloydSteinberg()
     return ErrorDiffusion(FALSE_FLOYD_STEINBERG, 1)
 end
-const FALSE_FLOYD_STEINBERG = [0 3; 3 2]//8
+const FALSE_FLOYD_STEINBERG = [0 3; 3 2] // 8

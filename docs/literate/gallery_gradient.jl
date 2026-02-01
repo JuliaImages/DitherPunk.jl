@@ -3,7 +3,7 @@ using DitherPunk: srgb2linear
 using Images
 
 function gradient_image(height, width) #hide
-    row = reshape(range(0; stop=1, length=width), 1, width) #hide
+    row = reshape(range(0; stop = 1, length = width), 1, width) #hide
     grad_srbg = Gray.(vcat(repeat(row, height))) #hide
     grad_linear = srgb2linear.(grad_srbg) #hide
     return grad_srbg, grad_linear #hide
@@ -27,7 +27,7 @@ function test_on_gradient(alg)
     dither_srgb = dither(srgb, alg)
     dither_linear = dither(linear, alg)
 
-    return mosaicview([srgb, dither_srgb, linear, dither_linear]; ncol=1)
+    return mosaicview([srgb, dither_srgb, linear, dither_linear]; ncol = 1)
 end;
 # Most dithering algorithms in DitherPunk.jl provide an optional parameter `to_linear`,
 # which converts the input image to a linear color space before applying the dithering.

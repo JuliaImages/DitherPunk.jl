@@ -14,6 +14,7 @@ using TestImages
 
 ## Define color scheme
 colorscheme = ColorSchemes.PuOr_6
+cs = colorscheme
 
 # Load test image
 img = testimage("fabio_color_256")
@@ -45,7 +46,7 @@ COLOR_PICKERS = (RuntimeColorPicker, LookupColorPicker)
 
                 # Test custom color dithering on color images
                 local img_copy = copy(img)
-                local d = @inferred dither(img_copy, alg, cs; colorpicker=colorpicker)
+                local d = @inferred dither(img_copy, alg, cs; colorpicker = colorpicker)
                 @test_reference "references/color/$(Method)_$(Metric)_$(CS).png" d
 
                 @test eltype(d) == eltype(img_copy)
@@ -53,7 +54,7 @@ COLOR_PICKERS = (RuntimeColorPicker, LookupColorPicker)
 
                 # Test custom color dithering on gray images
                 local img_copy_gray = copy(img_gray)
-                local d = @inferred dither(img_copy_gray, alg, cs; colorpicker=colorpicker)
+                local d = @inferred dither(img_copy_gray, alg, cs; colorpicker = colorpicker)
                 @test_reference "references/color/$(Method)_$(Metric)_$(CS)_from_gray.png" d
 
                 @test eltype(d) == eltype(cs)
@@ -65,7 +66,7 @@ end
 
 # Test error diffusion kwarg `clamp_error`:
 @testset "clamp_error" begin
-    d = @inferred dither(img, FloydSteinberg(), cs; clamp_error=false)
+    d = @inferred dither(img, FloydSteinberg(), cs; clamp_error = false)
     @test_reference "references/color/FloydSteinberg_clamp_error.txt" d
     @test eltype(d) == eltype(img)
 end

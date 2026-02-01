@@ -24,14 +24,14 @@ using UnicodeGraphics: uprint, ustring
 
 abstract type AbstractDither end
 
-const ColorLike = Union{Number,Colorant}
-const GrayLike = Union{Number,AbstractGray}
-const BinaryLike = Union{Bool,AbstractGray{Bool}}
+const ColorLike = Union{Number, Colorant}
+const GrayLike = Union{Number, AbstractGray}
+const BinaryLike = Union{Bool, AbstractGray{Bool}}
 
-const ColorVector{T<:ColorLike} = AbstractArray{T,1}
-const GenericImage{T<:ColorLike} = AbstractArray{T,2}
-const GrayImage{T<:GrayLike} = AbstractArray{T,2}
-const BinaryImage{T<:BinaryLike} = AbstractArray{T,2}
+const ColorVector{T <: ColorLike} = AbstractArray{T, 1}
+const GenericImage{T <: ColorLike} = AbstractArray{T, 2}
+const GrayImage{T <: GrayLike} = AbstractArray{T, 2}
+const BinaryImage{T <: BinaryLike} = AbstractArray{T, 2}
 
 include("compat.jl")
 include("colorschemes.jl")

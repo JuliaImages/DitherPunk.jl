@@ -20,7 +20,7 @@ cs = [white, yellow, green, orange, red, blue]
 # Use one representative algorithm of each type
 algs = Dict(
     "error diffusion" => FloydSteinberg(),
-    "ordered dithering" => Bayer(3;),
+    "ordered dithering" => Bayer(3),
     "closest color" => ClosestColor(),
     "threshold dithering" => WhiteNoiseThreshold(),
 )

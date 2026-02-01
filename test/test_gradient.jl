@@ -17,44 +17,44 @@ isoutputrandom(::WhiteNoiseThreshold) = true
 # using Dict for Julia 1.0 compatibility
 const ALGS = Dict(
     # threshold methods
-    "ConstantThreshold"   => @inferred(ConstantThreshold()),
-    "ClosestColor"        => @inferred(ClosestColor()),
+    "ConstantThreshold" => @inferred(ConstantThreshold()),
+    "ClosestColor" => @inferred(ClosestColor()),
     "WhiteNoiseThreshold" => @inferred(WhiteNoiseThreshold()),
     # ordered dithering
-    "Bayer"                 => @inferred(Bayer()),
-    "Bayer_l2"              => @inferred(Bayer(2)),
-    "Bayer_l3"              => @inferred(Bayer(3)),
-    "Bayer_l4"              => @inferred(Bayer(4)),
-    "ClusteredDots"         => @inferred(ClusteredDots()),
-    "CentralWhitePoint"     => @inferred(CentralWhitePoint()),
+    "Bayer" => @inferred(Bayer()),
+    "Bayer_l2" => @inferred(Bayer(2)),
+    "Bayer_l3" => @inferred(Bayer(3)),
+    "Bayer_l4" => @inferred(Bayer(4)),
+    "ClusteredDots" => @inferred(ClusteredDots()),
+    "CentralWhitePoint" => @inferred(CentralWhitePoint()),
     "BalancedCenteredPoint" => @inferred(BalancedCenteredPoint()),
-    "Rhombus"               => @inferred(Rhombus()),
-    "IM_checks"             => @inferred(IM_checks()),
-    "IM_h4x4a"              => @inferred(IM_h4x4a()),
-    "IM_h6x6a"              => @inferred(IM_h6x6a()),
-    "IM_h8x8a"              => @inferred(IM_h8x8a()),
-    "IM_h4x4o"              => @inferred(IM_h4x4o()),
-    "IM_h6x6o"              => @inferred(IM_h6x6o()),
-    "IM_h8x8o"              => @inferred(IM_h8x8o()),
-    "IM_c5x5"               => @inferred(IM_c5x5()),
-    "IM_c6x6"               => @inferred(IM_c6x6()),
-    "IM_c7x7"               => @inferred(IM_c7x7()),
+    "Rhombus" => @inferred(Rhombus()),
+    "IM_checks" => @inferred(IM_checks()),
+    "IM_h4x4a" => @inferred(IM_h4x4a()),
+    "IM_h6x6a" => @inferred(IM_h6x6a()),
+    "IM_h8x8a" => @inferred(IM_h8x8a()),
+    "IM_h4x4o" => @inferred(IM_h4x4o()),
+    "IM_h6x6o" => @inferred(IM_h6x6o()),
+    "IM_h8x8o" => @inferred(IM_h8x8o()),
+    "IM_c5x5" => @inferred(IM_c5x5()),
+    "IM_c6x6" => @inferred(IM_c6x6()),
+    "IM_c7x7" => @inferred(IM_c7x7()),
     # error error_diffusion
     "SimpleErrorDiffusion" => @inferred(SimpleErrorDiffusion()),
-    "FloydSteinberg"       => @inferred(FloydSteinberg()),
-    "JarvisJudice"         => @inferred(JarvisJudice()),
-    "Stucki"               => @inferred(Stucki()),
-    "Burkes"               => @inferred(Burkes()),
-    "Atkinson"             => @inferred(Atkinson()),
-    "Sierra"               => @inferred(Sierra()),
-    "TwoRowSierra"         => @inferred(TwoRowSierra()),
-    "SierraLite"           => @inferred(SierraLite()),
-    "Fan"                  => @inferred(Fan93()),
-    "ShiauFan"             => @inferred(ShiauFan()),
-    "ShiauFan2"            => @inferred(ShiauFan2()),
-    "FalseFloydSteinberg"  => @inferred(DitherPunk.FalseFloydSteinberg()),
+    "FloydSteinberg" => @inferred(FloydSteinberg()),
+    "JarvisJudice" => @inferred(JarvisJudice()),
+    "Stucki" => @inferred(Stucki()),
+    "Burkes" => @inferred(Burkes()),
+    "Atkinson" => @inferred(Atkinson()),
+    "Sierra" => @inferred(Sierra()),
+    "TwoRowSierra" => @inferred(TwoRowSierra()),
+    "SierraLite" => @inferred(SierraLite()),
+    "Fan" => @inferred(Fan93()),
+    "ShiauFan" => @inferred(ShiauFan()),
+    "ShiauFan2" => @inferred(ShiauFan2()),
+    "FalseFloydSteinberg" => @inferred(DitherPunk.FalseFloydSteinberg()),
     # Keyword arguments
-    "Bayer_invert_map" => @inferred(Bayer(; invert_map=true)),
+    "Bayer_invert_map" => @inferred(Bayer(; invert_map = true)),
 )
 
 # Test setting output type
@@ -68,7 +68,7 @@ const ALGS = Dict(
         if !isoutputrandom(alg)
             @testset "Reference tests" begin
                 @test_reference "references/gradient/$(name).txt" braille(
-                    dref; to_string=true
+                    dref; to_string = true
                 )
             end
         end
@@ -128,9 +128,9 @@ end
 
 # Test error diffusion kwarg `clamp_error`:
 @testset "clamp_error" begin
-    d = @inferred dither(img, FloydSteinberg(); clamp_error=false)
+    d = @inferred dither(img, FloydSteinberg(); clamp_error = false)
     @test_reference "references/gradient/FloydSteinberg_clamp_error.txt" braille(
-        d; to_string=true
+        d; to_string = true
     )
     @test eltype(d) == eltype(img)
 end
@@ -138,16 +138,16 @@ end
 ## Test to_linear
 @testset "to_linear" begin
     _img = copy(img)
-    d = @inferred dither(_img, Bayer(); to_linear=true)
-    @test_reference "references/gradient/Bayer_linear.txt" braille(d; to_string=true)
-    dl1 = @inferred dither(_img, DEFAULT_METHOD; to_linear=true)
-    dl2 = @inferred dither(_img; to_linear=true)
+    d = @inferred dither(_img, Bayer(); to_linear = true)
+    @test_reference "references/gradient/Bayer_linear.txt" braille(d; to_string = true)
+    dl1 = @inferred dither(_img, DEFAULT_METHOD; to_linear = true)
+    dl2 = @inferred dither(_img; to_linear = true)
     @test dl1 == dl2
 end
 
 ## Test error messages
 @testset "Error messages" begin
-    @test_throws DomainError ConstantThreshold(; threshold=-0.5)
+    @test_throws DomainError ConstantThreshold(; threshold = -0.5)
 
     img_zero_based = OffsetMatrix(rand(Float32, 10, 10), 0:9, 0:9)
     @test_throws ArgumentError dither(img_zero_based, FloydSteinberg())

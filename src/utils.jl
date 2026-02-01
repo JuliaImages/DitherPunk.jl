@@ -12,7 +12,7 @@ Convert pixel `u` from sRGB to linear color space.
 
 Upscale image by repeating individual pixels `scale` times.
 """
-upscale(img, scale) = repeat(img; inner=(scale, scale))
+upscale(img, scale) = repeat(img; inner = (scale, scale))
 
 """
     clamp_limits(color)

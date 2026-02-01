@@ -3,7 +3,7 @@
 
 | **Documentation**                                                     | **Build Status**                                                                |
 |:--------------------------------------------------------------------- |:------------------------------------------------------------------------------- |
-| [![][docs-stab-img]][docs-stab-url] [![][docs-dev-img]][docs-dev-url] | [![][ci-img]][ci-url] [![][codecov-img]][codecov-url] [![][aqua-img]][aqua-url] |
+| [![][docs-stab-img]][docs-stab-url] [![][docs-dev-img]][docs-dev-url] | [![][ci-img]][ci-url] [![][codecov-img]][codecov-url] [![][aqua-img]][aqua-url] [![][runic-img]][runic-url] |
 
 A dithering / digital halftoning package 
 inspired by Lucas Pope's [Obra Dinn](https://obradinn.com) 
@@ -165,6 +165,9 @@ and leave a GitHub Issue if you know of any cool algorithms you'd like to see im
 
 [aqua-img]: https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg
 [aqua-url]: https://github.com/JuliaTesting/Aqua.jl
+
+[runic-img]: https://img.shields.io/badge/code_style-%E1%9A%B1%E1%9A%A2%E1%9A%BE%E1%9B%81%E1%9A%B2-black
+[runic-url]: https://github.com/fredrikekre/Runic.jl
 
 [codecov-img]: https://codecov.io/gh/JuliaImages/DitherPunk.jl/branch/master/graph/badge.svg
 [codecov-url]: https://codecov.io/gh/JuliaImages/DitherPunk.jl

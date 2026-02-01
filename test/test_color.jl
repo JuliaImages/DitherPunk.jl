@@ -7,12 +7,12 @@ using ReferenceTests
 using TestImages
 
 ## Define color scheme
-white  = RGB{Float32}(1, 1, 1)
+white = RGB{Float32}(1, 1, 1)
 yellow = RGB{Float32}(1, 1, 0)
-green  = RGB{Float32}(0, 0.5, 0)
+green = RGB{Float32}(0, 0.5, 0)
 orange = RGB{Float32}(1, 0.5, 0)
-red    = RGB{Float32}(1, 0, 0)
-blue   = RGB{Float32}(0, 0, 1)
+red = RGB{Float32}(1, 0, 0)
+blue = RGB{Float32}(0, 0, 1)
 
 cs = [white, yellow, green, orange, red, blue]
 
@@ -31,7 +31,7 @@ for (name, alg) in algs
     # Test custom color dithering on color images
     local img2 = copy(img)
     local d = @inferred dither(img2, alg, cs)
-    @test_reference "references/color/$(name).txt" d
+    @test_reference "references/color/$(name).png" collect(d)
 
     @test eltype(d) == eltype(img2)
     @test img2 == img # image not modified
@@ -39,15 +39,15 @@ for (name, alg) in algs
     # Test custom color dithering on gray images
     local img2_gray = copy(img_gray)
     local d = @inferred dither(img2_gray, alg, cs)
-    @test_reference "references/color/$(name)_from_gray.txt" d
+    @test_reference "references/color/$(name)_from_gray.png" collect(d)
 
     @test eltype(d) == eltype(cs)
     @test img2_gray == img_gray # image not modified
 end
 
 # Test error diffusion kwarg `clamp_error`:
-d = @inferred dither(img, FloydSteinberg(), cs; clamp_error=false)
-@test_reference "references/color/FloydSteinberg_clamp_error.txt" d
+d = @inferred dither(img, FloydSteinberg(), cs; clamp_error = false)
+@test_reference "references/color/FloydSteinberg_clamp_error.png" collect(d)
 @test eltype(d) == eltype(img)
 
 ## Test API

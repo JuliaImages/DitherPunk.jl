@@ -12,7 +12,7 @@ using Images
 using DitherPunk
 using TestImages
 
-function star_sdf(x, y; r=0.5, rf=2.0)
+function star_sdf(x, y; r = 0.5, rf = 2.0)
     k1 = [0.809016994375, -0.587785252292]
     k2 = [-k1[1], k1[2]]
     p = [abs(x), y]
@@ -30,7 +30,7 @@ end;
 #
 # To convert an SDF to an `OrderedDither` algorithm, use this function:
 function sdf2halftone(sdf, n)
-    rg = range(-1, 1; length=n)
+    rg = range(-1, 1; length = n)
     A = [sdf(x, y) for y in rg, x in rg]
     p = sortperm(reshape(-A, :))
     B = Matrix{Int}(undef, n, n)

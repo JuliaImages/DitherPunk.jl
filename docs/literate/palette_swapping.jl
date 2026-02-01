@@ -54,5 +54,5 @@ IndirectArray(index, cs_secret)
 # This certainly isn't a very secure way to hide an image in another one.
 # However, it can be useful when trying to fit multiple images on low memory microcontrollers.
 # As a matter of fact, this example was inspired by
-# [Mark Ferrari's GDC 2016 talk](https://youtu.be/aMcJ1Jvtef0?t=717)
+# [Mark Ferrari's GDC 2016 talk](https://www.youtube.com/watch?t=717&v=aMcJ1Jvtef0)
 # where he used a similar technique for this very purpose.

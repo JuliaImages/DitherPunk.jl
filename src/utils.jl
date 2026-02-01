@@ -12,12 +12,12 @@ Convert pixel `u` from sRGB to linear color space.
 
 Upscale image by repeating individual pixels `scale` times.
 """
-upscale(img, scale) = repeat(img; inner=(scale, scale))
+upscale(img, scale) = repeat(img; inner = (scale, scale))
 
 if VERSION >= v"1.7"
-    _closest_color_idx(px, cs, metr) = argmin(colordiff(px, c; metric=metr) for c in cs)
+    _closest_color_idx(px, cs, metr) = argmin(colordiff(px, c; metric = metr) for c in cs)
 else
-    _closest_color_idx(px, cs, metr) = argmin([colordiff(px, c; metric=metr) for c in cs])
+    _closest_color_idx(px, cs, metr) = argmin([colordiff(px, c; metric = metr) for c in cs])
 end
 
 """

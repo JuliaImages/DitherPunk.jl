@@ -11,8 +11,8 @@ function binarydither!(::ClosestColor, out::GenericGrayImage, img::GenericGrayIm
 end
 
 function colordither(
-    ::ClosestColor, img::GenericImage, cs::AbstractVector{<:Pixel}, metric::DifferenceMetric
-)::Matrix{Int}
+        ::ClosestColor, img::GenericImage, cs::AbstractVector{<:Pixel}, metric::DifferenceMetric
+    )::Matrix{Int}
     cs_lab = Lab.(cs)
     return map(px -> _closest_color_idx(px, cs_lab, metric), img)
 end

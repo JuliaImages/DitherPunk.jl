@@ -8,22 +8,22 @@ When applying the algorithm to an image, the threshold matrix is repeatedly tile
 to match the size of the image. It is then applied as a per-pixel threshold map.
 Optionally, this final threshold map can be inverted by selecting `invert_map=true`.
 """
-struct OrderedDither{I<:Integer,M<:AbstractMatrix{<:I},R<:Real} <: AbstractDither
+struct OrderedDither{I <: Integer, M <: AbstractMatrix{<:I}, R <: Real} <: AbstractDither
     mat::M
     max::I
     color_error_multiplier::R
 
     function OrderedDither(
-        mat::M;
-        max::I=convert(I, length(mat) + 1),
-        invert_map=false,
-        color_error_multiplier::R=0.5,
-    ) where {I<:Integer,M<:AbstractMatrix{<:I},R<:Real}
+            mat::M;
+            max::I = convert(I, length(mat) + 1),
+            invert_map = false,
+            color_error_multiplier::R = 0.5,
+        ) where {I <: Integer, M <: AbstractMatrix{<:I}, R <: Real}
         require_one_based_indexing(mat)
         if invert_map
             mat = max .- mat
         end
-        return new{I,M,R}(mat, max, color_error_multiplier)
+        return new{I, M, R}(mat, max, color_error_multiplier)
     end
 end
 
@@ -53,11 +53,11 @@ end
 # Implemented according to Joel Yliluoma's pseudocode
 # https://bisqwit.iki.fi/story/howto/dither/jy/
 function colordither(
-    alg::OrderedDither,
-    img::GenericImage,
-    cs::AbstractVector{<:Pixel},
-    metric::DifferenceMetric,
-)
+        alg::OrderedDither,
+        img::GenericImage,
+        cs::AbstractVector{<:Pixel},
+        metric::DifferenceMetric,
+    )
     cs_lab = Lab.(cs)
     cs_xyz = XYZ.(cs)
 
@@ -100,7 +100,7 @@ function colordither(
         end
         # Sort candidates by luminance (dark to bright)
         index[I] = partialsort!(
-            candidates, mat[rlookup[r], clookup[c]]; by=i -> cs_lab[i].l
+            candidates, mat[rlookup[r], clookup[c]]; by = i -> cs_lab[i].l
         )
     end
     return index
@@ -117,7 +117,7 @@ which defaults to `1`.
      Tone Pictures," IEEE International Conference on Communications,
      Conference Records, 1973, pp. 26-11 to 26-15.
 """
-function Bayer(level=1; kwargs...)
+function Bayer(level = 1; kwargs...)
     bayer = bayer_matrix(level) .+ 1
     return OrderedDither(bayer; kwargs...)
 end
@@ -134,7 +134,7 @@ function bayer_matrix(n::Integer)
         b = [0 2; 3 1]
     else
         bₙ₋₁ = 4 * bayer_matrix(n - 1)
-        b = [(bₙ₋₁) (bₙ₋₁.+2); (bₙ₋₁.+3) (bₙ₋₁.+1)]
+        b = [(bₙ₋₁) (bₙ₋₁ .+ 2); (bₙ₋₁ .+ 3) (bₙ₋₁ .+ 1)]
     end
     return b
 end
@@ -193,10 +193,10 @@ const BALANCED_CENTERED_POINT_MAT = [
 Diagonal ordered matrix with balanced centered points.
 Uses ``8 \\times 8`` threshold matrix `RHOMBUS_MAT`.
 """
-Rhombus(; kwargs...) = OrderedDither(RHOMBUS_MAT; max=33, kwargs...)
+Rhombus(; kwargs...) = OrderedDither(RHOMBUS_MAT; max = 33, kwargs...)
 const RHOMBUS_MAT = [
     14 10  6 13 19 23 27 20
-     7  2  1  9 26 31 32 24
+    7  2  1  9 26 31 32 24
     11  3  4  5 22 30 29 28
     15  8 12 16 18 25 21 17
     19 23 27 20 14 10  6 13

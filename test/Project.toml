@@ -6,9 +6,15 @@ ExplicitImports = "7d51a73a-1435-4ff3-83d9-f097790105c7"
 FixedPointNumbers = "53c48c17-4a7d-5ca2-90c5-79b7896eea93"
 IndirectArrays = "9b13fd28-a010-5f03-acff-a1bbcff69959"
 JET = "c3a54625-cd67-489e-a8e7-0a5a0ff4e31b"
-JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
 OffsetArrays = "6fe1bfb0-de20-5000-8ca7-80f57d26f881"
 PkgJogger = "10150987-6cc1-4b76-abee-b1c1cbd91c01"
 ReferenceTests = "324d217c-45ce-50fc-942e-d289b448e8cf"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 TestImages = "5e47fb64-e119-507b-a336-dd2b206d9990"
+
+[compat]
+Aqua = "0.8"
+ExplicitImports = "1"
+JET = "0.9, 0.11"
+ReferenceTests = "0.10"
+

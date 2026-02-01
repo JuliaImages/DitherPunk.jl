@@ -27,7 +27,7 @@ struct OrderedDither{I <: Integer, M <: AbstractMatrix{<:I}, R <: Real} <: Abstr
     end
 end
 
-function binarydither!(alg::OrderedDither, out::GenericGrayImage, img::GenericGrayImage)
+function binarydither!(alg::OrderedDither, out::GrayImage, img::GrayImage)
     # eagerly promote to the same eltype to make for-loop faster
     FT = floattype(eltype(img))
     mat = FT.(alg.mat / alg.max)
@@ -52,14 +52,16 @@ end
 # https://patents.google.com/patent/US6606166B1/en
 # Implemented according to Joel Yliluoma's pseudocode
 # https://bisqwit.iki.fi/story/howto/dither/jy/
-function colordither(
+function colordither!(
+        out::Matrix{Int},
         alg::OrderedDither,
-        img::GenericImage,
-        cs::AbstractVector{<:Pixel},
-        metric::DifferenceMetric,
-    )
+        img::GenericImage{C},
+        cs::AbstractVector{C},
+        colorpicker::AbstractColorPicker{C},
+    ) where {C <: ColorLike}
     cs_lab = Lab.(cs)
-    cs_xyz = XYZ.(cs)
+    T = eltype(C)
+    error_multiplier = convert(T, alg.color_error_multiplier)
 
     # Precompute lookup tables for modulo indexing of threshold matrix
     mat = alg.mat
@@ -71,16 +73,15 @@ function colordither(
 
     # Allocate matrices
     candidates = Array{Int}(undef, nmax)
-    index = Matrix{Int}(undef, size(img)...)
 
     @inbounds for I in CartesianIndices(img)
         r, c = Tuple(I)
-        err = zero(XYZ)
-        px = XYZ(img[I])
+        err = zero(C)
+        px = img[I]
 
         for j in 1:nmax
-            col = px + alg.color_error_multiplier * err
-            idx = _closest_color_idx(col, cs_lab, metric)
+            col = px + error_multiplier * err
+            idx = colorpicker(col)
 
             # We are in loop (idx ↔ err) if we already computed `idx` as the closest color
             # after the first iteration. Breaking out of this loops lets us avoid calling
@@ -95,15 +96,13 @@ function colordither(
                 break
             else
                 candidates[j] = idx
-                err = px - cs_xyz[idx]
+                err = px - cs[idx]
             end
         end
         # Sort candidates by luminance (dark to bright)
-        index[I] = partialsort!(
-            candidates, mat[rlookup[r], clookup[c]]; by = i -> cs_lab[i].l
-        )
+        out[I] = partialsort!(candidates, mat[rlookup[r], clookup[c]]; by = i -> cs_lab[i].l)
     end
-    return index
+    return out
 end
 
 """
@@ -117,7 +116,7 @@ which defaults to `1`.
      Tone Pictures," IEEE International Conference on Communications,
      Conference Records, 1973, pp. 26-11 to 26-15.
 """
-function Bayer(level = 1; kwargs...)
+function Bayer(level = 1; kwargs...) # TODO: deprecate optional argument
     bayer = bayer_matrix(level) .+ 1
     return OrderedDither(bayer; kwargs...)
 end

@@ -31,7 +31,7 @@ struct ErrorDiffusion{V <: Real, R <: AbstractUnitRange} <: AbstractDither
 end
 function ErrorDiffusion(inds, vals, ranges)
     length(inds) != length(vals) &&
-        throw(ArgumentError("Lengths of filter indices and values don't match."))
+        throw(ArgumentError("Lengths of ErrorDiffusion indices and values don't match."))
     return ErrorDiffusion{typeof(vals), typeof(ranges)}(inds, vals, ranges)
 end
 
@@ -54,7 +54,7 @@ function inner_range(img, alg::ErrorDiffusion)
 end
 
 function binarydither!(
-        alg::ErrorDiffusion, out::GenericGrayImage, img::GenericGrayImage; clamp_error = true
+        alg::ErrorDiffusion, out::GrayImage, img::GrayImage; clamp_error = true
     )
     # This function does not yet support OffsetArray
     require_one_based_indexing(img)
@@ -92,33 +92,33 @@ function binarydither!(
     return out
 end
 
-function colordither(
+function colordither!(
+        out::Matrix{Int},
         alg::ErrorDiffusion,
-        img::GenericImage,
-        cs::AbstractVector{<:Pixel},
-        metric::DifferenceMetric;
+        img::GenericImage{C},
+        cs::AbstractVector{C},
+        colorpicker::AbstractColorPicker{C};
         clamp_error = true,
-    )
+    ) where {C <: ColorLike}
     # this function does not yet support OffsetArray
     require_one_based_indexing(img)
-    index = Matrix{Int}(undef, size(img)...) # allocate matrix of color indices
     Inner = inner_range(img, alg) # domain in which boundschecks can be skipped
 
-    # Change from normalized intensities to Float as error will get added!
-    # Eagerly promote to the same type to make loop run faster.
-    img = convert.(floattype(eltype(img)), img)
-    FT = floattype(eltype(eltype(img))) # type of Float
-    cs_err = convert.(eltype(img), cs)
-    cs_lab = Lab.(cs)
+    # DitherPunk uses two different colorspaces when running Error Diffusion:
+    # - one to compute the closest color: C
+    # - one to diffuse the error in: E
+    # This is mostly due to some color spaces like Lab being useful for
+
+    FT = eltype(eltype(img)) # Float type
     vals = convert.(FT, alg.vals)
 
     @inbounds for I in CartesianIndices(img)
         px = img[I]
         clamp_error && (px = clamp_limits(px))
-        index[I] = _closest_color_idx(px, cs_lab, metric)
+        out[I] = colorpicker(px)
 
         # Diffuse "error" to neighborhood in filter
-        err = px - cs_err[index[I]]  # diffuse "error" to neighborhood in filter
+        err = px - cs[out[I]]  # diffuse "error" to neighborhood in filter
         if I in Inner
             for i in 1:length(alg.inds)
                 img[I + alg.inds[i]] += err * vals[i]
@@ -131,7 +131,7 @@ function colordither(
             end
         end
     end
-    return index
+    return out
 end
 
 """

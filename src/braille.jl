@@ -19,7 +19,7 @@ function braille(img::GenericImage, alg::AbstractDither; kwargs...)
     return braille(img, alg; kwargs...)
 end
 function braille(
-        img::GenericGrayImage,
+        img::GrayImage,
         alg::AbstractDither;
         invert::Bool = false,
         to_string::Bool = false,
@@ -38,7 +38,7 @@ end
 # Enable direct printing of Binary images:
 braille(img::AbstractMatrix{Bool}; kwargs...) = _braille(img; kwargs...)
 braille(img::BitMatrix; kwargs...) = _braille(img; kwargs...)
-function braille(img::AbstractMatrix{<:BinaryGray}; kwargs...)
+function braille(img::AbstractMatrix{<:AbstractGray{Bool}}; kwargs...)
     return _braille(channelview(img); kwargs...)
 end
 

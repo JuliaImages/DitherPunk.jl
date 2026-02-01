@@ -1,10 +1,22 @@
 module DitherPunk
 
 using Base: require_one_based_indexing
-using ColorTypes: ColorTypes, AbstractGray, Color, Colorant, Gray, HSV, Lab, XYZ, gray
-using Colors: DifferenceMetric, colordiff, DE_2000, invert_srgb_compand
-using ImageCore: channelview, floattype, clamp01
+using FixedPointNumbers: N0f8, floattype
+using ColorTypes: ColorTypes, AbstractGray, Color, Colorant
+using ColorTypes: RGB, HSV, Lab, XYZ, Gray, gray
+using Colors:
+    DifferenceMetric,
+    EuclideanDifferenceMetric,
+    DE_2000,
+    DE_94,
+    DE_JPC79,
+    DE_CMC,
+    DE_BFD,
+    colordiff,
+    invert_srgb_compand
+using ImageCore: channelview, clamp01
 using IndirectArrays: IndirectArray
+import Colors: _colordiff # extended in colordiff.jl
 
 using ColorSchemes: ColorScheme
 using ColorQuantization: quantize, AbstractColorQuantizer, KMeansQuantization
@@ -12,17 +24,20 @@ using UnicodeGraphics: uprint, ustring
 
 abstract type AbstractDither end
 
-const BinaryGray = AbstractGray{Bool}
-const NumberLike = Union{Number, AbstractGray}
-const BinaryLike = Union{Bool, BinaryGray}
-const Pixel = Union{Number, Colorant}
+const ColorLike = Union{Number, Colorant}
+const GrayLike = Union{Number, AbstractGray}
+const BinaryLike = Union{Bool, AbstractGray{Bool}}
 
-const GenericBinaryImage{T <: BinaryLike} = Union{BitMatrix, AbstractArray{T, 2}}
-const GenericGrayImage{T <: NumberLike} = AbstractArray{T, 2}
-const GenericImage{T <: Pixel, N} = AbstractArray{T, N}
+const ColorVector{T <: ColorLike} = AbstractArray{T, 1}
+const GenericImage{T <: ColorLike} = AbstractArray{T, 2}
+const GrayImage{T <: GrayLike} = AbstractArray{T, 2}
+const BinaryImage{T <: BinaryLike} = AbstractArray{T, 2}
 
+include("compat.jl")
 include("colorschemes.jl")
 include("utils.jl")
+include("colordiff.jl")
+include("color_picker.jl")
 include("api/binary.jl")
 include("api/color.jl")
 include("threshold.jl")
@@ -34,6 +49,7 @@ include("api/default_method.jl")
 include("braille.jl")
 include("clustering.jl")
 
+@public AbstractDither
 export dither, dither!
 # Threshold dithering
 export ConstantThreshold, WhiteNoiseThreshold
@@ -48,6 +64,11 @@ export SimpleErrorDiffusion, FloydSteinberg, JarvisJudice, Stucki, Burkes
 export Sierra, TwoRowSierra, SierraLite, Atkinson, Fan93, ShiauFan, ShiauFan2
 # Closest color
 export ClosestColor
+# Closest color lookup
+@public AbstractColorPicker
+@public RuntimeColorPicker
+@public LookupColorPicker
+@public FastEuclideanMetric
 # Other utilities
 export upscale
 export braille

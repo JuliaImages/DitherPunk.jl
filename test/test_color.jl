@@ -1,108 +1,143 @@
 using DitherPunk
+using DitherPunk: DEFAULT_METHOD, AbstractDither
 using DitherPunk: ColorNotImplementedError
+using DitherPunk: RuntimeColorPicker, LookupColorPicker, FastEuclideanMetric, colorspace
+using Test
+
+using ColorSchemes
 using IndirectArrays
 using ColorTypes: RGB, HSV
+using Colors: DE_2000, DE_BFD
 using FixedPointNumbers: N0f8
 using ReferenceTests
 using TestImages
 
 ## Define color scheme
-white = RGB{Float32}(1, 1, 1)
-yellow = RGB{Float32}(1, 1, 0)
-green = RGB{Float32}(0, 0.5, 0)
-orange = RGB{Float32}(1, 0.5, 0)
-red = RGB{Float32}(1, 0, 0)
-blue = RGB{Float32}(0, 0, 1)
-
-cs = [white, yellow, green, orange, red, blue]
+colorscheme = ColorSchemes.PuOr_6
+cs = colorscheme
 
 # Load test image
 img = testimage("fabio_color_256")
 img_gray = testimage("fabio_gray_256")
 
+@testset verbose = true "Color dithering defaults" begin
+    d = @inferred dither(img, colorscheme)
+    @info d typeof(d)
+    @test_reference "references/color/default.png" d
+
+    d = @inferred dither(img_gray, colorscheme)
+    @info d typeof(d)
+    @test_reference "references/color/default_from_gray.png" d
+end
+
 # Run & test custom color palette dithering methods
-algs = Dict(
-    "FloydSteinberg" => @inferred(FloydSteinberg()),
-    "ClosestColor" => @inferred(ClosestColor()),
-    "Bayer" => @inferred(Bayer()),
-)
+COLOR_ALGS = (FloydSteinberg, ClosestColor, Bayer)
+COLOR_METRICS = (FastEuclideanMetric, DE_2000, DE_BFD)
+COLOR_PICKERS = (RuntimeColorPicker, LookupColorPicker)
 
-for (name, alg) in algs
-    # Test custom color dithering on color images
-    local img2 = copy(img)
-    local d = @inferred dither(img2, alg, cs)
-    @test_reference "references/color/$(name).png" collect(d)
+@testset verbose = true "Color dithering methods" begin
+    @testset "$(Method)" for Method in COLOR_ALGS
+        alg = Method()
+        @testset "$(Metric)" for Metric in COLOR_METRICS
+            metric = Metric()
+            CS = colorspace(metric)
+            @testset "$(ColorPicker)" for ColorPicker in COLOR_PICKERS
+                colorpicker = ColorPicker(colorscheme, metric)
 
-    @test eltype(d) == eltype(img2)
-    @test img2 == img # image not modified
+                # Test custom color dithering on color images
+                local img_copy = copy(img)
+                local d = @inferred dither(img_copy, alg, cs; colorpicker = colorpicker)
+                @test_reference "references/color/$(Method)_$(Metric)_$(CS).png" d
 
-    # Test custom color dithering on gray images
-    local img2_gray = copy(img_gray)
-    local d = @inferred dither(img2_gray, alg, cs)
-    @test_reference "references/color/$(name)_from_gray.png" collect(d)
+                @test eltype(d) == eltype(img_copy)
+                @test img_copy == img # image not modified
 
-    @test eltype(d) == eltype(cs)
-    @test img2_gray == img_gray # image not modified
+                # Test custom color dithering on gray images
+                local img_copy_gray = copy(img_gray)
+                local d = @inferred dither(img_copy_gray, alg, cs; colorpicker = colorpicker)
+                @test_reference "references/color/$(Method)_$(Metric)_$(CS)_from_gray.png" d
+
+                @test eltype(d) == eltype(cs)
+                @test img_copy_gray == img_gray # image not modified
+            end
+        end
+    end
 end
 
 # Test error diffusion kwarg `clamp_error`:
-d = @inferred dither(img, FloydSteinberg(), cs; clamp_error = false)
-@test_reference "references/color/FloydSteinberg_clamp_error.png" collect(d)
-@test eltype(d) == eltype(img)
-
-## Test API
-# Test for argument errors on algorithms that don't support custom color palettes
-for alg in [WhiteNoiseThreshold(), ConstantThreshold()]
-    @test_throws ColorNotImplementedError dither(img, alg, cs)
+@testset "clamp_error" begin
+    d = @inferred dither(img, FloydSteinberg(), cs; clamp_error = false)
+    @test_reference "references/color/FloydSteinberg_clamp_error.txt" d
+    @test eltype(d) == eltype(img)
 end
 
-img2 = copy(img)
-alg = FloydSteinberg()
-d = dither(img2, alg, cs)
+## Test API
+@testset "ColorNotImplementedError" begin
+    # Test for argument errors on algorithms that don't support custom color palettes
+    @testset "$(alg)" for alg in (WhiteNoiseThreshold(), ConstantThreshold())
+        @test_throws ColorNotImplementedError dither(img, alg, cs)
+    end
+end
+
+img_copy = copy(img)
+d_ref = dither(img_copy, DEFAULT_METHOD, cs)
 
 # Test setting output type
-d2 = @inferred dither(HSV, img2, alg, cs)
-@test d2 isa IndirectArray
-@test eltype(d2) <: HSV
-@test RGB{N0f8}.(d2) ≈ d
-@test img2 == img # image not modified
-d2default = @inferred dither(HSV, img2, cs)
-@test d2 == d2default
+@testset "Custom output type" begin
+    d = @inferred dither(HSV, img_copy, DEFAULT_METHOD, cs)
+    @test d isa IndirectArray
+    @test eltype(d) <: HSV
+    @test RGB{N0f8}.(d) ≈ d_ref
+    @test img_copy == img # image not modified
+
+    d_default = @inferred dither(HSV, img_copy, cs)
+    @test d_default == d
+end
 
 # Inplace modify output image
-out = zeros(RGB{Float16}, size(img2)...)
-d3 = @inferred dither!(out, img2, alg, cs)
-@test out ≈ d # image updated in-place
-@test d3 ≈ d
-@test eltype(out) == RGB{Float16}
-@test eltype(d3) == RGB{Float16}
-@test img2 == img # image not modified
-out = zeros(RGB{Float16}, size(img2)...)
-d3default = @inferred dither!(out, img2, cs)
-@test d2 == d2default
+@testset "Inplace modify 3-arg" begin
+    out = zeros(RGB{Float16}, size(img_copy)...)
+    d = @inferred dither!(out, img_copy, DEFAULT_METHOD, cs)
+    @test out === d # image updated in-place
+    @test eltype(out) == RGB{Float16}
+    @test d ≈ d_ref
+    @test img_copy == img # image not modified
+
+    out = zeros(RGB{Float16}, size(img_copy)...)
+    d_default = @inferred dither!(out, img_copy, cs)
+    @test d_default == d
+end
 
 # Inplace modify  image
-d4 = @inferred dither!(img2, alg, cs)
-@test d4 == d
-@test img2 == d # image updated in-place
-@test eltype(d4) == eltype(img)
-@test eltype(img2) == eltype(img)
-img2default = deepcopy(img)
-d4default = @inferred dither!(img2default, cs)
-@test img2default == d
-@test d4 == d4default
+@testset "Inplace modify 2-arg" begin
+    img_copy = deepcopy(img)
+    d = @inferred dither!(img_copy, DEFAULT_METHOD, cs)
+    @test d == d_ref
+    @test img_copy === d # image updated in-place
+    @test img_copy != img # image updated in-place
+    @test eltype(d) == eltype(img)
+    @test eltype(img_copy) == eltype(img)
+
+    img_copy = deepcopy(img)
+    d_default = @inferred dither!(img_copy, cs)
+    @test img_copy === d_default
+    @test d_default == d
+end
 
 ## Conditional dependencies
 # Test conditional dependency on ColorSchemes.jl
-using ColorSchemes
-d1 = @inferred dither(img, alg, ColorSchemes.jet)
-d2 = @inferred dither(img, alg, ColorSchemes.jet.colors)
-@test d1 == d2
-d3 = @inferred dither(img, ColorSchemes.jet)
-d4 = @inferred dither(img, ColorSchemes.jet.colors)
-@test d3 == d1
-@test d3 == d4
+@testset "Colorschemes.jl" begin
+    d1 = @inferred dither(img, DEFAULT_METHOD, ColorSchemes.jet)
+    d2 = @inferred dither(img, DEFAULT_METHOD, ColorSchemes.jet.colors)
+    @test d1 == d2
+    d3 = @inferred dither(img, ColorSchemes.jet)
+    d4 = @inferred dither(img, ColorSchemes.jet.colors)
+    @test d3 == d1
+    @test d3 == d4
+end
 
 # calls Clustering
-d = @inferred dither(img, alg, 4)
-d = @inferred dither(img, 4)
+@testset "Automatic colorscheme" begin
+    @test_nowarn @inferred dither(img, DEFAULT_METHOD, 4)
+    @test_nowarn @inferred dither(img, 4)
+end

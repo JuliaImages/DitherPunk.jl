@@ -42,7 +42,7 @@ function dither(::Type{T}, img::GenericImage, alg::AbstractDither; kwargs...) wh
 end
 
 # ...and defaults to the type of the input image.
-function dither(img::GenericImage{T, N}, alg::AbstractDither; kwargs...) where {T <: Pixel, N}
+function dither(img::GenericImage{T}, alg::AbstractDither; kwargs...) where {T <: ColorLike}
     return dither(T, img, alg; kwargs...)
 end
 
@@ -53,11 +53,7 @@ end
 # Dispatch to binary dithering on grayscale images
 # when no color palette is provided
 function _binarydither!(
-        out::GenericGrayImage,
-        img::GenericGrayImage,
-        alg::AbstractDither;
-        to_linear = false,
-        kwargs...,
+        out::GrayImage, img::GrayImage, alg::AbstractDither; to_linear = false, kwargs...
     )
     to_linear && (img = srgb2linear.(img))
     return binarydither!(alg, out, img; kwargs...)
@@ -65,8 +61,8 @@ end
 
 # Dispatch to per-channel dithering on color images when no color palette is provided
 function _binarydither!(
-        out::GenericImage{T, 2},
-        img::GenericImage{T, 2},
+        out::GenericImage{T},
+        img::GenericImage{T},
         alg::AbstractDither;
         to_linear = false,
         kwargs...,
